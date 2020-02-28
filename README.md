@@ -69,10 +69,58 @@ test-project/
 ```
 npm install express-generator -g
 express --view=ejs myapp
+npm install --save cookie-parser
 ```
 
-### .gitignore
+### nodemon
 
 ```
+npm install -g nodemon
+```
 
+### pug
+
+```
+npm install --save pug
+```
+
+### mongoose
+
+```
+npm install --save mongoose
+```
+
+### dotenv
+
+```
+npm install --save-dev dotenv
+```
+
+### multer
+
+```
+npm install --save-dev multer
+```
+
+### eslint
+
+```
+npm install --save-dev eslint -g
+```
+
+### webpack
+
+```
+npm install --save-dev webpack webpack-cli
+npm install --save-dev extract-text-webpack-plugin@next
+npm install --save-dev autoprefixer
+npm install --save-dev css-loader
+npm install --save-dev node-sass
+npm install --save-dev postcss-loader
+npm install --save-dev sass-loader
+npm install --save-dev @babel/polyfill
+npm install --save-dev babel-loader
+npm install --save-dev babel-core@^7.0.0-bridge.0
+npm install --save-dev @babel/node
+npm install --save-dev @babel/preset-env
 ```

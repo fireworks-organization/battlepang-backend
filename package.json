@@ -2,15 +2,30 @@
   "name": "Express-boilerplate",
   "version": "0.0.0",
   "private": true,
-  "scripts": {
-    "start": "node ./bin/www"
-  },
   "dependencies": {
-    "cookie-parser": "~1.4.4",
+    "cookie-parser": "1.4.4",
     "debug": "~2.6.9",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
-    "morgan": "~1.9.1"
+    "morgan": "1.9.1"
+  },
+  "scripts": {
+    "start": "nodemon --exec babel-node init.js --delay 2"
+  },
+  "devDependencies": {
+    "@babel/node": "7.8.4",
+    "@babel/polyfill": "7.8.3",
+    "@babel/preset-env": "7.8.6",
+    "autoprefixer": "9.7.4",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-loader": "8.0.6",
+    "css-loader": "3.4.2",
+    "extract-text-webpack-plugin": "4.0.0-beta.0",
+    "node-sass": "4.13.1",
+    "postcss-loader": "3.0.0",
+    "sass-loader": "8.0.2",
+    "webpack": "4.41.6",
+    "webpack-cli": "3.3.11"
   }
 }
