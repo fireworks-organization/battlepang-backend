@@ -1,0 +1,7 @@
+{
+  "prettier.disableLanguages": [],
+  "editor.formatOnSave": true,
+  "prettier.tabWidth": 2,
+  "prettier.useTabs": false,
+  "window.zoomLevel": 0
+}

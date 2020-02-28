@@ -1,0 +1,13 @@
+{
+  "prettier.disableLanguages": [],
+  "eslint.validate": ["javascript", { "autoFix": true, "language": "vue" }],
+  "editor.formatOnSave": true,
+  "prettier.tabWidth": 2,
+  "prettier.useTabs": false,
+  "window.zoomLevel": 1,
+  "endOfLine": "auto",
+  "eslint.autoFixOnSave": true,
+  "files.associations": {
+    "*.vue": "vue"
+  }
+}
