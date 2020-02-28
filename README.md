@@ -78,6 +78,12 @@ npm install --save cookie-parser
 npm install -g nodemon
 ```
 
+### morgan
+
+```
+npm install --save morgan
+```
+
 ### pug
 
 ```
@@ -118,9 +124,7 @@ npm install --save-dev css-loader
 npm install --save-dev node-sass
 npm install --save-dev postcss-loader
 npm install --save-dev sass-loader
-npm install --save-dev @babel/polyfill
+npm install --save-dev @babel/core @babel/cli @babel/preset-env
 npm install --save-dev babel-loader
-npm install --save-dev babel-core@^7.0.0-bridge.0
 npm install --save-dev @babel/node
-npm install --save-dev @babel/preset-env
 ```

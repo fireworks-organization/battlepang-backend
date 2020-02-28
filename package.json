@@ -14,11 +14,11 @@
     "start": "nodemon --exec babel-node init.js --delay 2"
   },
   "devDependencies": {
+    "@babel/cli": "7.8.4",
+    "@babel/core": "7.8.6",
     "@babel/node": "7.8.4",
-    "@babel/polyfill": "7.8.3",
     "@babel/preset-env": "7.8.6",
     "autoprefixer": "9.7.4",
-    "babel-core": "7.0.0-bridge.0",
     "babel-loader": "8.0.6",
     "css-loader": "3.4.2",
     "extract-text-webpack-plugin": "4.0.0-beta.0",
