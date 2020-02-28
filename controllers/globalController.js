@@ -2,8 +2,13 @@ import { getQueryTest } from "../config/db";
 
 export const home = (req, res) => {
   getQueryTest({
-    cb: results => {
-      res.send(JSON.stringify(results));
+    cb: params => {
+      const { result, err } = params;
+      if (result) {
+        res.send(JSON.stringify(result));
+      } else if (err) {
+        res.status(500).send(err);
+      }
       res.end();
     }
   });

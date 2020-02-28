@@ -40,10 +40,14 @@ export const getQueryTest = ({ cb }) => {
     .query("SELECT name from users")
     .then(([rows, fields]) => {
       if (cb) {
-        cb(rows);
+        cb({ result: rows });
       }
     })
-    .catch(console.log)
+    .catch(err => {
+      if (cb) {
+        cb({ err });
+      }
+    })
     .then(() => {
       console.log(" Disconnect to DB");
       client.end();
