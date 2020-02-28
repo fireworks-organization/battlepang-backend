@@ -124,7 +124,23 @@ npm install --save-dev css-loader
 npm install --save-dev node-sass
 npm install --save-dev postcss-loader
 npm install --save-dev sass-loader
-npm install --save-dev @babel/core @babel/cli @babel/preset-env
-npm install --save-dev babel-loader
-npm install --save-dev @babel/node
+npm install --save-dev @babel/core @babel/cli @babel/preset-env @babel/polyfill babel-loader @babel/node
+```
+
+### mysql2
+
+```
+npm install --save mysql2
+```
+
+### test Data
+
+```
+CREATE TABLE users (
+   id INT AUTO_INCREMENT PRIMARY KEY,
+   name VARCHAR(255) NOT NULL
+);
+
+insert into user(name) values ("aaa");
+SELECT name from users;
 ```
