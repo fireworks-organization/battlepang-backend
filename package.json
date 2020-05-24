@@ -11,7 +11,8 @@
     "http-errors": "~1.6.3",
     "mongoose": "^5.9.15",
     "morgan": "1.9.1",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "passport-local-mongoose": "^6.0.1"
   },
   "scripts": {
     "start": "nodemon --exec babel-node init.js --delay 2"
@@ -19,7 +20,7 @@
   "devDependencies": {
     "@babel/cli": "7.8.4",
     "@babel/core": "7.8.6",
-    "@babel/node": "7.8.4",
+    "@babel/node": "^7.8.4",
     "@babel/preset-env": "7.8.6",
     "autoprefixer": "9.7.4",
     "babel-loader": "8.0.6",
