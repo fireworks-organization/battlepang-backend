@@ -84,6 +84,12 @@ npm install -g nodemon
 npm install --save morgan
 ```
 
+### helmet
+
+```
+npm install --save helmet
+```
+
 ### pug
 
 ```
