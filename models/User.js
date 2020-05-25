@@ -10,18 +10,6 @@ const UserSchema = new mongoose.Schema({
     sex: String,
     kakaoId: Number,
     naverId: Number,
-    comments: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Comment"
-        }
-    ],
-    posts: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Posts"
-        }
-    ]
 });
 
 UserSchema.plugin(passportLocalMongoose, { usernameField: "email" });

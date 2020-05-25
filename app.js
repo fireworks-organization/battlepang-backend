@@ -7,6 +7,7 @@ import logger from "morgan";
 import helmet from "helmet";
 import userRouter from "./routes/userRouter";
 import globalRouter from "./routes/globalRouter";
+import cors from "cors";
 import routes from "./routes";
 
 var app = express();
@@ -15,6 +16,7 @@ var app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
+app.use(cors())
 app.use(helmet())
 app.use(logger("dev"));
 app.use(bodyParser.json());

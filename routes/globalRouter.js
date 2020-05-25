@@ -10,10 +10,14 @@ import {
   login,
   logout
 } from "../controllers/globalController";
+import {
+  postJoin,
+} from "../controllers/userController";
 
 globalRouter.get(routes.home, home);
 globalRouter.get(routes.search, search);
 globalRouter.get(routes.join, join);
+globalRouter.post(routes.join, postJoin);
 globalRouter.get(routes.login, login);
 globalRouter.get(routes.logout, logout);
 
