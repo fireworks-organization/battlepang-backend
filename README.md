@@ -132,5 +132,24 @@ npm install --save-dev postcss-loader
 npm install --save-dev sass-loader
 npm install --save-dev @babel/core @babel/cli @babel/preset-env
 npm install --save-dev babel-loader
-npm install --save-dev @babel/node
+npm install --save-dev @babel/node@7.8.4
+```
+
+### passport
+```
+npm install --save passport
+npm install --save passport-local
+npm install --save passport-local-mongoose
+npm install --save passport-jwt
+npm install --save jsonwebtoken
+```
+
+### cors
+```
+npm install --save cors
+```
+
+### nodemailer
+```
+npm install --save nodemailer
 ```

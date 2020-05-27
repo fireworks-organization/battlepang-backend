@@ -7,7 +7,10 @@ import logger from "morgan";
 import helmet from "helmet";
 import userRouter from "./routes/userRouter";
 import globalRouter from "./routes/globalRouter";
+import passport from 'passport';
+import passportConfig from "./passport";
 import cors from "cors";
+
 import routes from "./routes";
 
 var app = express();
@@ -23,6 +26,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(passport.initialize());
+passportConfig();
 
 app.use(routes.home, globalRouter);
 app.use(routes.users, userRouter);

@@ -3,6 +3,9 @@ const HOME = "/";
 const JOIN = "/join";
 const LOGIN = "/login";
 const LOGOUT = "/logout";
+const FIND_EMAIL = "/findEmail";
+const RESET_PASSWORD = "/resetPassword";
+const GET_USER_INFO = "/getUserInfo";
 const SEARCH = "/search";
 
 // Users
@@ -16,6 +19,9 @@ const routes = {
   home: HOME,
   join: JOIN,
   login: LOGIN,
+  findEmail: FIND_EMAIL,
+  resetPassword: RESET_PASSWORD,
+  getUserInfo: GET_USER_INFO,
   logout: LOGOUT,
   search: SEARCH,
   users: USERS,

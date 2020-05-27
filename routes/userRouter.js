@@ -5,9 +5,8 @@ import {
   users,
   userDetail,
   editProfile,
-  changePassword
+  changePassword,
 } from "../controllers/userController";
-
 userRouter.get("/", users);
 userRouter.get(routes.userDetail, userDetail);
 userRouter.get(routes.editProfile, editProfile);
