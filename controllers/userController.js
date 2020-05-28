@@ -64,7 +64,7 @@ export const postLogin = async (req, res, next) => {
         }
     } = req;
     const findUser = await User.findOne({ email: email });
-    passport.authenticate("local", function (err, user, info) {
+    passport.authenticate("local", { session: false }, function (err, user, info) {
         console.log(email)
         if (err) {
             return res.status(400).send({ error: err });
