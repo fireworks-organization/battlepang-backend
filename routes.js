@@ -8,6 +8,9 @@ const RESET_PASSWORD = "/resetPassword";
 const GET_USER_INFO = "/getUserInfo";
 const SEARCH = "/search";
 
+//SNS LOGIN
+const AUTH_LOGIN_NAVER_CALLBACK = "/auth/login/naver/callback";
+
 // Users
 
 const USERS = "/users";
@@ -27,7 +30,8 @@ const routes = {
   users: USERS,
   userDetail: USER_DETAIL,
   editProfile: EDIT_PROFILE,
-  changePassword: CHANGE_PASSWORD
+  changePassword: CHANGE_PASSWORD,
+  authLoginNaverCallback: AUTH_LOGIN_NAVER_CALLBACK
 };
 
 export default routes;

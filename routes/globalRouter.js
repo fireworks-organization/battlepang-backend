@@ -1,6 +1,6 @@
 import express from "express";
 import routes from "../routes";
-import passport from 'passport';
+import passport from "passport";
 const globalRouter = express.Router();
 /* GET home page. */
 
@@ -9,7 +9,8 @@ import {
   search,
   join,
   login,
-  logout
+  logout,
+  authLoginNaverCallback
 } from "../controllers/globalController";
 import {
   postJoin,
@@ -19,7 +20,7 @@ import {
   getUserInfo
 } from "../controllers/userController";
 
-const checkJWTAuthenticate = passport.authenticate('jwt', { session: false });
+const checkJWTAuthenticate = passport.authenticate("jwt", { session: false });
 globalRouter.get(routes.home, home);
 globalRouter.get(routes.search, search);
 globalRouter.get(routes.join, join);
@@ -29,5 +30,6 @@ globalRouter.post(routes.login, postLogin);
 globalRouter.post(routes.findEmail, findEmail);
 globalRouter.post(routes.resetPassword, resetPassword);
 globalRouter.post(routes.getUserInfo, checkJWTAuthenticate, getUserInfo);
+globalRouter.post(routes.authLoginNaverCallback, authLoginNaverCallback);
 
 export default globalRouter;
