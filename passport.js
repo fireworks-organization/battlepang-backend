@@ -1,31 +1,38 @@
-import passport from 'passport';
+import passport from "passport";
 
-const LocalStrategy = require('passport-local').Strategy;
-import passportJWT from 'passport-jwt'
+import passportJWT from "passport-jwt";
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
 import User from "./models/User";
 import dotenv from "dotenv";
+
+var NaverStrategy = require("passport-naver").Strategy;
+var FacebookStrategy = require("passport-facebook").Strategy;
+var KakaoStrategy = require("passport-kakao").Strategy;
+
 dotenv.config();
 
 module.exports = () => {
-    passport.use(User.createStrategy());
+  passport.use(User.createStrategy());
 
-    passport.serializeUser(User.serializeUser());
-    passport.deserializeUser(User.deserializeUser());
-    //JWT Strategy
-    passport.use(new JWTStrategy({
+  passport.serializeUser(User.serializeUser());
+  passport.deserializeUser(User.deserializeUser());
+  //JWT Strategy
+  passport.use(
+    new JWTStrategy(
+      {
         jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
         secretOrKey: process.env.JWT_SECRET
-    },
-        function (jwtPayload, done) {
-            return User.findOne({ _id: jwtPayload._id })
-                .then(user => {
-                    return done(null, user);
-                })
-                .catch(err => {
-                    return done(err);
-                });
-        }
-    ));
-}
+      },
+      function(jwtPayload, done) {
+        return User.findOne({ _id: jwtPayload._id })
+          .then(user => {
+            return done(null, user);
+          })
+          .catch(err => {
+            return done(err);
+          });
+      }
+    )
+  );
+};

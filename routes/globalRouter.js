@@ -9,15 +9,16 @@ import {
   search,
   join,
   login,
-  logout,
-  authLoginNaverCallback
+  logout
 } from "../controllers/globalController";
 import {
   postJoin,
   postLogin,
   findEmail,
   resetPassword,
-  getUserInfo
+  getUserInfo,
+  authLoginNaverCallback,
+  authLoginKakaoCallback
 } from "../controllers/userController";
 
 const checkJWTAuthenticate = passport.authenticate("jwt", { session: false });
@@ -31,5 +32,6 @@ globalRouter.post(routes.findEmail, findEmail);
 globalRouter.post(routes.resetPassword, resetPassword);
 globalRouter.post(routes.getUserInfo, checkJWTAuthenticate, getUserInfo);
 globalRouter.post(routes.authLoginNaverCallback, authLoginNaverCallback);
+globalRouter.post(routes.authLoginKakaoCallback, authLoginKakaoCallback);
 
 export default globalRouter;

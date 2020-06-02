@@ -10,6 +10,7 @@ const SEARCH = "/search";
 
 //SNS LOGIN
 const AUTH_LOGIN_NAVER_CALLBACK = "/auth/login/naver/callback";
+const AUTH_LOGIN_KAKAO_CALLBACK = "/auth/login/kakao/callback";
 
 // Users
 
@@ -31,7 +32,8 @@ const routes = {
   userDetail: USER_DETAIL,
   editProfile: EDIT_PROFILE,
   changePassword: CHANGE_PASSWORD,
-  authLoginNaverCallback: AUTH_LOGIN_NAVER_CALLBACK
+  authLoginNaverCallback: AUTH_LOGIN_NAVER_CALLBACK,
+  authLoginKakaoCallback: AUTH_LOGIN_KAKAO_CALLBACK
 };
 
 export default routes;
