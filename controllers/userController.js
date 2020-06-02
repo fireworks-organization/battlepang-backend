@@ -83,7 +83,7 @@ export const postLogin = async (req, res, next) => {
       });
       return res.status(200).json({
         user: {
-          ...user,
+          ...user._doc,
           loginType: "local"
         },
         token
