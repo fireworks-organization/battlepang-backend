@@ -298,3 +298,96 @@ export const getUserInfo = async (req, res) => {
     return res.status(400).send({ error: "해당 유저를 찾을 수 없습니다." });
   }
 };
+export const changeUserInfo = async (req, res) => {
+  const avatarUrl = req.files
+    .filter(item => item.fieldname == "avatarUrl")
+    .map(file => "/userAvatars/" + file.filename)[0];
+  console.log(avatarUrl);
+  // const subImages = req.files
+  //   .filter(item => item.fieldname != "imageData")
+  //   .map(file => "/productImages/" + file.filename);
+  const {
+    body: { id, email, name, phone }
+  } = req;
+  console.log(id, email, name, phone);
+  // const id = data.id;
+  const findUser = await User.findOne({ _id: id });
+  try {
+    if (email !== undefined) {
+      findUser.email = email;
+    }
+    if (name !== undefined) {
+      findUser.name = name;
+    }
+    if (avatarUrl !== undefined) {
+      findUser.avatarUrl = avatarUrl;
+    }
+    if (phone !== undefined) {
+      findUser.phone = phone;
+    }
+    await findUser.save(function(error, user) {
+      if (error) return res.status(400).send({ error });
+      res.status(200).json({
+        email,
+        avatarUrl,
+        name,
+        phone
+      });
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send({ error });
+  }
+};
+export const checkUserPassword = async (req, res) => {
+  const {
+    body: { email, password }
+  } = req;
+  console.log(email);
+  console.log(password);
+  passport.authenticate("local", { session: false }, function(
+    error,
+    user,
+    info
+  ) {
+    console.log(error);
+    console.log(user);
+    console.log(info);
+    if (error) {
+      return res.status(400).json({ error });
+    }
+    if (info) {
+      if (info.name == "IncorrectPasswordError") {
+        return res.status(200).json({
+          passwordValidation: false
+        });
+      }
+      return res.status(400).json({ error: info });
+    }
+    return res.status(200).json({
+      passwordValidation: true
+    });
+  })(req, res);
+};
+export const changeUserPassword = async (req, res) => {
+  const {
+    body: { data }
+  } = req;
+  const email = data.email;
+  const password = data.password;
+  try {
+    const findUser = await User.findOne({
+      email
+    });
+    if (findUser) {
+      await findUser.setPassword(password);
+      findUser.save();
+      res.status(200).send({ user: findUser });
+    } else {
+      res.status(400).send({ error: "유저를 찾을 수 없습니다." });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ error });
+  }
+};

@@ -136,6 +136,7 @@ npm install --save-dev @babel/node@7.8.4
 ```
 
 ### passport
+
 ```
 npm install --save passport
 npm install --save passport-local
@@ -145,11 +146,19 @@ npm install --save jsonwebtoken
 ```
 
 ### cors
+
 ```
 npm install --save cors
 ```
 
 ### nodemailer
+
 ```
 npm install --save nodemailer
+```
+
+### multer
+
+```
+npm install --save multer
 ```

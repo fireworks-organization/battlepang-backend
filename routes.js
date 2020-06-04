@@ -6,6 +6,7 @@ const LOGOUT = "/logout";
 const FIND_EMAIL = "/findEmail";
 const RESET_PASSWORD = "/resetPassword";
 const GET_USER_INFO = "/getUserInfo";
+const CHANGE_USER_INFO = "/changeUserInfo";
 const SEARCH = "/search";
 
 //SNS LOGIN
@@ -18,6 +19,8 @@ const USERS = "/users";
 const USER_DETAIL = "/:id";
 const EDIT_PROFILE = "/edit-profile";
 const CHANGE_PASSWORD = "/change-password";
+const CHECK_USER_PASSWORD = "/checkUserPassword";
+const CHANGE_USER_PASSWORD = "/changeUserPassword";
 
 const routes = {
   home: HOME,
@@ -33,7 +36,10 @@ const routes = {
   editProfile: EDIT_PROFILE,
   changePassword: CHANGE_PASSWORD,
   authLoginNaverCallback: AUTH_LOGIN_NAVER_CALLBACK,
-  authLoginKakaoCallback: AUTH_LOGIN_KAKAO_CALLBACK
+  authLoginKakaoCallback: AUTH_LOGIN_KAKAO_CALLBACK,
+  changeUserInfo: CHANGE_USER_INFO,
+  checkUserPassword: CHECK_USER_PASSWORD,
+  changeUserPassword: CHANGE_USER_PASSWORD
 };
 
 export default routes;

@@ -1,8 +1,19 @@
 import express from "express";
 import routes from "../routes";
 import passport from "passport";
+import multer from "multer";
+
 const globalRouter = express.Router();
 /* GET home page. */
+multer.diskStorage({
+  filename: (req, file, cb) => {
+    console.log(file);
+    cb(null, file.originalname);
+  }
+});
+const uploader = multer({
+  dest: "./public/userAvatars/"
+});
 
 import {
   home,
@@ -18,7 +29,10 @@ import {
   resetPassword,
   getUserInfo,
   authLoginNaverCallback,
-  authLoginKakaoCallback
+  authLoginKakaoCallback,
+  changeUserInfo,
+  checkUserPassword,
+  changeUserPassword
 } from "../controllers/userController";
 
 const checkJWTAuthenticate = passport.authenticate("jwt", { session: false });
@@ -33,5 +47,21 @@ globalRouter.post(routes.resetPassword, resetPassword);
 globalRouter.post(routes.getUserInfo, checkJWTAuthenticate, getUserInfo);
 globalRouter.post(routes.authLoginNaverCallback, authLoginNaverCallback);
 globalRouter.post(routes.authLoginKakaoCallback, authLoginKakaoCallback);
+globalRouter.post(
+  routes.changeUserInfo,
+  checkJWTAuthenticate,
+  uploader.any(),
+  changeUserInfo
+);
+globalRouter.post(
+  routes.checkUserPassword,
+  checkJWTAuthenticate,
+  checkUserPassword
+);
+globalRouter.post(
+  routes.changeUserPassword,
+  checkJWTAuthenticate,
+  changeUserPassword
+);
 
 export default globalRouter;

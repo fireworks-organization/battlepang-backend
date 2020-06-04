@@ -6,10 +6,6 @@ const ExtractJWT = passportJWT.ExtractJwt;
 import User from "./models/User";
 import dotenv from "dotenv";
 
-var NaverStrategy = require("passport-naver").Strategy;
-var FacebookStrategy = require("passport-facebook").Strategy;
-var KakaoStrategy = require("passport-kakao").Strategy;
-
 dotenv.config();
 
 module.exports = () => {
