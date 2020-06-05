@@ -21,6 +21,7 @@ const EDIT_PROFILE = "/edit-profile";
 const CHANGE_PASSWORD = "/change-password";
 const CHECK_USER_PASSWORD = "/checkUserPassword";
 const CHANGE_USER_PASSWORD = "/changeUserPassword";
+const DELETE_USER = "/deleteUser";
 
 const routes = {
   home: HOME,
@@ -39,7 +40,8 @@ const routes = {
   authLoginKakaoCallback: AUTH_LOGIN_KAKAO_CALLBACK,
   changeUserInfo: CHANGE_USER_INFO,
   checkUserPassword: CHECK_USER_PASSWORD,
-  changeUserPassword: CHANGE_USER_PASSWORD
+  changeUserPassword: CHANGE_USER_PASSWORD,
+  deleteUser: DELETE_USER
 };
 
 export default routes;

@@ -63,5 +63,6 @@ globalRouter.post(
   checkJWTAuthenticate,
   changeUserPassword
 );
+globalRouter.post(routes.deleteUser, checkJWTAuthenticate, deleteUser);
 
 export default globalRouter;

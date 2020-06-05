@@ -391,3 +391,16 @@ export const changeUserPassword = async (req, res) => {
     res.status(400).send({ error });
   }
 };
+export const deleteUser = async (req, res) => {
+  const {
+    body: { data }
+  } = req;
+  const id = data.id;
+  try {
+    const user = await User.findOneAndRemove({ _id: id });
+    res.status(200).send({ user });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ error });
+  }
+};
