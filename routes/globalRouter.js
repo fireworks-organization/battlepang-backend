@@ -32,7 +32,8 @@ import {
   authLoginKakaoCallback,
   changeUserInfo,
   checkUserPassword,
-  changeUserPassword
+  changeUserPassword,
+  deleteUser
 } from "../controllers/userController";
 
 const checkJWTAuthenticate = passport.authenticate("jwt", { session: false });

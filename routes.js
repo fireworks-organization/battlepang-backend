@@ -17,11 +17,13 @@ const AUTH_LOGIN_KAKAO_CALLBACK = "/auth/login/kakao/callback";
 
 const USERS = "/users";
 const USER_DETAIL = "/:id";
-const EDIT_PROFILE = "/edit-profile";
-const CHANGE_PASSWORD = "/change-password";
 const CHECK_USER_PASSWORD = "/checkUserPassword";
 const CHANGE_USER_PASSWORD = "/changeUserPassword";
 const DELETE_USER = "/deleteUser";
+
+// Battles
+const BATTLES = "/battles";
+const ADD_BATTLE = "/add";
 
 const routes = {
   home: HOME,
@@ -34,14 +36,14 @@ const routes = {
   search: SEARCH,
   users: USERS,
   userDetail: USER_DETAIL,
-  editProfile: EDIT_PROFILE,
-  changePassword: CHANGE_PASSWORD,
   authLoginNaverCallback: AUTH_LOGIN_NAVER_CALLBACK,
   authLoginKakaoCallback: AUTH_LOGIN_KAKAO_CALLBACK,
   changeUserInfo: CHANGE_USER_INFO,
   checkUserPassword: CHECK_USER_PASSWORD,
   changeUserPassword: CHANGE_USER_PASSWORD,
-  deleteUser: DELETE_USER
+  deleteUser: DELETE_USER,
+  battles: BATTLES,
+  addBattle: ADD_BATTLE
 };
 
 export default routes;
