@@ -162,3 +162,9 @@ npm install --save nodemailer
 ```
 npm install --save multer
 ```
+
+### vimeo
+
+```
+npm install --save vimeo
+```

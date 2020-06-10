@@ -300,9 +300,6 @@ export const changeUserInfo = async (req, res) => {
     .filter(item => item.fieldname == "avatarUrl")
     .map(file => "/userAvatars/" + file.filename)[0];
   console.log(avatarUrl);
-  // const subImages = req.files
-  //   .filter(item => item.fieldname != "imageData")
-  //   .map(file => "/productImages/" + file.filename);
   const {
     body: { id, email, name, phone }
   } = req;
