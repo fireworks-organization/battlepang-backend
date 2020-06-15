@@ -13,7 +13,8 @@ const BattleSchema = new mongoose.Schema({
   gold: Number,
   joinCount: Number,
   maxCount: Number,
-  battleStartTime: Date,
+  state: String,
+  battleStartTime: String,
   restOfDateTime: Date,
   description: String,
   views: {

@@ -5,15 +5,17 @@ import multer from "multer";
 const battleRouter = express.Router();
 
 import { battles, addBattle } from "../controllers/battleController";
-multer.diskStorage({
-  filename: (req, file, cb) => {
-    console.log(file);
-    cb(null, file.originalname);
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    console.log(file.fieldname);
+    if (file.fieldname === "videoFile") {
+      cb(null, "./public/videoFiles/");
+    } else {
+      cb(null, "./public/thumbnails/");
+    }
   }
 });
-const uploader = multer({
-  dest: "./public/videoFiles/"
-});
+const uploader = multer({ storage: storage });
 
 battleRouter.get("/", battles);
 battleRouter.post(routes.addBattle, uploader.any(), addBattle);

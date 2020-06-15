@@ -17,8 +17,28 @@ let client = new Vimeo(
 );
 
 export const battles = async (req, res) => {
+  const {
+    query: { creator }
+  } = req;
+  console.log(creator);
   try {
-    const findBattles = await Battle.find();
+    let findBattles = [];
+    if (creator) {
+      findBattles = await Battle.find({ creator }).populate({
+        path: "comments",
+        populate: {
+          path: "creator"
+        }
+      });
+    } else {
+      findBattles = await Battle.find().populate({
+        path: "comments",
+        populate: {
+          path: "creator"
+        }
+      });
+    }
+
     res.status(200).json({ battles: findBattles });
   } catch (error) {
     console.log(error);
@@ -39,9 +59,9 @@ export const addBattle = async (req, res) => {
     .map(file => "/videoFiles/" + file.filename)[0];
   let battleObjJSON = JSON.parse(battleObj);
 
-  let file_name = "./public" + videoFile;
+  let videoFileName = "./public" + videoFile;
   client.upload(
-    file_name,
+    videoFileName,
     {
       name: battleObjJSON.title ? battleObjJSON.title : "Untitled",
       description: battleObjJSON.subTitle
@@ -50,26 +70,53 @@ export const addBattle = async (req, res) => {
       const videoId = result.replace("/videos/", "");
       const uri = "https://player.vimeo.com/video/" + videoId;
       console.log("Your video URI is: " + uri);
-      fs.unlinkSync(file_name);
+      fs.unlinkSync(videoFileName);
       try {
-        client.request(
-          {
-            method: "GET",
-            path: `/videos/${videoId}/pictures`
-          },
-          function(error, body, status_code, headers) {
-            if (error) {
-              console.log(error);
-            }
-
-            console.log(body);
-          }
-        );
         battleObjJSON.videoUrl = uri;
+        battleObjJSON.thumbnail = `https://i.vimeocdn.com/video/`;
+
         console.log(battleObjJSON);
         const battle = new Battle(battleObjJSON);
         await battle.save();
-        res.status(200).send(battle);
+        res.status(200).send({ battle });
+        function getVideoState() {
+          //비디오 미리보기 이미지의 uri를 가져옴.
+          client.request(
+            {
+              method: "GET",
+              path: `/videos/${videoId}`
+            },
+            function(error, body, status_code, headers) {
+              console.log(body.status);
+              if (body.status != "available") {
+                setTimeout(getVideoState, 2000);
+              } else {
+                // 비디오 섬네일 업로드 링크 가져오기.
+                client.request(
+                  {
+                    method: "POST",
+                    path: `/videos/${videoId}/pictures`,
+                    query: { time: 0, active: true }
+                  },
+                  function(error, body, status_code, headers) {
+                    if (error) {
+                      console.log(error);
+                    }
+                    console.log(body);
+                    battle.state = "transcoded";
+                    battle.thumbnail = `https://i.vimeocdn.com/video/${body.uri
+                      .replace("/videos/", "")
+                      .replace(videoId, "")
+                      .replace("/pictures/", "")}`;
+                    battle.save();
+                  }
+                );
+              }
+            }
+          );
+        }
+
+        setTimeout(getVideoState, 2000);
       } catch (error) {
         console.log(error);
         res.status(400).send({ error });

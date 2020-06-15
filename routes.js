@@ -25,6 +25,10 @@ const DELETE_USER = "/deleteUser";
 const BATTLES = "/battles";
 const ADD_BATTLE = "/add";
 
+// Comment
+const COMMENTS = "/comments";
+const ADD_COMMENT = "/add";
+
 const routes = {
   home: HOME,
   join: JOIN,
@@ -43,7 +47,9 @@ const routes = {
   changeUserPassword: CHANGE_USER_PASSWORD,
   deleteUser: DELETE_USER,
   battles: BATTLES,
-  addBattle: ADD_BATTLE
+  addBattle: ADD_BATTLE,
+  comments: COMMENTS,
+  addComment: ADD_COMMENT
 };
 
 export default routes;

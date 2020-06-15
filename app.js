@@ -8,6 +8,7 @@ import helmet from "helmet";
 import globalRouter from "./routes/globalRouter";
 import userRouter from "./routes/userRouter";
 import battleRouter from "./routes/battleRouter";
+import commentRouter from "./routes/commentRouter";
 import passport from "passport";
 import passportConfig from "./passport";
 import cors from "cors";
@@ -34,6 +35,7 @@ passportConfig();
 app.use(routes.home, globalRouter);
 app.use(routes.users, userRouter);
 app.use(routes.battles, battleRouter);
+app.use(routes.comments, commentRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
