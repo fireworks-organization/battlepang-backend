@@ -18,12 +18,21 @@ let client = new Vimeo(
 
 export const battles = async (req, res) => {
   const {
-    query: { creator }
+    query: { id, creator }
   } = req;
-  console.log(creator);
+  console.log(id);
   try {
     let findBattles = [];
-    if (creator) {
+    if (id) {
+      findBattles = await Battle.find({ _id: id }).populate({
+        path: "comments",
+        populate: {
+          path: "creator"
+        }
+      });
+      findBattles[0].views = findBattles[0].views + 1;
+      findBattles[0].save();
+    } else if (creator) {
       findBattles = await Battle.find({ creator }).populate({
         path: "comments",
         populate: {
