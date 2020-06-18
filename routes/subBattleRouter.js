@@ -3,15 +3,15 @@ import routes from "../routes";
 import multer from "multer";
 import passport from "passport";
 
-const battleRouter = express.Router();
+const subBattleRouter = express.Router();
 const checkJWTAuthenticate = passport.authenticate("jwt", { session: false });
 
 import {
-  battles,
-  addBattle,
-  likeBattle,
-  unlikeBattle
-} from "../controllers/battleController";
+  subBattles,
+  addSubBattle,
+  likeSubBattle,
+  unlikeSubBattle
+} from "../controllers/subBattleController";
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     console.log(file.fieldname);
@@ -24,9 +24,13 @@ const storage = multer.diskStorage({
 });
 const uploader = multer({ storage: storage });
 
-battleRouter.get("/", battles);
-battleRouter.post(routes.addBattle, uploader.any(), addBattle);
-battleRouter.post(routes.likeBattle, checkJWTAuthenticate, likeBattle);
-battleRouter.post(routes.unlikeBattle, checkJWTAuthenticate, unlikeBattle);
+subBattleRouter.get("/", subBattles);
+subBattleRouter.post(routes.addSubBattle, uploader.any(), addSubBattle);
+subBattleRouter.post(routes.likeSubBattle, checkJWTAuthenticate, likeSubBattle);
+subBattleRouter.post(
+  routes.unlikeSubBattle,
+  checkJWTAuthenticate,
+  unlikeSubBattle
+);
 
-export default battleRouter;
+export default subBattleRouter;

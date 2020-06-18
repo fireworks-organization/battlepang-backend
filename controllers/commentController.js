@@ -8,15 +8,23 @@ dotenv.config();
 
 export const comments = async (req, res) => {
   const {
-    query: { creator }
+    query: { battleId, creator }
   } = req;
   console.log(creator);
   try {
     let findComments = [];
-    if (creator) {
-      findComments = await Comment.find({ creator });
+    if (battleId) {
+      findComments = await Comment.find({ battleId })
+        .populate("creator")
+        .sort({ createdAt: -1 });
+    } else if (creator) {
+      findComments = await Comment.find({ creator })
+        .populate("creator")
+        .sort({ createdAt: -1 });
     } else {
-      findComments = await Comment.find();
+      findComments = await Comment.find()
+        .populate("creator")
+        .sort({ createdAt: -1 });
     }
 
     res.status(200).json({ comments: findComments });

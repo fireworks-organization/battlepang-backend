@@ -7,6 +7,10 @@ const SubBattleSchema = new mongoose.Schema({
   subTitle: String,
   gold: Number,
   description: String,
+  state: {
+    type: String,
+    default: "wait-upload"
+  },
   views: {
     type: Number,
     default: 0
@@ -24,7 +28,23 @@ const SubBattleSchema = new mongoose.Schema({
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
-  }
+  },
+  battleId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Battle"
+  },
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }
+  ],
+  unlikes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }
+  ]
 });
 
 const model = mongoose.model("SubBattle", SubBattleSchema);

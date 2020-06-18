@@ -24,6 +24,13 @@ const DELETE_USER = "/deleteUser";
 // Battles
 const BATTLES = "/battles";
 const ADD_BATTLE = "/add";
+const LIKE_BATTLE = "/like";
+const UNLIKE_BATTLE = "/unlike";
+// Battles
+const SUB_BATTLES = "/subBattles";
+const ADD_SUB_BATTLE = "/add";
+const LIKE_SUB_BATTLE = "/like";
+const UNLIKE_SUB_BATTLE = "/unlike";
 
 // Comment
 const COMMENTS = "/comments";
@@ -48,8 +55,14 @@ const routes = {
   deleteUser: DELETE_USER,
   battles: BATTLES,
   addBattle: ADD_BATTLE,
+  likeBattle: LIKE_BATTLE,
+  unlikeBattle: UNLIKE_BATTLE,
   comments: COMMENTS,
-  addComment: ADD_COMMENT
+  addComment: ADD_COMMENT,
+  subBattles: SUB_BATTLES,
+  addSubBattle: ADD_SUB_BATTLE,
+  likeSubBattle: LIKE_SUB_BATTLE,
+  unlikeSubBattle: UNLIKE_SUB_BATTLE
 };
 
 export default routes;

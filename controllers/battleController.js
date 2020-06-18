@@ -16,6 +16,10 @@ let client = new Vimeo(
   process.env.VIMEO_ACCESS_TOKEN
 );
 
+export const battleDetail = (req, res) => res.send("Battle Detail");
+export const editProfile = (req, res) => res.send("Edit Profile");
+export const changePassword = (req, res) => res.send("Change Password");
+
 export const battles = async (req, res) => {
   const {
     query: { id, creator }
@@ -24,28 +28,37 @@ export const battles = async (req, res) => {
   try {
     let findBattles = [];
     if (id) {
-      findBattles = await Battle.find({ _id: id }).populate({
-        path: "comments",
-        populate: {
-          path: "creator"
-        }
-      });
+      findBattles = await Battle.find({ _id: id })
+        .populate("subBattles")
+        .populate({
+          path: "comments",
+          options: { sort: { createdAt: -1 } },
+          populate: {
+            path: "creator"
+          }
+        });
       findBattles[0].views = findBattles[0].views + 1;
       findBattles[0].save();
     } else if (creator) {
-      findBattles = await Battle.find({ creator }).populate({
-        path: "comments",
-        populate: {
-          path: "creator"
-        }
-      });
+      findBattles = await Battle.find({ creator })
+        .populate("subBattles")
+        .populate({
+          path: "comments",
+          options: { sort: { createdAt: -1 } },
+          populate: {
+            path: "creator"
+          }
+        });
     } else {
-      findBattles = await Battle.find().populate({
-        path: "comments",
-        populate: {
-          path: "creator"
-        }
-      });
+      findBattles = await Battle.find()
+        .populate("subBattles")
+        .populate({
+          path: "comments",
+          options: { sort: { createdAt: -1 } },
+          populate: {
+            path: "creator"
+          }
+        });
     }
 
     res.status(200).json({ battles: findBattles });
@@ -54,10 +67,6 @@ export const battles = async (req, res) => {
     res.status(400).send({ error });
   }
 };
-export const battleDetail = (req, res) => res.send("Battle Detail");
-export const editProfile = (req, res) => res.send("Edit Profile");
-export const changePassword = (req, res) => res.send("Change Password");
-
 export const addBattle = async (req, res) => {
   const {
     body: { battleObj }
@@ -140,4 +149,60 @@ export const addBattle = async (req, res) => {
     }
   );
   // console.log(data);
+};
+export const likeBattle = async (req, res) => {
+  const {
+    body: { data }
+  } = req;
+  const battleId = data.battleId;
+  const userId = data.userId;
+  const likeValue = data.likeValue; // true or false
+  try {
+    const findBattle = await Battle.findOne({
+      _id: battleId
+    });
+    if (findBattle) {
+      if (likeValue) {
+        findBattle.unlikes = findBattle.unlikes.filter(item => item != userId);
+        findBattle.likes = [...findBattle.likes, userId];
+      } else if (likeValue === false) {
+        findBattle.likes = findBattle.likes.filter(item => item != userId);
+      }
+      await findBattle.save();
+      res.status(200).send({ battle: findBattle });
+    } else {
+      res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ error });
+  }
+};
+export const unlikeBattle = async (req, res) => {
+  const {
+    body: { data }
+  } = req;
+  const battleId = data.battleId;
+  const userId = data.userId;
+  const unlikeValue = data.unlikeValue; // true or false
+  try {
+    const findBattle = await Battle.findOne({
+      _id: battleId
+    });
+    if (findBattle) {
+      if (unlikeValue) {
+        findBattle.likes = findBattle.likes.filter(item => item != userId);
+        findBattle.unlikes = [...findBattle.unlikes, userId];
+      } else if (unlikeValue === false) {
+        findBattle.unlikes = findBattle.unlikes.filter(item => item != userId);
+      }
+      await findBattle.save();
+      res.status(200).send({ battle: findBattle });
+    } else {
+      res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ error });
+  }
 };

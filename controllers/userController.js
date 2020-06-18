@@ -27,7 +27,6 @@ export const postJoin = async (req, res, next) => {
       });
       if (findUser) {
         res.status(400).send({ error: "이미 가입된 이메일 입니다." });
-        next();
       } else {
         const user = await User({
           email,
@@ -36,7 +35,6 @@ export const postJoin = async (req, res, next) => {
         });
         await User.register(user, password);
         res.status(200).send(user);
-        next();
       }
     } catch (error) {
       console.log(error);
