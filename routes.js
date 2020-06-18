@@ -29,6 +29,7 @@ const UNLIKE_BATTLE = "/unlike";
 // Battles
 const SUB_BATTLES = "/subBattles";
 const ADD_SUB_BATTLE = "/add";
+const UPDATE_SUB_BATTLE = "/update";
 const LIKE_SUB_BATTLE = "/like";
 const UNLIKE_SUB_BATTLE = "/unlike";
 
@@ -61,6 +62,7 @@ const routes = {
   addComment: ADD_COMMENT,
   subBattles: SUB_BATTLES,
   addSubBattle: ADD_SUB_BATTLE,
+  updateSubBattle: UPDATE_SUB_BATTLE,
   likeSubBattle: LIKE_SUB_BATTLE,
   unlikeSubBattle: UNLIKE_SUB_BATTLE
 };

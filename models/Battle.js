@@ -9,11 +9,11 @@ const BattleSchema = new mongoose.Schema({
       type: String
     }
   ],
-  subTitle: String,
   gold: Number,
   joinCount: Number,
   maxCount: Number,
   state: String,
+  reviewCriteria: String,
   battleStartTime: String,
   restOfDateTime: Date,
   description: String,

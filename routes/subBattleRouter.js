@@ -9,6 +9,7 @@ const checkJWTAuthenticate = passport.authenticate("jwt", { session: false });
 import {
   subBattles,
   addSubBattle,
+  updateSubBattle,
   likeSubBattle,
   unlikeSubBattle
 } from "../controllers/subBattleController";
@@ -26,6 +27,7 @@ const uploader = multer({ storage: storage });
 
 subBattleRouter.get("/", subBattles);
 subBattleRouter.post(routes.addSubBattle, uploader.any(), addSubBattle);
+subBattleRouter.post(routes.updateSubBattle, uploader.any(), updateSubBattle);
 subBattleRouter.post(routes.likeSubBattle, checkJWTAuthenticate, likeSubBattle);
 subBattleRouter.post(
   routes.unlikeSubBattle,

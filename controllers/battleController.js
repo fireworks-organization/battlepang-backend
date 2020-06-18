@@ -6,6 +6,7 @@ import fs from "fs";
 import routes from "../routes";
 
 import Battle from "../models/Battle";
+import SubBattle from "../models/SubBattle";
 
 dotenv.config();
 
@@ -22,13 +23,14 @@ export const changePassword = (req, res) => res.send("Change Password");
 
 export const battles = async (req, res) => {
   const {
-    query: { id, creator }
+    query: { id, creator, subBattleId }
   } = req;
   console.log(id);
   try {
     let findBattles = [];
     if (id) {
       findBattles = await Battle.find({ _id: id })
+        .populate("creator")
         .populate("subBattles")
         .populate({
           path: "comments",
@@ -41,6 +43,7 @@ export const battles = async (req, res) => {
       findBattles[0].save();
     } else if (creator) {
       findBattles = await Battle.find({ creator })
+        .populate("creator")
         .populate("subBattles")
         .populate({
           path: "comments",
@@ -49,8 +52,23 @@ export const battles = async (req, res) => {
             path: "creator"
           }
         });
+    } else if (subBattleId) {
+      const findSubBattle = await SubBattle.find({ _id: subBattleId });
+      if (findSubBattle) {
+        findBattles = await Battle.find({ _id: findSubBattle[0].battleId })
+          .populate("creator")
+          .populate("subBattles")
+          .populate({
+            path: "comments",
+            options: { sort: { createdAt: -1 } },
+            populate: {
+              path: "creator"
+            }
+          });
+      }
     } else {
       findBattles = await Battle.find()
+        .populate("creator")
         .populate("subBattles")
         .populate({
           path: "comments",
@@ -82,7 +100,7 @@ export const addBattle = async (req, res) => {
     videoFileName,
     {
       name: battleObjJSON.title ? battleObjJSON.title : "Untitled",
-      description: battleObjJSON.subTitle
+      description: battleObjJSON.description
     },
     async function(result) {
       const videoId = result.replace("/videos/", "");

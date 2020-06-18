@@ -4,7 +4,6 @@ const SubBattleSchema = new mongoose.Schema({
   videoUrl: String,
   thumbnail: String,
   title: String,
-  subTitle: String,
   gold: Number,
   description: String,
   state: {
@@ -15,6 +14,7 @@ const SubBattleSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  uploadedAt: Date,
   createdAt: {
     type: Date,
     default: Date.now
