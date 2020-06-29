@@ -11,7 +11,8 @@ import {
   addSubBattle,
   updateSubBattle,
   likeSubBattle,
-  unlikeSubBattle
+  unlikeSubBattle,
+  refundSubBattle
 } from "../controllers/subBattleController";
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -33,6 +34,11 @@ subBattleRouter.post(
   routes.unlikeSubBattle,
   checkJWTAuthenticate,
   unlikeSubBattle
+);
+subBattleRouter.post(
+  routes.refundSubBattle,
+  checkJWTAuthenticate,
+  refundSubBattle
 );
 
 export default subBattleRouter;

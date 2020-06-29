@@ -3,10 +3,11 @@ import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import fs from "fs";
-import routes from "../routes";
+import moment from "moment";
 
 import Battle from "../models/Battle";
 import SubBattle from "../models/SubBattle";
+import { stringify } from "querystring";
 
 dotenv.config();
 
@@ -28,10 +29,17 @@ export const battles = async (req, res) => {
   console.log(id);
   try {
     let findBattles = [];
-    if (id) {
+    if (id && subBattleId) {
+      // 아이디랑 서브 배틀함께 넘김
+      // 배틀 상세에서 아이디만으로 찾아보고 없으면 배틀도 찾는다
       findBattles = await Battle.find({ _id: id })
         .populate("creator")
-        .populate("subBattles")
+        .populate({
+          path: "subBattles",
+          populate: {
+            path: "creator"
+          }
+        })
         .populate({
           path: "comments",
           options: { sort: { createdAt: -1 } },
@@ -39,12 +47,71 @@ export const battles = async (req, res) => {
             path: "creator"
           }
         });
-      findBattles[0].views = findBattles[0].views + 1;
-      findBattles[0].save();
+      if (findBattles[0]) {
+        findBattles[0].views = findBattles[0].views + 1;
+        findBattles[0].save();
+      } else {
+        const findSubBattle = await SubBattle.find({
+          _id: subBattleId
+        }).populate({
+          path: "comments",
+          options: { sort: { createdAt: -1 } },
+          populate: {
+            path: "creator"
+          }
+        });
+        if (findSubBattle) {
+          findSubBattle[0].views = findSubBattle[0].views + 1;
+          findSubBattle[0].save();
+          findBattles = await Battle.find({ _id: findSubBattle[0].battleId })
+            .populate("creator")
+            .populate({
+              path: "subBattles",
+              populate: {
+                path: "creator"
+              }
+            })
+            .populate({
+              path: "comments",
+              options: { sort: { createdAt: -1 } },
+              populate: {
+                path: "creator"
+              }
+            });
+          res
+            .status(200)
+            .json({ battles: findBattles, currentSubBattle: findSubBattle });
+        }
+      }
+    } else if (id) {
+      findBattles = await Battle.find({ _id: id })
+        .populate("creator")
+        .populate({
+          path: "subBattles",
+          populate: {
+            path: "creator"
+          }
+        })
+        .populate({
+          path: "comments",
+          options: { sort: { createdAt: -1 } },
+          populate: {
+            path: "creator"
+          }
+        });
+      if (findBattles[0]) {
+        findBattles[0].views = findBattles[0].views + 1;
+        findBattles[0].save();
+      }
     } else if (creator) {
       findBattles = await Battle.find({ creator })
         .populate("creator")
-        .populate("subBattles")
+        .populate({
+          path: "subBattles",
+          populate: {
+            path: "creator"
+          }
+        })
         .populate({
           path: "comments",
           options: { sort: { createdAt: -1 } },
@@ -57,7 +124,12 @@ export const battles = async (req, res) => {
       if (findSubBattle) {
         findBattles = await Battle.find({ _id: findSubBattle[0].battleId })
           .populate("creator")
-          .populate("subBattles")
+          .populate({
+            path: "subBattles",
+            populate: {
+              path: "creator"
+            }
+          })
           .populate({
             path: "comments",
             options: { sort: { createdAt: -1 } },
@@ -65,11 +137,17 @@ export const battles = async (req, res) => {
               path: "creator"
             }
           });
+        console.log(findBattles);
       }
     } else {
       findBattles = await Battle.find()
         .populate("creator")
-        .populate("subBattles")
+        .populate({
+          path: "subBattles",
+          populate: {
+            path: "creator"
+          }
+        })
         .populate({
           path: "comments",
           options: { sort: { createdAt: -1 } },
@@ -189,8 +267,28 @@ export const likeBattle = async (req, res) => {
       await findBattle.save();
       res.status(200).send({ battle: findBattle });
     } else {
-      res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+      const findSubBattle = await SubBattle.findOne({
+        _id: battleId
+      });
+
+      if (findSubBattle) {
+        if (likeValue) {
+          findSubBattle.unlikes = findSubBattle.unlikes.filter(
+            item => item != userId
+          );
+          findSubBattle.likes = [...findSubBattle.likes, userId];
+        } else if (likeValue === false) {
+          findSubBattle.likes = findSubBattle.likes.filter(
+            item => item != userId
+          );
+        }
+        await findSubBattle.save();
+        res.status(200).send({ battle: findSubBattle });
+      } else {
+        res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+      }
     }
+    JSON > stringify;
   } catch (error) {
     console.log(error);
     res.status(400).send({ error });
@@ -217,8 +315,66 @@ export const unlikeBattle = async (req, res) => {
       await findBattle.save();
       res.status(200).send({ battle: findBattle });
     } else {
+      const findSubBattle = await SubBattle.findOne({
+        _id: battleId
+      });
+
+      if (findSubBattle) {
+        if (unlikeValue) {
+          findSubBattle.unlikes = [...findSubBattle.unlikes, userId];
+          findSubBattle.likes = findSubBattle.likes.filter(
+            item => item != userId
+          );
+        } else if (unlikeValue === false) {
+          findSubBattle.unlikes = findSubBattle.unlikes.filter(
+            item => item != userId
+          );
+        }
+        await findSubBattle.save();
+        res.status(200).send({ battle: findSubBattle });
+      } else {
+        res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ error });
+  }
+};
+export const startBattle = async (req, res) => {
+  const {
+    body: { data }
+  } = req;
+  const battleId = data.battleId;
+  try {
+    const findBattle = await Battle.findOne({
+      _id: battleId
+    });
+    if (findBattle) {
+      findBattle.battleStartTime = moment().format("YYYY-MM-DDTHH:mm:ss");
+      await findBattle.save();
+      res.status(200).send({ battle: findBattle });
+    } else {
       res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
     }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ error });
+  }
+};
+
+export const checkStartTimeAndDeletebattles = async (req, res) => {
+  const {
+    body: { data }
+  } = req;
+  const battleId = data.battleId;
+  try {
+    const allBattles = await Battle.find();
+    allBattles;
+    // for (let i = 0, len = battlesResult.length; i < len; i++) {
+    // const currentBattle = battlesResult[i];
+    // console.log(i);
+    // console.log(JSON.stringify(currentBattle));
   } catch (error) {
     console.log(error);
     res.status(400).send({ error });

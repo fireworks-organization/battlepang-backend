@@ -44,6 +44,12 @@ const SubBattleSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
     }
+  ],
+  voters: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }
   ]
 });
 

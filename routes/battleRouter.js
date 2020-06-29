@@ -10,7 +10,8 @@ import {
   battles,
   addBattle,
   likeBattle,
-  unlikeBattle
+  unlikeBattle,
+  startBattle
 } from "../controllers/battleController";
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -28,5 +29,6 @@ battleRouter.get("/", battles);
 battleRouter.post(routes.addBattle, uploader.any(), addBattle);
 battleRouter.post(routes.likeBattle, checkJWTAuthenticate, likeBattle);
 battleRouter.post(routes.unlikeBattle, checkJWTAuthenticate, unlikeBattle);
+battleRouter.post(routes.startBattle, checkJWTAuthenticate, startBattle);
 
 export default battleRouter;

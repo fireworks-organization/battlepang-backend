@@ -2,6 +2,8 @@ import passport from "passport";
 import dotenv from "dotenv";
 
 import Battle from "../models/Battle";
+import SubBattle from "../models/SubBattle";
+
 import Comment from "../models/Comment";
 
 dotenv.config();
@@ -55,7 +57,19 @@ export const addComment = async (req, res) => {
       await findBattle.save();
       res.status(200).send({ comment });
     } else {
-      res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+      const findSubBattle = await SubBattle.findOne({
+        _id: battleId
+      });
+
+      if (findSubBattle) {
+        const comment = new Comment(commentObj);
+        await comment.save();
+        findSubBattle.comments = [...findSubBattle.comments, comment];
+        await findSubBattle.save();
+        res.status(200).send({ comment });
+      } else {
+        res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+      }
     }
   } catch (error) {
     console.log(error);

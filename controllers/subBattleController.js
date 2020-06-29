@@ -71,11 +71,16 @@ export const addSubBattle = async (req, res) => {
       _id: subBattleObjJSON.battleId
     });
     if (findBattle) {
-      const subBattle = new SubBattle(subBattleObjJSON);
-      await subBattle.save();
-      findBattle.subBattles = [...findBattle.subBattles, subBattle._id];
-      await findBattle.save();
-      res.status(200).send({ subBattle });
+      if (findBattle.joinCount >= findBattle.maxCount) {
+        res.status(400).send({ error: "신청인원이 모두 찼습니다." });
+      } else {
+        const subBattle = new SubBattle(subBattleObjJSON);
+        await subBattle.save();
+        findBattle.joinCount = findBattle.joinCount + 1;
+        findBattle.subBattles = [...findBattle.subBattles, subBattle._id];
+        await findBattle.save();
+        res.status(200).send({ subBattle });
+      }
     } else {
       res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
     }
@@ -192,6 +197,7 @@ export const updateSubBattle = async (req, res) => {
           subBattle.description = subBattleObjJSON.description;
           subBattle.thumbnail = subBattleObjJSON.thumbnail;
           subBattle.videoUrl = subBattleObjJSON.videoUrl;
+          subBattle.uploadedAt = Date.now();
           subBattle.state = subBattleObjJSON.state;
           await subBattle.save();
           res.status(200).send({ subBattle });
@@ -322,6 +328,27 @@ export const joinSubBattle = async (req, res) => {
     const subBattle = new SubBattle(subBattleObjJSON);
     await subBattle.save();
     res.status(200).send({ subBattle });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ error });
+  }
+};
+
+export const refundSubBattle = async (req, res) => {
+  const {
+    body: { data }
+  } = req;
+  const subBattleId = data.refundSubBattle._id;
+  console.log(subBattleId);
+  try {
+    const findSubBattle = await SubBattle.findOneAndRemove({
+      _id: subBattleId
+    });
+    if (findSubBattle) {
+      res.status(200).send({ subBattle: findSubBattle });
+    } else {
+      res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+    }
   } catch (error) {
     console.log(error);
     res.status(400).send({ error });
