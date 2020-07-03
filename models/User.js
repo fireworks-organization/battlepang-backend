@@ -8,7 +8,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: ""
   },
-  birthday: String,
   phone: String,
   sex: String,
   kakaoId: Number,

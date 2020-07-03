@@ -52,7 +52,7 @@ export const postLogin = async (req, res, next) => {
     body: { email }
   } = req;
   const findUser = await User.findOne({ email: email });
-  passport.authenticate("local", { session: false }, function(err, user, info) {
+  passport.authenticate("local", { session: false }, function (err, user, info) {
     console.log(email);
     if (err) {
       return res.status(400).send({ error: err });
@@ -100,15 +100,18 @@ export const authLoginNaverCallback = (req, res, next) => {
       Authorization: `Bearer ${accessToken}`
     }
   };
-  console.log(accessToken);
-  request.get(options, function(error, response, body) {
+  request.get(options, function (error, response, body) {
     const responseDatas = JSON.parse(body).response;
     console.log(responseDatas);
     if (!error && response.statusCode == 200) {
       const naverId = responseDatas.id;
+      const avatarUrl = responseDatas.profile_image;
+      const email = responseDatas.email;
+      const name = responseDatas.name;
       snsLogin(req, res, "naver", {
-        email: "",
-        name: "",
+        email,
+        name,
+        avatarUrl,
         naverId
       });
       //   res
@@ -147,11 +150,12 @@ const snsLogin = async (req, res, snsLoginType, userObj) => {
     default:
       break;
   }
+  console.log(snsLoginType)
   let findUser = await User.findOne({ email: userObj.email });
   if (!findUser) {
     findUser = await User.findOne(searchKey);
   }
-  passport.authenticate("local", { session: false }, async function(
+  passport.authenticate("local", { session: false }, async function (
     err,
     user,
     info
@@ -161,6 +165,10 @@ const snsLogin = async (req, res, snsLoginType, userObj) => {
       console.log("유저있음!!");
       if (snsLoginType == "kakao" && !findUser.kakaoId) {
         findUser.kakaoId = userObj.kakaoId;
+        await findUser.save();
+      }
+      if (snsLoginType == "naver" && !findUser.naverId) {
+        findUser.naverId = userObj.naverId;
         await findUser.save();
       }
       req.login(findUser, { session: false }, err => {
@@ -181,21 +189,17 @@ const snsLogin = async (req, res, snsLoginType, userObj) => {
     } else {
       console.log(userObj);
       //유저가 없으면 유저 회원가입 후 로그인 / jwt출력
-      const user = new User({
-        email: "crowner.v0@gmail.com",
-        name: "CROWN",
-        kakaoId: 1372295663
-      });
+      const user = new User(userObj);
 
       try {
-        await user.save(function(error, user) {
+        await user.save(function (error, user) {
           if (error) return res.status(400).send({ error });
           const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_SECRET_TIME
           });
           res.status(200).json({
             user: {
-              ...user,
+              ...user._doc,
               loginType: snsLoginType
             },
             token
@@ -317,7 +321,7 @@ export const changeUserInfo = async (req, res) => {
     if (phone !== undefined) {
       findUser.phone = phone;
     }
-    await findUser.save(function(error, user) {
+    await findUser.save(function (error, user) {
       if (error) return res.status(400).send({ error });
       res.status(200).json({
         email,
@@ -337,7 +341,7 @@ export const checkUserPassword = async (req, res) => {
   } = req;
   console.log(email);
   console.log(password);
-  passport.authenticate("local", { session: false }, function(
+  passport.authenticate("local", { session: false }, function (
     error,
     user,
     info
