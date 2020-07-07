@@ -26,7 +26,9 @@ export const battles = async (req, res) => {
   const {
     query: { id, creator, subBattleId }
   } = req;
-  console.log(id);
+  // console.log(id);
+  // console.log(creator);
+  // console.log(subBattleId);
   try {
     let findBattles = [];
     if (id && subBattleId) {
@@ -119,6 +121,14 @@ export const battles = async (req, res) => {
             path: "creator"
           }
         });
+
+      console.log("creator");
+      const findSubBattle = await SubBattle.find({ creator });
+      console.log(findSubBattle)
+      if (findSubBattle) {
+        res.status(200).json({ battles: findBattles, subBattles: findSubBattle });
+        res.end();
+      }
     } else if (subBattleId) {
       const findSubBattle = await SubBattle.find({ _id: subBattleId });
       if (findSubBattle) {
@@ -180,7 +190,7 @@ export const addBattle = async (req, res) => {
       name: battleObjJSON.title ? battleObjJSON.title : "Untitled",
       description: battleObjJSON.description
     },
-    async function(result) {
+    async function (result) {
       const videoId = result.replace("/videos/", "");
       const uri = "https://player.vimeo.com/video/" + videoId;
       console.log("Your video URI is: " + uri);
@@ -200,7 +210,7 @@ export const addBattle = async (req, res) => {
               method: "GET",
               path: `/videos/${videoId}`
             },
-            function(error, body, status_code, headers) {
+            function (error, body, status_code, headers) {
               console.log(body.status);
               if (body.status != "available") {
                 setTimeout(getVideoState, 2000);
@@ -212,7 +222,7 @@ export const addBattle = async (req, res) => {
                     path: `/videos/${videoId}/pictures`,
                     query: { time: 0, active: true }
                   },
-                  function(error, body, status_code, headers) {
+                  function (error, body, status_code, headers) {
                     if (error) {
                       console.log(error);
                     }
@@ -236,11 +246,11 @@ export const addBattle = async (req, res) => {
         res.status(400).send({ error });
       }
     },
-    function(bytes_uploaded, bytes_total) {
+    function (bytes_uploaded, bytes_total) {
       var percentage = ((bytes_uploaded / bytes_total) * 100).toFixed(2);
       console.log(bytes_uploaded, bytes_total, percentage + "%");
     },
-    function(error) {
+    function (error) {
       console.log("Failed because: " + error);
     }
   );

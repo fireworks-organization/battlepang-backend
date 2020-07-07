@@ -92,7 +92,7 @@ export const addSubBattle = async (req, res) => {
       name: subBattleObjJSON.title ? subBattleObjJSON.title : "Untitled",
       description: subBattleObjJSON.description
     },
-    async function(result) {
+    async function (result) {
       const videoId = result.replace("/videos/", "");
       const uri = "https://player.vimeo.com/video/" + videoId;
       console.log("Your video URI is: " + uri);
@@ -112,7 +112,7 @@ export const addSubBattle = async (req, res) => {
               method: "GET",
               path: `/videos/${videoId}`
             },
-            function(error, body, status_code, headers) {
+            function (error, body, status_code, headers) {
               console.log(body.status);
               if (body.status != "available") {
                 setTimeout(getVideoState, 2000);
@@ -124,7 +124,7 @@ export const addSubBattle = async (req, res) => {
                     path: `/videos/${videoId}/pictures`,
                     query: { time: 0, active: true }
                   },
-                  function(error, body, status_code, headers) {
+                  function (error, body, status_code, headers) {
                     if (error) {
                       console.log(error);
                     }
@@ -148,11 +148,11 @@ export const addSubBattle = async (req, res) => {
         res.status(400).send({ error });
       }
     },
-    function(bytes_uploaded, bytes_total) {
+    function (bytes_uploaded, bytes_total) {
       var percentage = ((bytes_uploaded / bytes_total) * 100).toFixed(2);
       console.log(bytes_uploaded, bytes_total, percentage + "%");
     },
-    function(error) {
+    function (error) {
       console.log("Failed because: " + error);
     }
   );
@@ -177,7 +177,7 @@ export const updateSubBattle = async (req, res) => {
       name: subBattleObjJSON.title ? subBattleObjJSON.title : "Untitled",
       description: subBattleObjJSON.description
     },
-    async function(result) {
+    async function (result) {
       const videoId = result.replace("/videos/", "");
       const uri = "https://player.vimeo.com/video/" + videoId;
       console.log("Your video URI is: " + uri);
@@ -208,7 +208,7 @@ export const updateSubBattle = async (req, res) => {
                 method: "GET",
                 path: `/videos/${videoId}`
               },
-              function(error, body, status_code, headers) {
+              function (error, body, status_code, headers) {
                 console.log(body.status);
                 if (body.status != "available") {
                   setTimeout(getVideoState, 2000);
@@ -220,7 +220,7 @@ export const updateSubBattle = async (req, res) => {
                       path: `/videos/${videoId}/pictures`,
                       query: { time: 0, active: true }
                     },
-                    function(error, body, status_code, headers) {
+                    function (error, body, status_code, headers) {
                       if (error) {
                         console.log(error);
                       }
@@ -244,11 +244,11 @@ export const updateSubBattle = async (req, res) => {
         res.status(400).send({ error });
       }
     },
-    function(bytes_uploaded, bytes_total) {
+    function (bytes_uploaded, bytes_total) {
       var percentage = ((bytes_uploaded / bytes_total) * 100).toFixed(2);
       console.log(bytes_uploaded, bytes_total, percentage + "%");
     },
-    function(error) {
+    function (error) {
       console.log("Failed because: " + error);
     }
   );
