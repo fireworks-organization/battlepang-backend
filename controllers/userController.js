@@ -303,20 +303,24 @@ export const changeUserInfo = async (req, res) => {
     .map(file => "/userAvatars/" + file.filename)[0];
   console.log(avatarUrl);
   const {
-    body: { id, email, name, phone }
+    body: { id, email, name, phone, channelName }
   } = req;
-  console.log(id, email, name, phone);
+  console.log(id, email, name, phone, channelName);
   // const id = data.id;
   const findUser = await User.findOne({ _id: id });
   try {
     if (email !== undefined) {
       findUser.email = email;
     }
-    if (name !== undefined) {
-      findUser.name = name;
+    if (channelName !== undefined) {
+      findUser.channelName = channelName;
+      findUser.updatedDateOfChannelName = Date.now();
     }
     if (avatarUrl !== undefined) {
       findUser.avatarUrl = avatarUrl;
+    }
+    if (phone !== undefined) {
+      findUser.phone = phone;
     }
     if (phone !== undefined) {
       findUser.phone = phone;
@@ -326,6 +330,8 @@ export const changeUserInfo = async (req, res) => {
       res.status(200).json({
         email,
         avatarUrl,
+        channelName,
+        updatedDateOfChannelName: Date.now(),
         name,
         phone
       });

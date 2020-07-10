@@ -12,6 +12,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: ""
   },
+  updatedDateOfChannelName: Date,
   phone: String,
   sex: String,
   kakaoId: Number,
