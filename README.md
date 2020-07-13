@@ -168,3 +168,11 @@ npm install --save multer
 ```
 npm install --save vimeo
 ```
+
+### ffmpegPath ffmpeg 
+
+```
+npm install --save @ffmpeg-installer/ffmpeg
+
+npm install --save fluent-ffmpeg
+```
