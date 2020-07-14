@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
 import fs from "fs";
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path
+const ffmpeg = require('fluent-ffmpeg')
 
 import Battle from "../models/Battle";
 import SubBattle from "../models/SubBattle";
@@ -56,16 +58,13 @@ export const subBattles = async (req, res) => {
 };
 export const addSubBattle = async (req, res) => {
   const {
-    body: { subBattleObj }
+    body: { subBattleObj, battleTrimStartTime }
   } = req;
 
   const videoFile = req.files
-    .filter(item => item.fieldname == "videoFile")
-    .map(file => "/videoFiles/" + file.filename)[0];
+    .filter(item => item.fieldname == "videoFile")[0];
   let subBattleObjJSON = JSON.parse(subBattleObj);
 
-  let videoFileName = "./public" + videoFile;
-  console.log(videoFile);
   if (!videoFile) {
     const findBattle = await Battle.findOne({
       _id: subBattleObjJSON.battleId
@@ -86,172 +85,119 @@ export const addSubBattle = async (req, res) => {
     }
     return false;
   }
-  client.upload(
-    videoFileName,
-    {
-      name: subBattleObjJSON.title ? subBattleObjJSON.title : "Untitled",
-      description: subBattleObjJSON.description
-    },
-    async function (result) {
-      const videoId = result.replace("/videos/", "");
-      const uri = "https://player.vimeo.com/video/" + videoId;
-      console.log("Your video URI is: " + uri);
-      fs.unlinkSync(videoFileName);
-      try {
-        subBattleObjJSON.videoUrl = uri;
-        subBattleObjJSON.thumbnail = `https://i.vimeocdn.com/video/`;
-
-        console.log(subBattleObjJSON);
-        const subBattle = new SubBattle(subBattleObjJSON);
-        await subBattle.save();
-        res.status(200).send({ subBattle });
-        function getVideoState() {
-          //비디오 미리보기 이미지의 uri를 가져옴.
-          client.request(
-            {
-              method: "GET",
-              path: `/videos/${videoId}`
-            },
-            function (error, body, status_code, headers) {
-              console.log(body.status);
-              if (body.status != "available") {
-                setTimeout(getVideoState, 2000);
-              } else {
-                // 비디오 섬네일 업로드 링크 가져오기.
-                client.request(
-                  {
-                    method: "POST",
-                    path: `/videos/${videoId}/pictures`,
-                    query: { time: 0, active: true }
-                  },
-                  function (error, body, status_code, headers) {
-                    if (error) {
-                      console.log(error);
-                    }
-                    console.log(body);
-                    subBattle.state = "transcoded";
-                    subBattle.thumbnail = `https://i.vimeocdn.com/video/${body.uri
-                      .replace("/videos/", "")
-                      .replace(videoId, "")
-                      .replace("/pictures/", "")}`;
-                    subBattle.save();
-                  }
-                );
-              }
-            }
-          );
-
-          setTimeout(getVideoState, 2000);
-        }
-      } catch (error) {
-        console.log(error);
-        res.status(400).send({ error });
-      }
-    },
-    function (bytes_uploaded, bytes_total) {
-      var percentage = ((bytes_uploaded / bytes_total) * 100).toFixed(2);
-      console.log(bytes_uploaded, bytes_total, percentage + "%");
-    },
-    function (error) {
-      console.log("Failed because: " + error);
-    }
-  );
   // console.log(data);
 };
 export const updateSubBattle = async (req, res) => {
   const {
-    body: { subBattleObj }
+    body: { subBattleObj, battleTrimStartTime }
   } = req;
 
   const videoFile = req.files
-    .filter(item => item.fieldname == "videoFile")
-    .map(file => "/videoFiles/" + file.filename)[0];
+    .filter(item => item.fieldname == "videoFile")[0];
   let subBattleObjJSON = JSON.parse(subBattleObj);
 
-  let videoFileName = "./public" + videoFile;
-  console.log(videoFile);
-  console.log(subBattleObjJSON);
-  client.upload(
-    videoFileName,
-    {
-      name: subBattleObjJSON.title ? subBattleObjJSON.title : "Untitled",
-      description: subBattleObjJSON.description
-    },
-    async function (result) {
-      const videoId = result.replace("/videos/", "");
-      const uri = "https://player.vimeo.com/video/" + videoId;
-      console.log("Your video URI is: " + uri);
-      fs.unlinkSync(videoFileName);
-      try {
-        subBattleObjJSON.videoUrl = uri;
-        subBattleObjJSON.thumbnail = `https://i.vimeocdn.com/video/`;
+  let videoFileName = "./public/videoFiles/" + videoFile.filename;
+  let newVideoFileName = "./public/videoFiles/converted-" + videoFile.filename + ".mp4";
 
-        console.log(subBattleObjJSON);
+  console.log(battleTrimStartTime)
+  console.log(videoFileName)
+  ffmpeg.setFfmpegPath(ffmpegPath);
+  ffmpeg(videoFileName)
+    .setStartTime(battleTrimStartTime)
+    .setDuration('30')
+    .output(newVideoFileName)
+    .on('end', function (err) {
+      console.log(err)
+      if (!err) {
+        client.upload(
+          newVideoFileName,
+          {
+            name: subBattleObjJSON.title ? subBattleObjJSON.title : "Untitled",
+            description: subBattleObjJSON.description
+          },
+          async function (result) {
+            const videoId = result.replace("/videos/", "");
+            const uri = "https://player.vimeo.com/video/" + videoId;
+            console.log("Your video URI is: " + uri);
+            fs.unlinkSync(videoFileName);
+            fs.unlinkSync(newVideoFileName);
+            try {
+              subBattleObjJSON.videoUrl = uri;
+              subBattleObjJSON.thumbnail = `https://i.vimeocdn.com/video/`;
 
-        const subBattle = await SubBattle.findOne({
-          _id: subBattleObjJSON._id
-        });
+              console.log(subBattleObjJSON);
 
-        if (subBattle) {
-          subBattle.title = subBattleObjJSON.title;
-          subBattle.description = subBattleObjJSON.description;
-          subBattle.thumbnail = subBattleObjJSON.thumbnail;
-          subBattle.videoUrl = subBattleObjJSON.videoUrl;
-          subBattle.uploadedAt = Date.now();
-          subBattle.state = subBattleObjJSON.state;
-          await subBattle.save();
-          res.status(200).send({ subBattle });
-          function getVideoState() {
-            //비디오 미리보기 이미지의 uri를 가져옴.
-            client.request(
-              {
-                method: "GET",
-                path: `/videos/${videoId}`
-              },
-              function (error, body, status_code, headers) {
-                console.log(body.status);
-                if (body.status != "available") {
-                  setTimeout(getVideoState, 2000);
-                } else {
-                  // 비디오 섬네일 업로드 링크 가져오기.
+              const subBattle = await SubBattle.findOne({
+                _id: subBattleObjJSON._id
+              });
+
+              if (subBattle) {
+                subBattle.title = subBattleObjJSON.title;
+                subBattle.description = subBattleObjJSON.description;
+                subBattle.thumbnail = subBattleObjJSON.thumbnail;
+                subBattle.videoUrl = subBattleObjJSON.videoUrl;
+                subBattle.uploadedAt = Date.now();
+                subBattle.state = subBattleObjJSON.state;
+                await subBattle.save();
+                res.status(200).send({ subBattle });
+                function getVideoState() {
+                  //비디오 미리보기 이미지의 uri를 가져옴.
                   client.request(
                     {
-                      method: "POST",
-                      path: `/videos/${videoId}/pictures`,
-                      query: { time: 0, active: true }
+                      method: "GET",
+                      path: `/videos/${videoId}`
                     },
                     function (error, body, status_code, headers) {
-                      if (error) {
-                        console.log(error);
+                      console.log(body.status);
+                      if (body.status != "available") {
+                        setTimeout(getVideoState, 2000);
+                      } else {
+                        // 비디오 섬네일 업로드 링크 가져오기.
+                        client.request(
+                          {
+                            method: "POST",
+                            path: `/videos/${videoId}/pictures`,
+                            query: { time: 0, active: true }
+                          },
+                          function (error, body, status_code, headers) {
+                            if (error) {
+                              console.log(error);
+                            }
+                            console.log(body);
+                            subBattle.state = "transcoded";
+                            subBattle.thumbnail = `https://i.vimeocdn.com/video/${body.uri
+                              .replace("/videos/", "")
+                              .replace(videoId, "")
+                              .replace("/pictures/", "")}`;
+                            subBattle.save();
+                          }
+                        );
                       }
-                      console.log(body);
-                      subBattle.state = "transcoded";
-                      subBattle.thumbnail = `https://i.vimeocdn.com/video/${body.uri
-                        .replace("/videos/", "")
-                        .replace(videoId, "")
-                        .replace("/pictures/", "")}`;
-                      subBattle.save();
                     }
                   );
                 }
+                setTimeout(getVideoState, 2000);
               }
-            );
+            } catch (error) {
+              console.log(error);
+              res.status(400).send({ error });
+            }
+          },
+          function (bytes_uploaded, bytes_total) {
+            var percentage = ((bytes_uploaded / bytes_total) * 100).toFixed(2);
+            console.log(bytes_uploaded, bytes_total, percentage + "%");
+          },
+          function (error) {
+            console.log("Failed because: " + error);
           }
-          setTimeout(getVideoState, 2000);
-        }
-      } catch (error) {
-        console.log(error);
-        res.status(400).send({ error });
+        );
       }
-    },
-    function (bytes_uploaded, bytes_total) {
-      var percentage = ((bytes_uploaded / bytes_total) * 100).toFixed(2);
-      console.log(bytes_uploaded, bytes_total, percentage + "%");
-    },
-    function (error) {
-      console.log("Failed because: " + error);
-    }
-  );
+    })
+    .on('error', function (err) {
+      console.log('error: ', err)
+    }).run()
+
+
   // console.log(data);
 };
 export const likeSubBattle = async (req, res) => {
@@ -338,13 +284,21 @@ export const refundSubBattle = async (req, res) => {
   const {
     body: { data }
   } = req;
-  const subBattleId = data.refundSubBattle._id;
-  console.log(subBattleId);
+  const refundSubBattle = data.refundSubBattle;
+  const subBattleId = refundSubBattle._id;
   try {
-    const findSubBattle = await SubBattle.findOneAndRemove({
-      _id: subBattleId
+    const findBattle = await Battle.findOne({
+      _id: refundSubBattle.battleId
     });
-    if (findSubBattle) {
+    if (findBattle) {
+
+      findBattle.joinCount = findBattle.joinCount - 1;
+      findBattle.subBattles = findBattle.subBattles.filter(item => item._id != subBattleId);
+      await findBattle.save();
+
+      const findSubBattle = await SubBattle.findOneAndRemove({
+        _id: subBattleId
+      });
       res.status(200).send({ subBattle: findSubBattle });
     } else {
       res.status(400).send({ error: "배틀을 찾을 수 없습니다." });

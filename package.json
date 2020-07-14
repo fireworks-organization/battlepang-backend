@@ -24,6 +24,11 @@
     "passport-local-mongoose": "^6.0.1",
     "vimeo": "^2.1.1"
   },
+  "nodemonConfig": {
+    "ignore": [
+      "public/videosFiles/*"
+    ]
+  },
   "scripts": {
     "start": "nodemon --exec babel-node init.js --delay 2"
   },
