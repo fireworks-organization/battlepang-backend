@@ -173,6 +173,5 @@ npm install --save vimeo
 
 ```
 npm install --save @ffmpeg-installer/ffmpeg
-
 npm install --save fluent-ffmpeg
 ```

@@ -6,6 +6,7 @@ const ffmpeg = require('fluent-ffmpeg')
 
 import Battle from "../models/Battle";
 import SubBattle from "../models/SubBattle";
+import Vote from "../models/Vote";
 import { stringify } from "querystring";
 
 dotenv.config();
@@ -41,6 +42,7 @@ export const battles = async (req, res) => {
             path: "creator"
           }
         })
+        .populate("votes")
         .populate({
           path: "comments",
           options: { sort: { createdAt: -1 } },
@@ -66,6 +68,7 @@ export const battles = async (req, res) => {
           findSubBattle[0].save();
           findBattles = await Battle.find({ _id: findSubBattle[0].battleId })
             .populate("creator")
+            .populate("votes")
             .populate({
               path: "subBattles",
               populate: {
@@ -87,6 +90,7 @@ export const battles = async (req, res) => {
     } else if (id) {
       findBattles = await Battle.find({ _id: id })
         .populate("creator")
+        .populate("votes")
         .populate({
           path: "subBattles",
           populate: {
@@ -107,6 +111,7 @@ export const battles = async (req, res) => {
     } else if (creator) {
       findBattles = await Battle.find({ creator })
         .populate("creator")
+        .populate("votes")
         .populate({
           path: "subBattles",
           populate: {
@@ -133,6 +138,7 @@ export const battles = async (req, res) => {
       if (findSubBattle) {
         findBattles = await Battle.find({ _id: findSubBattle[0].battleId })
           .populate("creator")
+          .populate("votes")
           .populate({
             path: "subBattles",
             populate: {
@@ -151,6 +157,7 @@ export const battles = async (req, res) => {
     } else {
       findBattles = await Battle.find()
         .populate("creator")
+        .populate("votes")
         .populate({
           path: "subBattles",
           populate: {
@@ -388,18 +395,69 @@ export const startBattle = async (req, res) => {
   }
 };
 
-export const checkStartTimeAndDeletebattles = async (req, res) => {
+export const refundBattle = async (req, res) => {
   const {
     body: { data }
   } = req;
-  const battleId = data.battleId;
+  console.log(data.refundSubBattle)
+  const videoId = data.refundSubBattle.videoUrl.split("/video/");
+  const subBattleId = data.refundSubBattle._id;
+  console.log(videoId);
+  return false;
   try {
-    const allBattles = await Battle.find();
-    allBattles;
-    // for (let i = 0, len = battlesResult.length; i < len; i++) {
-    // const currentBattle = battlesResult[i];
-    // console.log(i);
-    // console.log(JSON.stringify(currentBattle));
+    client.request(
+      {
+        method: "DELETE",
+        path: `/videos/${videoId}`,
+        query: { time: 0, active: true }
+      },
+      function (error, body, status_code, headers) {
+        if (error) {
+          console.log(error);
+        }
+        console.log(body);
+        battle.state = "transcoded";
+        battle.thumbnail = `https://i.vimeocdn.com/video/${body.uri
+          .replace("/videos/", "")
+          .replace(videoId, "")
+          .replace("/pictures/", "")}`;
+        battle.save();
+      }
+    );
+    const findSubBattle = await SubBattle.findOneAndRemove({
+      _id: subBattleId
+    });
+    if (findSubBattle) {
+      res.status(200).send({ subBattle: findSubBattle });
+    } else {
+      res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ error });
+  }
+};
+export const voteBattle = async (req, res) => {
+  const {
+    body: { data }
+  } = req;
+  console.log(data.battleId)
+  const battleId = data.battleId;
+  const voteObj = data.voteObj;
+  console.log(voteObj)
+  try {
+    const findBattle = await Battle.findOne({
+      _id: battleId
+    });
+    if (findBattle) {
+      const vote = new Vote(voteObj);
+      const addedVoteObj = await vote.save();
+      findBattle.votes = findBattle.votes = [...findBattle.votes, addedVoteObj._id];
+      await findBattle.save();
+      res.status(200).send({ voteObj: addedVoteObj });
+    } else {
+      res.status(400).send({ error: "투표 실패 에러가 발생하였습니다." });
+    }
   } catch (error) {
     console.log(error);
     res.status(400).send({ error });

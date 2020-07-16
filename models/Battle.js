@@ -53,10 +53,10 @@ const BattleSchema = new mongoose.Schema({
       ref: "User"
     }
   ],
-  voters: [
+  votes: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
+      ref: "Vote"
     }
   ]
 });

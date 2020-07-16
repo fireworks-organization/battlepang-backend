@@ -11,10 +11,12 @@ import {
   addBattle,
   likeBattle,
   unlikeBattle,
-  startBattle
+  startBattle,
+  refundBattle,
+  voteBattle
 } from "../controllers/battleController";
 const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     console.log(file.fieldname);
     if (file.fieldname === "videoFile") {
       cb(null, "./public/videoFiles/");
@@ -30,5 +32,7 @@ battleRouter.post(routes.addBattle, uploader.any(), addBattle);
 battleRouter.post(routes.likeBattle, checkJWTAuthenticate, likeBattle);
 battleRouter.post(routes.unlikeBattle, checkJWTAuthenticate, unlikeBattle);
 battleRouter.post(routes.startBattle, checkJWTAuthenticate, startBattle);
+battleRouter.post(routes.refundBattle, checkJWTAuthenticate, refundBattle);
+battleRouter.post(routes.voteBattle, checkJWTAuthenticate, voteBattle);
 
 export default battleRouter;
