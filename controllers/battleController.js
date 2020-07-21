@@ -34,7 +34,9 @@ export const battles = async (req, res) => {
     if (id && subBattleId) {
       // 아이디랑 서브 배틀함께 넘김
       // 배틀 상세에서 아이디만으로 찾아보고 없으면 배틀도 찾는다
-      findBattles = await Battle.find({ _id: id })
+      findBattles = await Battle.find({
+        $or: [{ _id: id }, { title: { $nin: "" } }],
+      }).limit(4)
         .populate("creator")
         .populate({
           path: "subBattles",

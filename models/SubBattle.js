@@ -19,12 +19,6 @@ const SubBattleSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  comments: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Comment"
-    }
-  ],
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
@@ -33,24 +27,6 @@ const SubBattleSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Battle"
   },
-  likes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
-    }
-  ],
-  unlikes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
-    }
-  ],
-  voters: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
-    }
-  ]
 });
 
 const model = mongoose.model("SubBattle", SubBattleSchema);
