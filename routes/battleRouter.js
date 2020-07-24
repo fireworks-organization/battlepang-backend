@@ -13,7 +13,8 @@ import {
   unlikeBattle,
   startBattle,
   refundBattle,
-  voteBattle
+  voteBattle,
+  reportBattle
 } from "../controllers/battleController";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -34,5 +35,6 @@ battleRouter.post(routes.unlikeBattle, checkJWTAuthenticate, unlikeBattle);
 battleRouter.post(routes.startBattle, checkJWTAuthenticate, startBattle);
 battleRouter.post(routes.refundBattle, checkJWTAuthenticate, refundBattle);
 battleRouter.post(routes.voteBattle, checkJWTAuthenticate, voteBattle);
+battleRouter.post(routes.reportBattle, checkJWTAuthenticate, reportBattle);
 
 export default battleRouter;

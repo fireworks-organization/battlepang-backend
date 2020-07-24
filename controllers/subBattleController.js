@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import fs from "fs";
+import moment from "moment";
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path
 const ffmpeg = require('fluent-ffmpeg')
 
@@ -132,6 +133,21 @@ export const updateSubBattle = async (req, res) => {
               });
 
               if (subBattle) {
+                const findBattle = await Battle.findOne({
+                  _id: subBattle.battleId
+                }).populate("subBattles");
+                if (!findBattle) {
+                  res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+                  return false;
+                } else if (findBattle.joinCount >= findBattle.maxCount) {
+                  const waitUploadBattle = findBattle.subBattles.filter(subBattle => subBattle.state == 'wait-upload');
+                  console.log(waitUploadBattle)
+                  if (waitUploadBattle.length == 0) {
+                    findBattle.battleStartTime = moment().format("YYYY-MM-DDTHH:mm:ss");
+                    await findBattle.save();
+                  }
+                }
+
                 subBattle.title = subBattleObjJSON.title;
                 subBattle.description = subBattleObjJSON.description;
                 subBattle.thumbnail = subBattleObjJSON.thumbnail;

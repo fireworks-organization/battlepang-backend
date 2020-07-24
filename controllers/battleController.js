@@ -7,6 +7,7 @@ const ffmpeg = require('fluent-ffmpeg')
 import Battle from "../models/Battle";
 import SubBattle from "../models/SubBattle";
 import Vote from "../models/Vote";
+import Report from "../models/Report";
 import { stringify } from "querystring";
 
 dotenv.config();
@@ -26,7 +27,7 @@ export const battles = async (req, res) => {
   const {
     query: { id, creator, subBattleId }
   } = req;
-  // console.log(id);
+  console.log(id);
   // console.log(creator);
   // console.log(subBattleId);
   try {
@@ -35,8 +36,8 @@ export const battles = async (req, res) => {
       // 아이디랑 서브 배틀함께 넘김
       // 배틀 상세에서 아이디만으로 찾아보고 없으면 배틀도 찾는다
       findBattles = await Battle.find({
-        $or: [{ _id: id }, { title: { $nin: "" } }],
-      }).limit(4)
+        _id: id
+      })
         .populate("creator")
         .populate({
           path: "subBattles",
@@ -52,6 +53,27 @@ export const battles = async (req, res) => {
             path: "creator"
           }
         });
+      // 다른 영상 3개를 추출하는데 
+      // 현재 배틀 영상이랑 상태값이 타임오버, 변환중인 비디오는 제외한다
+      const otherBattles = await Battle.find(
+        { $and: [{ _id: { $nin: id } }, { state: { $nin: ["time-over", "trandcoding"] } }] }
+      ).limit(3)
+        .populate("creator")
+        .populate({
+          path: "subBattles",
+          populate: {
+            path: "creator"
+          }
+        })
+        .populate("votes")
+        .populate({
+          path: "comments",
+          options: { sort: { createdAt: -1 } },
+          populate: {
+            path: "creator"
+          }
+        });
+      findBattles = [...findBattles, ...otherBattles];
       if (findBattles[0]) {
         findBattles[0].views = findBattles[0].views + 1;
         findBattles[0].save();
@@ -128,9 +150,7 @@ export const battles = async (req, res) => {
           }
         });
 
-      console.log("creator");
       const findSubBattle = await SubBattle.find({ creator });
-      console.log(findSubBattle)
       if (findSubBattle) {
         res.status(200).json({ battles: findBattles, subBattles: findSubBattle });
         res.end();
@@ -386,6 +406,7 @@ export const startBattle = async (req, res) => {
     });
     if (findBattle) {
       findBattle.battleStartTime = moment().format("YYYY-MM-DDTHH:mm:ss");
+      findBattle.voteStartTime = moment().add(3, "days").format("YYYY-MM-DDTHH:mm:ss");
       await findBattle.save();
       res.status(200).send({ battle: findBattle });
     } else {
@@ -459,6 +480,43 @@ export const voteBattle = async (req, res) => {
       res.status(200).send({ voteObj: addedVoteObj });
     } else {
       res.status(400).send({ error: "투표 실패 에러가 발생하였습니다." });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ error });
+  }
+};
+export const reportBattle = async (req, res) => {
+  const {
+    body: { data },
+    params: { battleId }
+  } = req;
+
+  console.log(battleId)
+  let reportObj = data.reportObj;
+  console.log(reportObj)
+  try {
+    const findBattle = await Battle.findOne({
+      _id: battleId
+    });
+    if (findBattle) {
+      const report = new Report(reportObj);
+      const addedReportObj = await report.save();
+      res.status(200).send({ reportObj: addedReportObj });
+    } else {
+      const findSubBattle = await SubBattle.findOne({
+        _id: battleId
+      });
+      if (findSubBattle) {
+        console.log("findSubBattle")
+        reportObj.subBattlesId = battleId;
+        delete reportObj.battleId;
+        const report = new Report(reportObj);
+        const addedReportObj = await report.save();
+        res.status(200).send({ reportObj: addedReportObj });
+      } else {
+        res.status(400).send({ error: "신고 실패 에러가 발생하였습니다." });
+      }
     }
   } catch (error) {
     console.log(error);

@@ -175,3 +175,10 @@ npm install --save vimeo
 npm install --save @ffmpeg-installer/ffmpeg
 npm install --save fluent-ffmpeg
 ```
+
+
+### mongo
+```
+
+        $or: [{ _id: id }, { title: { $nin: "" } }],
+        ```

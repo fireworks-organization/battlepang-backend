@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 
 import Battle from "../models/Battle";
 import SubBattle from "../models/SubBattle";
+import Report from "../models/Report";
 
 import Comment from "../models/Comment";
 
@@ -18,14 +19,20 @@ export const comments = async (req, res) => {
     if (battleId) {
       findComments = await Comment.find({ battleId })
         .populate("creator")
+        .populate("like")
+        .populate("unlike")
         .sort({ createdAt: -1 });
     } else if (creator) {
       findComments = await Comment.find({ creator })
         .populate("creator")
+        .populate("like")
+        .populate("unlike")
         .sort({ createdAt: -1 });
     } else {
       findComments = await Comment.find()
         .populate("creator")
+        .populate("like")
+        .populate("unlike")
         .sort({ createdAt: -1 });
     }
 
@@ -70,6 +77,92 @@ export const addComment = async (req, res) => {
       } else {
         res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
       }
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ error });
+  }
+};
+
+export const reportComment = async (req, res) => {
+  const {
+    body: { data },
+    params: { commentId }
+  } = req;
+
+  console.log(commentId)
+  const reportObj = data.reportObj;
+  console.log(reportObj)
+  try {
+    const findComment = await Comment.findOne({
+      _id: commentId
+    });
+    if (findComment) {
+      const report = new Report(reportObj);
+      const addedReportObj = await report.save();
+      res.status(200).send({ reportObj: addedReportObj });
+    } else {
+      res.status(400).send({ error: "신고 실패 에러가 발생하였습니다." });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ error });
+  }
+};
+
+
+export const likeComment = async (req, res) => {
+  const {
+    body: { data },
+    params: { commentId }
+  } = req;
+  const userId = data.userId;
+  const likeValue = data.likeValue; // true or false
+  try {
+    const findComment = await Comment.findOne({
+      _id: commentId
+    });
+    if (findComment) {
+      if (likeValue) {
+        findComment.unlikes = findComment.unlikes.filter(item => item != userId);
+        findComment.likes = [...findComment.likes, userId];
+      } else if (likeValue === false) {
+        findComment.likes = findComment.likes.filter(item => item != userId);
+      }
+      const newComment = await findComment.save();
+      console.log(newComment)
+      res.status(200).send({ comment: newComment });
+    } else {
+      res.status(400).send({ error: "코멘트를 찾을 수 없습니다." });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ error });
+  }
+};
+export const unlikeComment = async (req, res) => {
+  const {
+    body: { data },
+    params: { commentId }
+  } = req;
+  const userId = data.userId;
+  const unlikeValue = data.unlikeValue; // true or false
+  try {
+    const findComment = await Comment.findOne({
+      _id: commentId
+    });
+    if (findComment) {
+      if (unlikeValue) {
+        findComment.likes = findComment.likes.filter(item => item != userId);
+        findComment.unlikes = [...findComment.unlikes, userId];
+      } else if (unlikeValue === false) {
+        findComment.unlikes = findComment.unlikes.filter(item => item != userId);
+      }
+      const newComment = await findComment.save();
+      console.log(newComment)
+      res.status(200).send({ comment: newComment });
+    } else {
+      res.status(400).send({ error: "코멘트를 찾을 수 없습니다." });
     }
   } catch (error) {
     console.log(error);

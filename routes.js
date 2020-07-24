@@ -14,7 +14,6 @@ const AUTH_LOGIN_NAVER_CALLBACK = "/auth/login/naver/callback";
 const AUTH_LOGIN_KAKAO_CALLBACK = "/auth/login/kakao/callback";
 
 // Users
-
 const USERS = "/users";
 const USER_DETAIL = "/:id";
 const CHECK_USER_PASSWORD = "/checkUserPassword";
@@ -29,6 +28,11 @@ const UNLIKE_BATTLE = "/unlike";
 const START_BATTLE = "/start";
 const REFUND_BATTLE = "/refund";
 const VOTE_BATTLE = "/vote";
+// battleReport
+const REPORT_BATTLE = "/:battleId/reports";
+const REPORT_COMMENT = "/:commentId/reports";
+const LIKE_COMMENT = "/:commentId/like";
+const UNLIKE_COMMENT = "/:commentId/unlike";
 // Battles
 const SUB_BATTLES = "/subBattles";
 const ADD_SUB_BATTLE = "/add";
@@ -73,6 +77,10 @@ const routes = {
   unlikeSubBattle: UNLIKE_SUB_BATTLE,
   refundSubBattle: REFUND_SUB_BATTLE,
   voteBattle: VOTE_BATTLE,
+  reportBattle: REPORT_BATTLE,
+  reportComment: REPORT_COMMENT,
+  likeComment: LIKE_COMMENT,
+  unlikeComment: UNLIKE_COMMENT,
 };
 
 export default routes;
