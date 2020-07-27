@@ -144,6 +144,7 @@ export const updateSubBattle = async (req, res) => {
                   console.log(waitUploadBattle)
                   if (waitUploadBattle.length == 0) {
                     findBattle.battleStartTime = moment().format("YYYY-MM-DDTHH:mm:ss");
+                    findBattle.voteEndTime = moment().add(3, "days").format("YYYY-MM-DDTHH:mm:ss");
                     await findBattle.save();
                   }
                 }

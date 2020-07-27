@@ -406,7 +406,7 @@ export const startBattle = async (req, res) => {
     });
     if (findBattle) {
       findBattle.battleStartTime = moment().format("YYYY-MM-DDTHH:mm:ss");
-      findBattle.voteStartTime = moment().add(3, "days").format("YYYY-MM-DDTHH:mm:ss");
+      findBattle.voteEndTime = moment().add(3, "days").format("YYYY-MM-DDTHH:mm:ss");
       await findBattle.save();
       res.status(200).send({ battle: findBattle });
     } else {

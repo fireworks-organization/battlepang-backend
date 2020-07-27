@@ -179,6 +179,15 @@ npm install --save fluent-ffmpeg
 
 ### mongo
 ```
+   $or: [{ _id: id }, { title: { $nin: "" } }],
+```
 
-        $or: [{ _id: id }, { title: { $nin: "" } }],
-        ```
+### Amazon software development kit
+```
+   npm i aws-sdk --save
+```
+
+### multer-s3
+```
+   npm i multer-s3 --save
+```

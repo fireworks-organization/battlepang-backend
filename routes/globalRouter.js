@@ -2,6 +2,11 @@ import express from "express";
 import routes from "../routes";
 import passport from "passport";
 import multer from "multer";
+import multerS3 from "multer-s3";
+import aws from "aws-sdk";
+
+import dotenv from "dotenv";
+dotenv.config();
 
 const globalRouter = express.Router();
 /* GET home page. */
@@ -11,9 +16,21 @@ multer.diskStorage({
     cb(null, file.originalname);
   }
 });
-const uploader = multer({
-  dest: "./public/userAvatars/"
+
+const s3 = new aws.S3({
+  accessKeyId: process.env.S3_ACCESS_KEY,
+  secretAccessKey: process.env.S3_PRIVATE_KEY,
+  region: "ap-northeast-1"
 });
+
+const multerAvatar = multer({
+  storage: multerS3({
+    s3,
+    acl: "public-read",
+    bucket: "fireworks-triple-star/avatar"
+  })
+});
+export const uploadAvatar = multerAvatar.single("avatarUrl");
 
 import {
   home,
@@ -48,10 +65,11 @@ globalRouter.post(routes.resetPassword, resetPassword);
 globalRouter.post(routes.getUserInfo, checkJWTAuthenticate, getUserInfo);
 globalRouter.post(routes.authLoginNaverCallback, authLoginNaverCallback);
 globalRouter.post(routes.authLoginKakaoCallback, authLoginKakaoCallback);
+
 globalRouter.post(
   routes.changeUserInfo,
   checkJWTAuthenticate,
-  uploader.any(),
+  uploadAvatar,
   changeUserInfo
 );
 globalRouter.post(

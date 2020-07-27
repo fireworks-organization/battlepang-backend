@@ -298,13 +298,12 @@ export const getUserInfo = async (req, res) => {
   }
 };
 export const changeUserInfo = async (req, res) => {
-  const avatarUrl = req.files
-    .filter(item => item.fieldname == "avatarUrl")
-    .map(file => "/userAvatars/" + file.filename)[0];
-  console.log(avatarUrl);
   const {
-    body: { id, email, name, phone, channelName }
+    body: { id, email, name, phone, channelName },
+    file
   } = req;
+  console.log(file);
+  const avatarUrl = file ? file.location : '';
   console.log(id, email, name, phone, channelName);
   // const id = data.id;
   const findUser = await User.findOne({ _id: id });

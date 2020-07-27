@@ -15,8 +15,7 @@ const BattleSchema = new mongoose.Schema({
   state: String,
   reviewCriteria: String,
   battleStartTime: String,
-  voteStartTime: String,
-  restOfDateTime: Date,
+  voteEndTime: String,
   description: String,
   views: {
     type: Number,

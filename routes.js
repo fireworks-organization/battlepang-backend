@@ -44,6 +44,8 @@ const REFUND_SUB_BATTLE = "/refund";
 // Comment
 const COMMENTS = "/comments";
 const ADD_COMMENT = "/add";
+const UPDATE_COMMENT = "/:commentId/update";
+const DELETE_COMMENT = "/:commentId/delete";
 
 const routes = {
   home: HOME,
@@ -81,6 +83,8 @@ const routes = {
   reportComment: REPORT_COMMENT,
   likeComment: LIKE_COMMENT,
   unlikeComment: UNLIKE_COMMENT,
+  updateComment: UPDATE_COMMENT,
+  deleteComment: DELETE_COMMENT,
 };
 
 export default routes;

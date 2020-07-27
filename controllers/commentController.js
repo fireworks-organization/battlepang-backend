@@ -169,3 +169,51 @@ export const unlikeComment = async (req, res) => {
     res.status(400).send({ error });
   }
 };
+export const updateComment = async (req, res) => {
+  const {
+    body: { data },
+    params: { commentId }
+  } = req;
+  try {
+    const content = data.content;
+    const findComment = await Comment.findOne({
+      _id: commentId
+    });
+    if (findComment) {
+      findComment.content = content;
+      findComment.updatedAt = Date.now();
+      const newComment = await findComment.save();
+      res.status(200).send({ comment: newComment });
+    } else {
+      res.status(400).send({ error: "코멘트를 찾을 수 없습니다." });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ error });
+  }
+};
+export const deleteComment = async (req, res) => {
+  const {
+    body: { data: { comment } }
+  } = req;
+  try {
+    console.log(comment)
+    const commentId = comment._id;
+    const findBattle = await Battle.findOne({
+      _id: comment.battleId
+    });
+    if (findBattle) {
+      await Comment.findOneAndRemove({
+        _id: commentId
+      });
+      findBattle.comments = findBattle.comments.filter(comment => comment._id != commentId);
+      await findBattle.save();
+      res.status(200).send({ comment });
+    } else {
+      res.status(400).send({ error: "코멘트를 찾을 수 없습니다." });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ error });
+  }
+};
