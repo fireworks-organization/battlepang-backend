@@ -10,6 +10,7 @@ import userRouter from "./routes/userRouter";
 import battleRouter from "./routes/battleRouter";
 import subBattleRouter from "./routes/subBattleRouter";
 import commentRouter from "./routes/commentRouter";
+import rankRouter from "./routes/rankRouter";
 import passport from "passport";
 import passportConfig from "./passport";
 import cors from "cors";
@@ -38,6 +39,7 @@ app.use(routes.users, userRouter);
 app.use(routes.subBattles, subBattleRouter);
 app.use(routes.battles, battleRouter);
 app.use(routes.comments, commentRouter);
+app.use(routes.ranks, rankRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
   },
   avatarUrl: {
     type: String,
-    default: ""
+    default: "https://fireworks-triple-star.s3.ap-northeast-2.amazonaws.com/default-user-white.png"
   },
   updatedDateOfChannelName: Date,
   phone: String,
@@ -18,7 +18,11 @@ const UserSchema = new mongoose.Schema({
   kakaoId: Number,
   naverId: Number,
   facebookId: Number,
-  googleId: Number
+  googleId: Number,
+  gold: {
+    type: Number,
+    default: 0
+  },
 });
 
 UserSchema.plugin(passportLocalMongoose, { usernameField: "email" });

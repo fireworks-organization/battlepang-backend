@@ -47,6 +47,9 @@ const ADD_COMMENT = "/add";
 const UPDATE_COMMENT = "/:commentId/update";
 const DELETE_COMMENT = "/:commentId/delete";
 
+// Rank
+const RANKS = "/ranks";
+
 const routes = {
   home: HOME,
   join: JOIN,
@@ -85,6 +88,7 @@ const routes = {
   unlikeComment: UNLIKE_COMMENT,
   updateComment: UPDATE_COMMENT,
   deleteComment: DELETE_COMMENT,
+  ranks: RANKS,
 };
 
 export default routes;
