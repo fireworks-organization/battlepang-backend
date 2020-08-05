@@ -49,6 +49,9 @@ const DELETE_COMMENT = "/:commentId/delete";
 
 // Rank
 const RANKS = "/ranks";
+// GoldHistory
+const GOLD_HISTORYS = "/gold-history";
+const UPDATE_GOLD_HISTORYS = "/:goldHistoryId";
 
 const routes = {
   home: HOME,
@@ -89,6 +92,8 @@ const routes = {
   updateComment: UPDATE_COMMENT,
   deleteComment: DELETE_COMMENT,
   ranks: RANKS,
+  goldHistory: GOLD_HISTORYS,
+  updateGoldHistory: UPDATE_GOLD_HISTORYS,
 };
 
 export default routes;

@@ -342,7 +342,6 @@ export const likeBattle = async (req, res) => {
         res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
       }
     }
-    JSON > stringify;
   } catch (error) {
     console.log(error);
     res.status(400).send({ error });

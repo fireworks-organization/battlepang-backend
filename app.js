@@ -11,6 +11,7 @@ import battleRouter from "./routes/battleRouter";
 import subBattleRouter from "./routes/subBattleRouter";
 import commentRouter from "./routes/commentRouter";
 import rankRouter from "./routes/rankRouter";
+import goldHistoryRouter from "./routes/goldHistoryRouter";
 import passport from "passport";
 import passportConfig from "./passport";
 import cors from "cors";
@@ -40,6 +41,7 @@ app.use(routes.subBattles, subBattleRouter);
 app.use(routes.battles, battleRouter);
 app.use(routes.comments, commentRouter);
 app.use(routes.ranks, rankRouter);
+app.use(routes.goldHistory, goldHistoryRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

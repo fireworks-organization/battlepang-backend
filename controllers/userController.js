@@ -1,11 +1,18 @@
 import passport from "passport";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
+import aws from "aws-sdk";
 import dotenv from "dotenv";
 import routes from "../routes";
 import User from "../models/User";
+
 dotenv.config();
 
+const s3 = new aws.S3({
+  accessKeyId: process.env.S3_ACCESS_KEY,
+  secretAccessKey: process.env.S3_PRIVATE_KEY,
+  region: "ap-northeast-1"
+});
 export const users = (req, res) => res.send("Users");
 
 export const getJoin = (req, res) =>
@@ -316,6 +323,20 @@ export const changeUserInfo = async (req, res) => {
       findUser.updatedDateOfChannelName = Date.now();
     }
     if (avatarUrl !== undefined) {
+      if (findUser.avatarUrl != "") {
+        const currentImagePath = findUser.avatarUrl.split('com/avatar/')[1]
+        await s3.deleteObject({
+          Bucket: `fireworks-triple-star`,
+          Key: `avatar/${currentImagePath}`
+        }, function (err, data) {
+          if (err) {
+            console.log("이미지 삭제 실패")
+            // return res.status(400).send({ error: "이미지 삭제 실패" });
+          }
+          console.log("data")
+          console.log(data)
+        })
+      }
       findUser.avatarUrl = avatarUrl;
     }
     if (phone !== undefined) {
