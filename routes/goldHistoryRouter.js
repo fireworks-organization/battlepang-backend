@@ -9,7 +9,7 @@ import {
     addGoldHistory,
     updateGoldHistory,
 } from "../controllers/goldHistoryController";
-goldHistoryRouter.get("/", checkJWTAuthenticate, goldHistory);
+goldHistoryRouter.get("/", goldHistory);
 goldHistoryRouter.post("/", checkJWTAuthenticate, addGoldHistory); //add gold history
 goldHistoryRouter.put(routes.updateGoldHistory, checkJWTAuthenticate, updateGoldHistory); //add gold history
 

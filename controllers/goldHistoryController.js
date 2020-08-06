@@ -9,7 +9,9 @@ export const goldHistory = async (req, res) => {
     query: { },
   } = req;
   try {
-    res.status(200).send({ goldHistorys: [{ aaa: 'aaa' }, { bbb: 'bbb' }] });
+    const goldHistories = await GoldHistory.find().populate("user");
+    console.log(goldHistories)
+    res.status(200).send({ goldHistories });
   } catch (error) {
     console.log(error);
     res.status(400).send({ error });
@@ -45,10 +47,10 @@ export const updateGoldHistory = async (req, res) => {
       _id: goldHistoryObjJSON.user
     });
     if (!findUser) {
-      const error = "충전할 유저가 없습니다.";
-      if (goldHistoryObjJSON.massage) {
+      const error = "충전할 유저를 찾을 수 없습니다.";
+      if (goldHistoryObjJSON.message) {
         findGoldHistoryObj.status = goldHistoryObjJSON.status + " / error";
-        findGoldHistoryObj.massage = goldHistoryObjJSON.massage + " / " + error;
+        findGoldHistoryObj.message = goldHistoryObjJSON.message + " / " + error;
       }
       await findGoldHistoryObj.save();
       res.status(400).send({ error });
@@ -59,13 +61,13 @@ export const updateGoldHistory = async (req, res) => {
     await findUser.save();
     console.log(findUser.gold)
     if (!findGoldHistoryObj) {
-      if (goldHistoryObjJSON.massage) {
-        findGoldHistoryObj.massage = goldHistoryObjJSON.massage;
+      if (goldHistoryObjJSON.message) {
+        findGoldHistoryObj.message = goldHistoryObjJSON.message;
       }
       const error = "업데이트할 기록이 없습니다.";
-      if (goldHistoryObjJSON.massage) {
+      if (goldHistoryObjJSON.message) {
         findGoldHistoryObj.status = goldHistoryObjJSON.status + " / error";
-        findGoldHistoryObj.massage = goldHistoryObjJSON.massage + " / " + error;
+        findGoldHistoryObj.message = goldHistoryObjJSON.message + " / " + error;
       }
       await findGoldHistoryObj.save();
       res.status(400).send({ error });
@@ -101,8 +103,8 @@ export const updateGoldHistory = async (req, res) => {
     if (goldHistoryObjJSON.requestId) {
       findGoldHistoryObj.requestId = goldHistoryObjJSON.requestId;
     }
-    if (goldHistoryObjJSON.massage) {
-      findGoldHistoryObj.massage = goldHistoryObjJSON.massage;
+    if (goldHistoryObjJSON.message) {
+      findGoldHistoryObj.message = goldHistoryObjJSON.message;
     }
     const goldHistory = await findGoldHistoryObj.save();
     res.status(200).send({ goldHistory });
@@ -113,7 +115,7 @@ export const updateGoldHistory = async (req, res) => {
     });
     if (findGoldHistoryObj) {
       findGoldHistoryObj.status = goldHistoryObjJSON.status + " / other_error";
-      findGoldHistoryObj.massage = goldHistoryObjJSON.massage + " / " + error;
+      findGoldHistoryObj.message = goldHistoryObjJSON.message + " / " + error;
       await findGoldHistoryObj.save();
     }
     res.status(400).send({ error });

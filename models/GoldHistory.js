@@ -45,7 +45,7 @@ const GoldHistorySchema = new mongoose.Schema({
     type: String,
     default: ""
   },
-  massage: { // 결과 메세지
+  message: { // 결과 메세지
     type: String,
     default: ""
   },
