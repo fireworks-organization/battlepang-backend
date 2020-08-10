@@ -27,8 +27,8 @@ export const addPaymentHistory = async (req, res) => {
   try {
     let paymentHistoryObjJSON = JSON.parse(paymentHistoryObj);
     const paymentHistory = new PaymentHistory(paymentHistoryObjJSON);
-    await paymentHistory.save();
-    res.status(200).send({ paymentHistory });
+    const insertedPaymentHistory = await paymentHistory.save();
+    res.status(200).send({ paymentHistory: insertedPaymentHistory });
   } catch (error) {
     console.log(error);
     res.status(400).send({ error });
@@ -37,16 +37,24 @@ export const addPaymentHistory = async (req, res) => {
 export const updatePaymentHistory = async (req, res) => {
   const {
     body: { data },
+    params: { paymentHistoryId },
   } = req;
   const paymentHistoryObj = data.paymentHistoryObj;
   let paymentHistoryObjJSON = JSON.parse(paymentHistoryObj);
+  const userObjJSON = JSON.parse(data.userObj);
+  console.log(paymentHistoryId)
+
   try {
     const findPaymentHistoryObj = await PaymentHistory.findOne({
-      _id: paymentHistoryObjJSON._id
+      _id: paymentHistoryId
     });
     const findUser = await User.findOne({
-      _id: paymentHistoryObjJSON.user
+      _id: userObjJSON._id
     });
+    if (!findPaymentHistoryObj) {
+      const error = "변경할 paymentHistoryId는 필수입니다.";
+      res.status(400).send({ error });
+    }
     if (!findUser) {
       const error = "충전할 유저를 찾을 수 없습니다.";
       if (paymentHistoryObjJSON.message) {
@@ -71,6 +79,7 @@ export const updatePaymentHistory = async (req, res) => {
     await findUser.save();
     insertedGoldHistory.afterGold = findUser.gold;
     await insertedGoldHistory.save();
+    findPaymentHistoryObj.goldHistoryId = insertedGoldHistory._id;
     if (!findPaymentHistoryObj) {
       if (paymentHistoryObjJSON.message) {
         findPaymentHistoryObj.message = paymentHistoryObjJSON.message;

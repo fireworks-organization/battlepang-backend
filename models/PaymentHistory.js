@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 
 const PaymentHistorySchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-  },
   impUid: { // 아임포트 고유 아이디 imp_uid
     type: String,
     default: ""
@@ -41,9 +37,9 @@ const PaymentHistorySchema = new mongoose.Schema({
     type: String,
     default: ""
   },
-  chargeGold: { // 충전 골드
-    type: String,
-    default: ""
+  goldHistoryId: { // 충전 골드 금액 및 유저를 갖고있는 연동데이터
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "GoldHistory"
   },
   message: { // 결과 메세지
     type: String,
