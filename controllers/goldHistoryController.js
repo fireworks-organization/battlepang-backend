@@ -22,8 +22,14 @@ export const addGoldHistory = async (req, res) => {
     body: { data },
   } = req;
   const goldHistoryObj = data.goldHistoryObj;
+  const userId = data.goldHistoryObj.user;
   console.log(goldHistoryObj)
   try {
+    const findUser = User.find({ _id: userId });
+    if (!findUser) {
+      res.status(400).send({ error: "충전할 유저를 찾을 수 없음." });
+      res.end();
+    }
     let goldHistoryObjJSON = JSON.parse(goldHistoryObj);
     const goldHistory = new GoldHistory(goldHistoryObjJSON);
     await goldHistory.save();

@@ -23,6 +23,10 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  permission: {
+    type: String,
+    default: "public"
+  },
 });
 
 UserSchema.plugin(passportLocalMongoose, { usernameField: "email" });

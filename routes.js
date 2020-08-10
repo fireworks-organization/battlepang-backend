@@ -52,6 +52,9 @@ const RANKS = "/ranks";
 // GoldHistory
 const GOLD_HISTORYS = "/gold-history";
 const UPDATE_GOLD_HISTORYS = "/:goldHistoryId";
+// PaymentHistory
+const PAYMENT_HISTORYS = "/payment-history";
+const UPDATE_PAYMENT_HISTORYS = "/:paymentHistoryId";
 
 const routes = {
   home: HOME,
@@ -94,6 +97,8 @@ const routes = {
   ranks: RANKS,
   goldHistory: GOLD_HISTORYS,
   updateGoldHistory: UPDATE_GOLD_HISTORYS,
+  paymentHistory: PAYMENT_HISTORYS,
+  updatePaymentHistory: UPDATE_PAYMENT_HISTORYS,
 };
 
 export default routes;

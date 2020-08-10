@@ -174,6 +174,10 @@ npm install --save vimeo
 ```
 npm install --save @ffmpeg-installer/ffmpeg
 npm install --save fluent-ffmpeg
+
+권한 문제로 위의 모듈이 설치되지 않으면 해당경로로 이동한다음에
+sudo chmod -R 777 .
+로 npm설치폴더의 권한을 풀어준다
 ```
 
 
@@ -190,4 +194,9 @@ npm install --save fluent-ffmpeg
 ### multer-s3
 ```
    npm i multer-s3 --save
+```
+
+### pm2 실행
+```
+pm2 start pm2.json
 ```
