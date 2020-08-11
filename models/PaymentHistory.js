@@ -37,9 +37,13 @@ const PaymentHistorySchema = new mongoose.Schema({
     type: String,
     default: ""
   },
-  goldHistoryId: { // 충전 골드 금액 및 유저를 갖고있는 연동데이터
+  goldHistory: { // 충전 골드 금액 및 유저를 갖고있는 연동데이터
     type: mongoose.Schema.Types.ObjectId,
     ref: "GoldHistory"
+  },
+  user: { // 충전 골드 금액 및 유저를 갖고있는 연동데이터
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
   },
   message: { // 결과 메세지
     type: String,

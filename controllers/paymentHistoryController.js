@@ -10,7 +10,7 @@ export const paymentHistory = async (req, res) => {
     query: { },
   } = req;
   try {
-    const paymentHistories = await PaymentHistory.find().populate("user");
+    const paymentHistories = await PaymentHistory.find().populate("user").populate("goldHistory");
     console.log(paymentHistories)
     res.status(200).send({ paymentHistories });
   } catch (error) {
@@ -69,7 +69,7 @@ export const updatePaymentHistory = async (req, res) => {
     const chargeGold = parseInt(paymentHistoryObjJSON.chargeGold);
     const goldHistoryObj = {
       user: findUser._id,
-      paymentId: findPaymentHistoryObj._id,
+      payment: findPaymentHistoryObj._id,
       chargeGold,
       beforeGold: findUser.gold
     }
@@ -79,7 +79,7 @@ export const updatePaymentHistory = async (req, res) => {
     await findUser.save();
     insertedGoldHistory.afterGold = findUser.gold;
     await insertedGoldHistory.save();
-    findPaymentHistoryObj.goldHistoryId = insertedGoldHistory._id;
+    findPaymentHistoryObj.goldHistory = insertedGoldHistory._id;
     if (!findPaymentHistoryObj) {
       if (paymentHistoryObjJSON.message) {
         findPaymentHistoryObj.message = paymentHistoryObjJSON.message;

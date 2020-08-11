@@ -13,6 +13,7 @@ import commentRouter from "./routes/commentRouter";
 import rankRouter from "./routes/rankRouter";
 import goldHistoryRouter from "./routes/goldHistoryRouter";
 import paymentHistoryRouter from "./routes/paymentHistoryRouter";
+import bankAccountNumberRouter from "./routes/bankAccountNumberRouter";
 import passport from "passport";
 import passportConfig from "./passport";
 import cors from "cors";
@@ -44,6 +45,7 @@ app.use(routes.comments, commentRouter);
 app.use(routes.ranks, rankRouter);
 app.use(routes.goldHistory, goldHistoryRouter);
 app.use(routes.paymentHistory, paymentHistoryRouter);
+app.use(routes.bankAccountNumber, bankAccountNumberRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -27,6 +27,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "public"
   },
+  bankAccountNumbers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "BankAccountNumber"
+  }]
 });
 
 UserSchema.plugin(passportLocalMongoose, { usernameField: "email" });

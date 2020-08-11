@@ -55,6 +55,8 @@ const UPDATE_GOLD_HISTORYS = "/:goldHistoryId";
 // PaymentHistory
 const PAYMENT_HISTORYS = "/payment-history";
 const UPDATE_PAYMENT_HISTORYS = "/:paymentHistoryId";
+// PaymentHistory
+const BANK_ACCOUNT_NUMBER = "/bank-account-number";
 
 const routes = {
   home: HOME,
@@ -99,6 +101,7 @@ const routes = {
   updateGoldHistory: UPDATE_GOLD_HISTORYS,
   paymentHistory: PAYMENT_HISTORYS,
   updatePaymentHistory: UPDATE_PAYMENT_HISTORYS,
+  bankAccountNumber: BANK_ACCOUNT_NUMBER,
 };
 
 export default routes;

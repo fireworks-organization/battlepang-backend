@@ -9,7 +9,7 @@ export const goldHistory = async (req, res) => {
     query: { },
   } = req;
   try {
-    const goldHistories = await GoldHistory.find().populate("user").populate("payment");
+    const goldHistories = await GoldHistory.find().populate("user");
     console.log(goldHistories)
     res.status(200).send({ goldHistories });
   } catch (error) {

@@ -5,7 +5,7 @@ const GoldHistorySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
-  paymentId: { // 결제 이력 Id
+  payment: { // 결제 이력 Id
     type: mongoose.Schema.Types.ObjectId,
     ref: "PaymentHistory"
   },

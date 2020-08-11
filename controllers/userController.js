@@ -297,7 +297,7 @@ export const getUserInfo = async (req, res) => {
   } = req;
   console.log(data);
   const id = data.id;
-  const user = await User.findOne({ _id: id });
+  const user = await User.findOne({ _id: id }).populate("bankAccountNumbers");
   if (user) {
     return res.status(200).json({ user });
   } else {
