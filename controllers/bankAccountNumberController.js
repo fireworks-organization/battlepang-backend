@@ -14,7 +14,7 @@ export const bankAccountNumber = async (req, res) => {
     res.status(200).send({ paymentHistories });
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const addBankAccountNumber = async (req, res) => {
@@ -30,7 +30,7 @@ export const addBankAccountNumber = async (req, res) => {
     });
     if (!findUser) {
       const error = "등록 유저를 찾을 수 없습니다.";
-      res.status(400).send({ error });
+      res.status(400).json({ error });
       return false;
     }
     const bankAccountNumber = new BankAccountNumber(bankAccountNumberObjJSON);
@@ -41,6 +41,6 @@ export const addBankAccountNumber = async (req, res) => {
     res.status(200).send({ bankAccountNumberObj: insertedBankAccountNumber });
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };

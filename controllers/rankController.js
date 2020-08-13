@@ -12,7 +12,7 @@ export const ranks = async (req, res) => {
   } = req;
   try {
     if (!rankObject) {
-      res.status(400).send({ error: "rankObject 파라미너를 확인해주세요. user, battle" });
+      res.status(400).json({ error: "rankObject 파라미너를 확인해주세요. user, battle" });
     }
     if (rankObject === "users") {
       const ranks = await User.aggregate([{ $sample: { size: 30 } }]);
@@ -30,6 +30,6 @@ export const ranks = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };

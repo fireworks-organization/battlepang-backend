@@ -54,7 +54,7 @@ export const subBattles = async (req, res) => {
     res.status(200).json({ subBattles: findSubBattles });
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const addSubBattle = async (req, res) => {
@@ -72,7 +72,7 @@ export const addSubBattle = async (req, res) => {
     });
     if (findBattle) {
       if (findBattle.joinCount >= findBattle.maxCount) {
-        res.status(400).send({ error: "신청인원이 모두 찼습니다." });
+        res.status(400).json({ error: "신청인원이 모두 찼습니다." });
       } else {
         const subBattle = new SubBattle(subBattleObjJSON);
         await subBattle.save();
@@ -82,7 +82,7 @@ export const addSubBattle = async (req, res) => {
         res.status(200).send({ subBattle });
       }
     } else {
-      res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+      res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
     }
     return false;
   }
@@ -137,7 +137,7 @@ export const updateSubBattle = async (req, res) => {
                   _id: subBattle.battleId
                 }).populate("subBattles");
                 if (!findBattle) {
-                  res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+                  res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
                   return false;
                 } else if (findBattle.joinCount >= findBattle.maxCount) {
                   const waitUploadBattle = findBattle.subBattles.filter(subBattle => subBattle.state == 'wait-upload');
@@ -197,7 +197,7 @@ export const updateSubBattle = async (req, res) => {
               }
             } catch (error) {
               console.log(error);
-              res.status(400).send({ error });
+              res.status(400).json({ error });
             }
           },
           function (bytes_uploaded, bytes_total) {
@@ -242,11 +242,11 @@ export const likeSubBattle = async (req, res) => {
       await findSubBattle.save();
       res.status(200).send({ subBattle: findSubBattle });
     } else {
-      res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+      res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const unlikeSubBattle = async (req, res) => {
@@ -274,11 +274,11 @@ export const unlikeSubBattle = async (req, res) => {
       await findSubBattle.save();
       res.status(200).send({ subBattle: findSubBattle });
     } else {
-      res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+      res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const joinSubBattle = async (req, res) => {
@@ -293,7 +293,7 @@ export const joinSubBattle = async (req, res) => {
     res.status(200).send({ subBattle });
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 
@@ -318,10 +318,10 @@ export const refundSubBattle = async (req, res) => {
       });
       res.status(200).send({ subBattle: findSubBattle });
     } else {
-      res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+      res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };

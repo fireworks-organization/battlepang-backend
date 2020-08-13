@@ -39,7 +39,7 @@ export const comments = async (req, res) => {
     res.status(200).json({ comments: findComments });
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 
@@ -75,12 +75,12 @@ export const addComment = async (req, res) => {
         await findSubBattle.save();
         res.status(200).send({ comment });
       } else {
-        res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+        res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
       }
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 
@@ -102,11 +102,11 @@ export const reportComment = async (req, res) => {
       const addedReportObj = await report.save();
       res.status(200).send({ reportObj: addedReportObj });
     } else {
-      res.status(400).send({ error: "신고 실패 에러가 발생하였습니다." });
+      res.status(400).json({ error: "신고 실패 에러가 발생하였습니다." });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 
@@ -133,11 +133,11 @@ export const likeComment = async (req, res) => {
       console.log(newComment)
       res.status(200).send({ comment: newComment });
     } else {
-      res.status(400).send({ error: "코멘트를 찾을 수 없습니다." });
+      res.status(400).json({ error: "코멘트를 찾을 수 없습니다." });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const unlikeComment = async (req, res) => {
@@ -162,11 +162,11 @@ export const unlikeComment = async (req, res) => {
       console.log(newComment)
       res.status(200).send({ comment: newComment });
     } else {
-      res.status(400).send({ error: "코멘트를 찾을 수 없습니다." });
+      res.status(400).json({ error: "코멘트를 찾을 수 없습니다." });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const updateComment = async (req, res) => {
@@ -185,11 +185,11 @@ export const updateComment = async (req, res) => {
       const newComment = await findComment.save();
       res.status(200).send({ comment: newComment });
     } else {
-      res.status(400).send({ error: "코멘트를 찾을 수 없습니다." });
+      res.status(400).json({ error: "코멘트를 찾을 수 없습니다." });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const deleteComment = async (req, res) => {
@@ -210,10 +210,10 @@ export const deleteComment = async (req, res) => {
       await findBattle.save();
       res.status(200).send({ comment });
     } else {
-      res.status(400).send({ error: "코멘트를 찾을 수 없습니다." });
+      res.status(400).json({ error: "코멘트를 찾을 수 없습니다." });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };

@@ -14,7 +14,7 @@ export const goldHistory = async (req, res) => {
     res.status(200).send({ goldHistories });
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const addGoldHistory = async (req, res) => {
@@ -27,7 +27,7 @@ export const addGoldHistory = async (req, res) => {
   try {
     const findUser = User.find({ _id: userId });
     if (!findUser) {
-      res.status(400).send({ error: "충전할 유저를 찾을 수 없음." });
+      res.status(400).json({ error: "충전할 유저를 찾을 수 없음." });
       res.end();
     }
     let goldHistoryObjJSON = JSON.parse(goldHistoryObj);
@@ -36,7 +36,7 @@ export const addGoldHistory = async (req, res) => {
     res.status(200).send({ goldHistory });
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const updateGoldHistory = async (req, res) => {
@@ -59,7 +59,7 @@ export const updateGoldHistory = async (req, res) => {
         findGoldHistoryObj.message = goldHistoryObjJSON.message + " / " + error;
       }
       await findGoldHistoryObj.save();
-      res.status(400).send({ error });
+      res.status(400).json({ error });
       return false;
     }
     console.log(findUser.gold)
@@ -76,7 +76,7 @@ export const updateGoldHistory = async (req, res) => {
         findGoldHistoryObj.message = goldHistoryObjJSON.message + " / " + error;
       }
       await findGoldHistoryObj.save();
-      res.status(400).send({ error });
+      res.status(400).json({ error });
       return false;
     }
     if (goldHistoryObjJSON.impUid) {
@@ -124,6 +124,6 @@ export const updateGoldHistory = async (req, res) => {
       findGoldHistoryObj.message = goldHistoryObjJSON.message + " / " + error;
       await findGoldHistoryObj.save();
     }
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };

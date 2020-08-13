@@ -198,7 +198,7 @@ export const battles = async (req, res) => {
     res.status(200).json({ battles: findBattles });
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const addBattle = async (req, res) => {
@@ -280,7 +280,7 @@ export const addBattle = async (req, res) => {
               setTimeout(getVideoState, 2000);
             } catch (error) {
               console.log(error);
-              res.status(400).send({ error });
+              res.status(400).json({ error });
             }
           },
           function (bytes_uploaded, bytes_total) {
@@ -339,12 +339,12 @@ export const likeBattle = async (req, res) => {
         await findSubBattle.save();
         res.status(200).send({ battle: findSubBattle });
       } else {
-        res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+        res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
       }
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const unlikeBattle = async (req, res) => {
@@ -386,12 +386,12 @@ export const unlikeBattle = async (req, res) => {
         await findSubBattle.save();
         res.status(200).send({ battle: findSubBattle });
       } else {
-        res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+        res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
       }
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const startBattle = async (req, res) => {
@@ -409,11 +409,11 @@ export const startBattle = async (req, res) => {
       await findBattle.save();
       res.status(200).send({ battle: findBattle });
     } else {
-      res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+      res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 
@@ -452,11 +452,11 @@ export const refundBattle = async (req, res) => {
     if (findSubBattle) {
       res.status(200).send({ subBattle: findSubBattle });
     } else {
-      res.status(400).send({ error: "배틀을 찾을 수 없습니다." });
+      res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const voteBattle = async (req, res) => {
@@ -478,11 +478,11 @@ export const voteBattle = async (req, res) => {
       await findBattle.save();
       res.status(200).send({ voteObj: addedVoteObj });
     } else {
-      res.status(400).send({ error: "투표 실패 에러가 발생하였습니다." });
+      res.status(400).json({ error: "투표 실패 에러가 발생하였습니다." });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const reportBattle = async (req, res) => {
@@ -514,11 +514,11 @@ export const reportBattle = async (req, res) => {
         const addedReportObj = await report.save();
         res.status(200).send({ reportObj: addedReportObj });
       } else {
-        res.status(400).send({ error: "신고 실패 에러가 발생하였습니다." });
+        res.status(400).json({ error: "신고 실패 에러가 발생하였습니다." });
       }
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };

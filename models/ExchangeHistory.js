@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
 
 const ExchangeHistorySchema = new mongoose.Schema({
-  BankAccountNumber: { // 아임포트 고유 아이디 imp_uid
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  },
+  BankAccountNumber: { // 환급 계좌
     type: mongoose.Schema.Types.ObjectId,
     ref: "BankAccountNumber"
   },
@@ -13,6 +17,14 @@ const ExchangeHistorySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "GoldHistory"
   },
+  exchangeGold: { // 수수료 제외 환급금액
+    type: String,
+    default: ""
+  },
+  exchangeMoney: { // 수수료 제외 환급금액
+    type: String,
+    default: ""
+  },
   message: { // 결과 메세지
     type: String,
     default: ""
@@ -20,6 +32,10 @@ const ExchangeHistorySchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  exchangedAt: {
+    type: Date,
+    default: ""
   },
 });
 

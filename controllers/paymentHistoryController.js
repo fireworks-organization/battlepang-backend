@@ -15,7 +15,7 @@ export const paymentHistory = async (req, res) => {
     res.status(200).send({ paymentHistories });
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const addPaymentHistory = async (req, res) => {
@@ -31,7 +31,7 @@ export const addPaymentHistory = async (req, res) => {
     res.status(200).send({ paymentHistory: insertedPaymentHistory });
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const updatePaymentHistory = async (req, res) => {
@@ -53,7 +53,7 @@ export const updatePaymentHistory = async (req, res) => {
     });
     if (!findPaymentHistoryObj) {
       const error = "변경할 paymentHistoryId는 필수입니다.";
-      res.status(400).send({ error });
+      res.status(400).json({ error });
     }
     if (!findUser) {
       const error = "충전할 유저를 찾을 수 없습니다.";
@@ -62,7 +62,7 @@ export const updatePaymentHistory = async (req, res) => {
         findPaymentHistoryObj.message = paymentHistoryObjJSON.message + " / " + error;
       }
       await findPaymentHistoryObj.save();
-      res.status(400).send({ error });
+      res.status(400).json({ error });
       return false;
     }
     console.log(findUser.payment)
@@ -90,7 +90,7 @@ export const updatePaymentHistory = async (req, res) => {
         findPaymentHistoryObj.message = paymentHistoryObjJSON.message + " / " + error;
       }
       await findPaymentHistoryObj.save();
-      res.status(400).send({ error });
+      res.status(400).json({ error });
       return false;
     }
     if (paymentHistoryObjJSON.impUid) {
@@ -138,6 +138,6 @@ export const updatePaymentHistory = async (req, res) => {
       findPaymentHistoryObj.message = paymentHistoryObjJSON.message + " / " + error;
       await findPaymentHistoryObj.save();
     }
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };

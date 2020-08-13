@@ -25,7 +25,7 @@ export const postJoin = async (req, res, next) => {
   console.log(data);
   const { email, name, phone, password, password2 } = data;
   if (password !== password2) {
-    res.status(400).send({ error: "패스워드가 다릅니다." });
+    res.status(400).json({ error: "패스워드가 다릅니다." });
     next();
   } else {
     try {
@@ -33,7 +33,7 @@ export const postJoin = async (req, res, next) => {
         email
       });
       if (findUser) {
-        res.status(400).send({ error: "이미 가입된 이메일 입니다." });
+        res.status(400).json({ error: "이미 가입된 이메일 입니다." });
       } else {
         const user = await User({
           email,
@@ -45,7 +45,7 @@ export const postJoin = async (req, res, next) => {
       }
     } catch (error) {
       console.log(error);
-      res.status(400).send({ error });
+      res.status(400).json({ error });
       next();
     }
   }
@@ -58,14 +58,17 @@ export const postLogin = async (req, res, next) => {
   const {
     body: { email }
   } = req;
+  console.log(req.body)
   const findUser = await User.findOne({ email: email });
+  if (!findUser) {
+    console.log("존재하지 않는 아이디입니다")
+    return res.status(200).json({ error: "존재하지 않는 아이디입니다" }); // 임의 에러 처리
+  }
   passport.authenticate("local", { session: false }, function (err, user, info) {
-    console.log(email);
     if (err) {
-      return res.status(400).send({ error: err });
+      console.log("에러발생:" + err)
+      return res.status(400).json({ error: err });
     }
-    if (!findUser)
-      res.status(400).send({ error: "존재하지 않는 아이디입니다" }); // 임의 에러 처리
     if (!user) {
       if (info) {
         return res.status(400).send({
@@ -78,7 +81,7 @@ export const postLogin = async (req, res, next) => {
     }
     req.login(user, { session: false }, err => {
       if (err) {
-        return res.status(400).send({ error: err });
+        return res.status(400).json({ error: err });
       }
       const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_SECRET_TIME
@@ -200,7 +203,7 @@ const snsLogin = async (req, res, snsLoginType, userObj) => {
 
       try {
         await user.save(function (error, user) {
-          if (error) return res.status(400).send({ error });
+          if (error) return res.status(400).json({ error });
           const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_SECRET_TIME
           });
@@ -214,7 +217,7 @@ const snsLogin = async (req, res, snsLoginType, userObj) => {
         });
       } catch (error) {
         console.log(error);
-        return res.status(400).send({ error });
+        return res.status(400).json({ error });
       }
     }
   })(req, res);
@@ -229,11 +232,11 @@ export const findEmail = async (req, res, next) => {
     if (user) {
       return res.status(200).json({ user });
     } else {
-      return res.status(400).send({ error: "아이디를 찾지 못했습니다." });
+      return res.status(400).json({ error: "아이디를 찾지 못했습니다." });
     }
   } catch (error) {
     console.log(error);
-    return res.status(400).send({ error });
+    return res.status(400).json({ error });
   }
 };
 
@@ -284,10 +287,10 @@ export const resetPassword = async (req, res) => {
       return res.status(200).send({ message: "임시 비밀번호 발급 성공" });
     } catch (error) {
       console.log(error);
-      return res.status(400).send({ error: error });
+      return res.status(400).json({ error: error });
     }
   } else {
-    return res.status(400).send({ error: "이름과 이메일을 확인해주세요." });
+    return res.status(400).json({ error: "이름과 이메일을 확인해주세요." });
   }
 };
 
@@ -301,7 +304,7 @@ export const getUserInfo = async (req, res) => {
   if (user) {
     return res.status(200).json({ user });
   } else {
-    return res.status(400).send({ error: "해당 유저를 찾을 수 없습니다." });
+    return res.status(400).json({ error: "해당 유저를 찾을 수 없습니다." });
   }
 };
 export const changeUserInfo = async (req, res) => {
@@ -331,7 +334,7 @@ export const changeUserInfo = async (req, res) => {
         }, function (err, data) {
           if (err) {
             console.log("이미지 삭제 실패")
-            // return res.status(400).send({ error: "이미지 삭제 실패" });
+            // return res.status(400).json({ error: "이미지 삭제 실패" });
           }
           console.log("data")
           console.log(data)
@@ -346,7 +349,7 @@ export const changeUserInfo = async (req, res) => {
       findUser.phone = phone;
     }
     await findUser.save(function (error, user) {
-      if (error) return res.status(400).send({ error });
+      if (error) return res.status(400).json({ error });
       res.status(200).json({
         email,
         avatarUrl,
@@ -358,7 +361,7 @@ export const changeUserInfo = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return res.status(400).send({ error });
+    return res.status(400).json({ error });
   }
 };
 export const checkUserPassword = async (req, res) => {
@@ -406,11 +409,11 @@ export const changeUserPassword = async (req, res) => {
       findUser.save();
       res.status(200).send({ user: findUser });
     } else {
-      res.status(400).send({ error: "유저를 찾을 수 없습니다." });
+      res.status(400).json({ error: "유저를 찾을 수 없습니다." });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 export const deleteUser = async (req, res) => {
@@ -423,6 +426,6 @@ export const deleteUser = async (req, res) => {
     res.status(200).send({ user });
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };

@@ -9,6 +9,10 @@ const GoldHistorySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "PaymentHistory"
   },
+  exchangeHistory: { // 환급신청 Id
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "ExchangeHistory"
+  },
   chargeGold: { // 충전 골드
     type: String,
     default: ""
