@@ -12,6 +12,6 @@ import {
 } from "../controllers/exchangeHistoryController";
 exchangeHistoryRouter.get("/", exchangeHistory);
 exchangeHistoryRouter.post("/", checkJWTAuthenticate, addExchangeHistory); //add exchange history
-exchangeHistoryRouter.put(routes.updateExchangeHistory, updateExchangeHistory); //add exchange history
+exchangeHistoryRouter.put(routes.updateExchangeHistory, checkJWTAuthenticate, updateExchangeHistory); //add exchange history
 
 export default exchangeHistoryRouter;

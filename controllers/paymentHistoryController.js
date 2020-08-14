@@ -7,11 +7,15 @@ dotenv.config();
 
 export const paymentHistory = async (req, res) => {
   const {
-    query: { },
+    query: { paymentHistoryId }
   } = req;
   try {
-    const paymentHistories = await PaymentHistory.find().populate("user").populate("goldHistory");
-    console.log(paymentHistories)
+    const populateList = ["user", "goldHistory"];
+    let findOperate = {};
+    if (paymentHistoryId) {
+      findOperate = { _id: paymentHistoryId };
+    }
+    let paymentHistories = await PaymentHistory.find(findOperate).populate(populateList);
     res.status(200).send({ paymentHistories });
   } catch (error) {
     console.log(error);

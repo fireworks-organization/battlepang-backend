@@ -6,11 +6,15 @@ dotenv.config();
 
 export const goldHistory = async (req, res) => {
   const {
-    query: { },
+    query: { goldHistoryId },
   } = req;
   try {
-    const goldHistories = await GoldHistory.find().populate("user").populate("payment");
-    console.log(goldHistories)
+    const populateList = ["user", "payment"];
+    let findOperate = {};
+    if (goldHistoryId) {
+      findOperate = { _id: goldHistoryId };
+    }
+    const goldHistories = await GoldHistory.find(findOperate).populate(populateList);
     res.status(200).send({ goldHistories });
   } catch (error) {
     console.log(error);
