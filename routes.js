@@ -1,3 +1,4 @@
+const SEARCH = "/search";
 // Global
 const HOME = "/";
 const JOIN = "/join";
@@ -7,7 +8,6 @@ const FIND_EMAIL = "/findEmail";
 const RESET_PASSWORD = "/resetPassword";
 const GET_USER_INFO = "/getUserInfo";
 const CHANGE_USER_INFO = "/changeUserInfo";
-const SEARCH = "/search";
 
 //SNS LOGIN
 const AUTH_LOGIN_NAVER_CALLBACK = "/auth/login/naver/callback";
@@ -28,17 +28,13 @@ const UNLIKE_BATTLE = "/unlike";
 const START_BATTLE = "/start";
 const REFUND_BATTLE = "/refund";
 const VOTE_BATTLE = "/vote";
-// battleReport
 const REPORT_BATTLE = "/:battleId/reports";
-const REPORT_COMMENT = "/:commentId/reports";
-const LIKE_COMMENT = "/:commentId/like";
-const UNLIKE_COMMENT = "/:commentId/unlike";
-// Battles
+// SubBattles
 const SUB_BATTLES = "/subBattles";
 const ADD_SUB_BATTLE = "/add";
 const UPDATE_SUB_BATTLE = "/update";
-const LIKE_SUB_BATTLE = "/like";
-const UNLIKE_SUB_BATTLE = "/unlike";
+// const LIKE_SUB_BATTLE = "/like";
+// const UNLIKE_SUB_BATTLE = "/unlike";
 const REFUND_SUB_BATTLE = "/refund";
 
 // Comment
@@ -46,6 +42,9 @@ const COMMENTS = "/comments";
 const ADD_COMMENT = "/add";
 const UPDATE_COMMENT = "/:commentId/update";
 const DELETE_COMMENT = "/:commentId/delete";
+const REPORT_COMMENT = "/:commentId/reports";
+const LIKE_COMMENT = "/:commentId/like";
+const UNLIKE_COMMENT = "/:commentId/unlike";
 
 // Rank
 const RANKS = "/ranks";
@@ -89,8 +88,8 @@ const routes = {
   subBattles: SUB_BATTLES,
   addSubBattle: ADD_SUB_BATTLE,
   updateSubBattle: UPDATE_SUB_BATTLE,
-  likeSubBattle: LIKE_SUB_BATTLE,
-  unlikeSubBattle: UNLIKE_SUB_BATTLE,
+  // likeSubBattle: LIKE_SUB_BATTLE,
+  // unlikeSubBattle: UNLIKE_SUB_BATTLE,
   refundSubBattle: REFUND_SUB_BATTLE,
   voteBattle: VOTE_BATTLE,
   reportBattle: REPORT_BATTLE,

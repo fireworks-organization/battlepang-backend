@@ -19,9 +19,50 @@ import passport from "passport";
 import passportConfig from "./passport";
 import cors from "cors";
 
+import swaggerUi from 'swagger-ui-express';
+
+
 import routes from "./routes";
 
 var app = express();
+const swaggerDocument = require("./swaggerDocument.json");
+
+app.use((req, res, next) => {
+  if (req.url === '/favicon.ico') {
+    res.sendFile(__dirname + '/favicon.ico');
+  } else if (req.url === '/swagger.json') {
+    res.sendFile(__dirname + '/swagger.json');
+  } else if (req.url === '/my-custom.css') {
+    res.sendFile(__dirname + '/my-custom.css');
+  } else {
+    next();
+  }
+});
+
+var options = {
+  validatorUrl: null,
+  docExpansion: 'list', // none , list, full
+  // operationsSorter: function (a, b) {
+  //   var score = {
+  //     '/': 0,
+  //     '/users': 1
+  //   }
+  //   console.log('a', a.get("path"), b.get("path"))
+  //   return score[a.get("path")] < score[b.get("path")]
+  // }
+};
+
+var swaggerUiOpts = {
+  explorer: false,
+  swaggerOptions: options,
+  operationsSorter: 'alpha',
+  customSiteTitle: "API 문서",
+  customfavIcon: "/favicon.jpg",
+  // customCssUrl: 'https://cdn.jsdelivr.net/npm/swagger-ui-themes@3.0.0/themes/3.x/theme-material.css'
+  customCssUrl: '../stylesheets/swagger.css'
+}
+app.use('/api-docs', swaggerUi.serve)
+app.get('/api-docs', swaggerUi.setup(swaggerDocument, swaggerUiOpts));
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));

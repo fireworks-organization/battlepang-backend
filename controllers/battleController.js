@@ -19,10 +19,6 @@ let client = new Vimeo(
   process.env.VIMEO_ACCESS_TOKEN
 );
 
-export const battleDetail = (req, res) => res.send("Battle Detail");
-export const editProfile = (req, res) => res.send("Edit Profile");
-export const changePassword = (req, res) => res.send("Change Password");
-
 export const battles = async (req, res) => {
   const {
     query: { id, creator, subBattleId }
@@ -416,7 +412,6 @@ export const startBattle = async (req, res) => {
     res.status(400).json({ error });
   }
 };
-
 export const refundBattle = async (req, res) => {
   const {
     body: { data }

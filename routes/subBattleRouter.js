@@ -10,12 +10,12 @@ import {
   subBattles,
   addSubBattle,
   updateSubBattle,
-  likeSubBattle,
-  unlikeSubBattle,
+  // likeSubBattle,
+  // unlikeSubBattle,
   refundSubBattle
 } from "../controllers/subBattleController";
 const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     console.log(file.fieldname);
     if (file.fieldname === "videoFile") {
       cb(null, "./public/videoFiles/");
@@ -29,12 +29,12 @@ const uploader = multer({ storage: storage });
 subBattleRouter.get("/", subBattles);
 subBattleRouter.post(routes.addSubBattle, uploader.any(), addSubBattle);
 subBattleRouter.post(routes.updateSubBattle, uploader.any(), updateSubBattle);
-subBattleRouter.post(routes.likeSubBattle, checkJWTAuthenticate, likeSubBattle);
-subBattleRouter.post(
-  routes.unlikeSubBattle,
-  checkJWTAuthenticate,
-  unlikeSubBattle
-);
+// subBattleRouter.post(routes.likeSubBattle, checkJWTAuthenticate, likeSubBattle);
+// subBattleRouter.post(
+//   routes.unlikeSubBattle,
+//   checkJWTAuthenticate,
+//   unlikeSubBattle
+// );
 subBattleRouter.post(
   routes.refundSubBattle,
   checkJWTAuthenticate,

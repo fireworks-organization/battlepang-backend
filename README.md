@@ -200,3 +200,57 @@ sudo chmod -R 777 .
 ```
 pm2 start pm2.json
 ```
+
+### swagger 
+```
+npm install --save swagger-jsdoc
+npm install --save swagger-ui-express
+```
+
+### swagger{
+     "paths": {
+        "/users/": {
+            "get": {
+                "x-swagger-router-controller": "users",
+                "operationId": "impossible",
+                "tags": [
+                    "/users"
+                ],
+                "description": "",
+                "parameters": [],
+                "responses": {}
+            },
+            "post": {
+                "x-swagger-router-controller": "users",
+                "operationId": "index",
+                "tags": [
+                    "/users"
+                ],
+                "description": "[Login 123](https://www.google.com)",
+                "parameters": [
+                    {
+                        "name": "test",
+                        "in": "formData",
+                        "type": "array",
+                        "collectionFormat": "multi",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "profileId",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "file",
+                        "in": "formData",
+                        "type": "file",
+                        "required": "true"
+                    }
+                ],
+                "responses": {}
+            }
+        },
+}

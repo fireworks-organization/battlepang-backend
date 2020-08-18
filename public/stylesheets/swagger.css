@@ -1,0 +1,14 @@
+.swagger-ui .topbar{background: #262626 }
+
+.topbar-wrapper img[alt="Swagger UI"], .topbar-wrapper span {
+    visibility: hidden;
+}
+.topbar-wrapper .link:after {
+    content: 'FireWorks';
+    color: #fff;
+    visibility: visible;
+    display: block;
+    position: absolute;
+    padding: 5px;
+    top: 10px;
+}
