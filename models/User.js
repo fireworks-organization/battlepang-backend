@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema({
   email: String,
   channelName: {
     type: String,
-    default: ""
+    default: "채널명 없음"
   },
   avatarUrl: {
     type: String,
