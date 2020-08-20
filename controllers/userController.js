@@ -267,7 +267,8 @@ export const sendResetPasswordEmail = async (req, res) => {
     }
   });
   const resetPasswordToken = makeid(12);
-  const url = "http://localhost:8080"
+  // const url = "http://localhost:8080"
+  const url = "https://battlepang.com"
   const resetPasswordURL = `${url}/resetPassword?userId=${userId}&&resetPasswordToken=${resetPasswordToken}`;
   // send mail with defined transport object
   const user = await User.findOne({
