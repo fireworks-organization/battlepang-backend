@@ -13,12 +13,20 @@ const s3 = new aws.S3({
   secretAccessKey: process.env.S3_PRIVATE_KEY,
   region: "ap-northeast-1"
 });
+function makeid(length) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
 export const users = (req, res) => res.send("Users");
 
-export const getJoin = (req, res) =>
-  res.render("join", { pageTitle: "Log In" });
-
-export const postJoin = async (req, res, next) => {
+export const register = async (req, res, next) => {
   const {
     body: { data }
   } = req;
@@ -35,10 +43,13 @@ export const postJoin = async (req, res, next) => {
       if (findUser) {
         res.status(400).json({ error: "이미 가입된 이메일 입니다." });
       } else {
+
+        const resetPasswordToken = makeid(12)
         const user = await User({
           email,
           name,
-          phone
+          phone,
+          resetPasswordToken
         });
         await User.register(user, password);
         res.status(200).send(user);
@@ -51,10 +62,7 @@ export const postJoin = async (req, res, next) => {
   }
 };
 
-export const getLogin = (req, res) =>
-  res.render("login", { pageTitle: "Log In" });
-
-export const postLogin = async (req, res, next) => {
+export const login = async (req, res, next) => {
   const {
     body: { email }
   } = req;
@@ -225,10 +233,12 @@ const snsLogin = async (req, res, snsLoginType, userObj) => {
 
 export const findEmail = async (req, res, next) => {
   const {
-    body: { name, phone }
+    query: { eamil, phone }
   } = req;
+  console.log(eamil)
+  console.log(phone)
   try {
-    const user = await User.findOne({ $and: [{ name }, { phone }] });
+    const user = await User.findOne({ $and: [{ eamil }, { phone }] });
     if (user) {
       return res.status(200).json({ user });
     } else {
@@ -240,10 +250,14 @@ export const findEmail = async (req, res, next) => {
   }
 };
 
-export const resetPassword = async (req, res) => {
+export const sendResetPasswordEmail = async (req, res) => {
   const {
-    body: { email, name, phone }
+    body: { email },
+    params: { userId }
   } = req;
+  console.log("rest!!")
+  console.log(process.env.EMAIL_ID)
+  console.log(process.env.EMAIL_PASSWORD)
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
     service: "gmail",
@@ -252,37 +266,29 @@ export const resetPassword = async (req, res) => {
       pass: process.env.EMAIL_PASSWORD // generated ethereal password
     }
   });
-  function makeid(length) {
-    var result = "";
-    var characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  }
-  const tmpPassword = makeid(6);
+  const resetPasswordToken = makeid(12);
+  const url = "http://localhost:8080"
+  const resetPasswordURL = `${url}/resetPassword?userId=${userId}&&resetPasswordToken=${resetPasswordToken}`;
   // send mail with defined transport object
   const user = await User.findOne({
-    $and: [{ email }, { name }, { phone }]
+    $and: [{ email }, { _id: userId }]
   });
   if (user) {
     try {
-      await user.setPassword(tmpPassword);
-      user.save();
-      let info = await transporter.sendMail({
+      user.resetPasswordToken = resetPasswordToken;
+      await user.save();
+      await transporter.sendMail({
         from: process.env.EMAIL_ID, // sender address
         to: email, // list of receivers
-        subject: "임시 비밀번호 발급", // Subject line
+        subject: "비밀번호 변경 링크를 보내드립니다", // Subject line
         text:
-          "안녕하세요 운영팀입니다. <br> 회원님의 임시 비밀번호는 <b>" +
-          tmpPassword +
-          "</b>입니다", // plain text body
+          "안녕하세요 배틀팡 운영팀입니다. <br> 회원님의 비밀번호변경 링크는 <br/>" +
+          resetPasswordURL +
+          "<br/>입니다", // plain text body
         html:
-          "안녕하세요 운영팀입니다. <br> 회원님의 임시 비밀번호는 <b>" +
-          tmpPassword +
-          "</b>입니다" // html body
+          "안녕하세요 배틀팡 운영팀입니다. <br> 회원님의 비밀번호변경 링크는 <br/>" +
+          resetPasswordURL +
+          "<br/>입니다" // html body
       });
       return res.status(200).send({ message: "임시 비밀번호 발급 성공" });
     } catch (error) {
@@ -296,11 +302,9 @@ export const resetPassword = async (req, res) => {
 
 export const getUserInfo = async (req, res) => {
   const {
-    body: { data }
+    params: { userId }
   } = req;
-  console.log(data);
-  const id = data.id;
-  const user = await User.findOne({ _id: id }).populate("bankAccountNumbers");
+  const user = await User.findOne({ _id: userId }).populate("bankAccountNumbers");
   if (user) {
     return res.status(200).json({ user });
   } else {
@@ -366,7 +370,7 @@ export const changeUserInfo = async (req, res) => {
 };
 export const checkUserPassword = async (req, res) => {
   const {
-    body: { email, password }
+    body: { email, password },
   } = req;
   console.log(email);
   console.log(password);
@@ -394,22 +398,54 @@ export const checkUserPassword = async (req, res) => {
     });
   })(req, res);
 };
-export const changeUserPassword = async (req, res) => {
+export const resetUserPassword = async (req, res) => {
   const {
-    body: { data }
+    body: { data },
+    params: { userId },
   } = req;
-  const email = data.email;
   const password = data.password;
   try {
+    console.log(userId)
+    const resetPasswordToken = data.resetPasswordToken;
     const findUser = await User.findOne({
-      email
+      _id: userId,
+      resetPasswordToken
     });
+
+    const newResetPasswordToken = makeid(12);
     if (findUser) {
       await findUser.setPassword(password);
+      findUser.resetPasswordToken = newResetPasswordToken;
+      await findUser.save();
       findUser.save();
       res.status(200).send({ user: findUser });
     } else {
       res.status(400).json({ error: "유저를 찾을 수 없습니다." });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};
+export const checkResetPasswordToken = async (req, res) => {
+  const {
+    params: { userId },
+    query: { resetPasswordToken }
+  } = req;
+  try {
+    console.log(userId)
+    console.log(resetPasswordToken)
+    const findUser = await User.findOne({
+      _id: userId,
+      resetPasswordToken
+    });
+
+    console.log(findUser)
+
+    if (findUser) {
+      res.status(200).json({ result: true });
+    } else {
+      res.status(400).json({ result: false, error: "토큰을 확인해주세요." });
     }
   } catch (error) {
     console.log(error);

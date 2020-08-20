@@ -1,13 +1,9 @@
 const SEARCH = "/search";
 // Global
 const HOME = "/";
-const JOIN = "/join";
+const REGISTER = "/register";
 const LOGIN = "/login";
 const LOGOUT = "/logout";
-const FIND_EMAIL = "/findEmail";
-const RESET_PASSWORD = "/resetPassword";
-const GET_USER_INFO = "/getUserInfo";
-const CHANGE_USER_INFO = "/changeUserInfo";
 
 //SNS LOGIN
 const AUTH_LOGIN_NAVER_CALLBACK = "/auth/login/naver/callback";
@@ -15,10 +11,14 @@ const AUTH_LOGIN_KAKAO_CALLBACK = "/auth/login/kakao/callback";
 
 // Users
 const USERS = "/users";
-const USER_DETAIL = "/:id";
-const CHECK_USER_PASSWORD = "/checkUserPassword";
-const CHANGE_USER_PASSWORD = "/changeUserPassword";
-const DELETE_USER = "/deleteUser";
+const GET_USER_INFO = "/:userId";
+const FIND_EMAIL = "/find-email";
+const CHANGE_USER_INFO = "/:userId";
+const SEND_RESET_PASSWORD_EMAIL = "/:userId/send-reset-password-email";
+const CHECK_USER_PASSWORD = "/check-password";
+const CHECK_RESET_PASSWORD_TOKEN = "/:userId/check-reset-password-token";
+const RESET_USER_PASSWORD = "/:userId/password";
+const DELETE_USER = "/:userId";
 
 // Battles
 const BATTLES = "/battles";
@@ -62,20 +62,20 @@ const UPDATE_EXCHANGE_HISTORY = "/:exchangeHistoryId";
 
 const routes = {
   home: HOME,
-  join: JOIN,
+  register: REGISTER,
   login: LOGIN,
   findEmail: FIND_EMAIL,
-  resetPassword: RESET_PASSWORD,
+  sendResetPasswordEmail: SEND_RESET_PASSWORD_EMAIL,
   getUserInfo: GET_USER_INFO,
   logout: LOGOUT,
   search: SEARCH,
   users: USERS,
-  userDetail: USER_DETAIL,
   authLoginNaverCallback: AUTH_LOGIN_NAVER_CALLBACK,
   authLoginKakaoCallback: AUTH_LOGIN_KAKAO_CALLBACK,
   changeUserInfo: CHANGE_USER_INFO,
+  checkResetPasswordToken: CHECK_RESET_PASSWORD_TOKEN,
   checkUserPassword: CHECK_USER_PASSWORD,
-  changeUserPassword: CHANGE_USER_PASSWORD,
+  resetUserPassword: RESET_USER_PASSWORD,
   deleteUser: DELETE_USER,
   battles: BATTLES,
   addBattle: ADD_BATTLE,

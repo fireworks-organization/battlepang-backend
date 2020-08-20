@@ -30,7 +30,11 @@ const UserSchema = new mongoose.Schema({
   bankAccountNumbers: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "BankAccountNumber"
-  }]
+  }],
+  resetPasswordToken: {
+    type: String,
+    default: ""
+  },
 });
 
 UserSchema.plugin(passportLocalMongoose, { usernameField: "email" });
