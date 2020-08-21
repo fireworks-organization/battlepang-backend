@@ -9,57 +9,13 @@
         "application/json"
     ],
     "paths": {
-        "/": {
-            "get": {
-                "x-swagger-router-controller": "",
-                "tags": [
-                    "글로벌 API"
-                ],
-                "description": "get ",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": " to be returned",
-                        "schema": {
-                            "$ref": "#/definitions/"
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            },
+        "/login 로그인": {
             "post": {
                 "x-swagger-router-controller": "",
                 "tags": [
                     "글로벌 API"
                 ],
-                "description": "post ",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": " to be returned",
-                        "schema": {
-                            "$ref": "#/definitions/"
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "x-swagger-router-controller": "",
-                "tags": [
-                    "글로벌 API"
-                ],
-                "description": "put ",
+                "description": "로그인 할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -77,13 +33,85 @@
                 }
             }
         },
-        "/users/": {
+        "/register 회원가입": {
+            "post": {
+                "x-swagger-router-controller": "",
+                "tags": [
+                    "글로벌 API"
+                ],
+                "description": "회원가입 할때 사용됩니다.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": " to be returned",
+                        "schema": {
+                            "$ref": "#/definitions/"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login/naver/callback 네이버 로그인 콜백": {
+            "post": {
+                "x-swagger-router-controller": "",
+                "tags": [
+                    "글로벌 API"
+                ],
+                "description": "네이버 로그인 할때 사용됩니다.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": " to be returned",
+                        "schema": {
+                            "$ref": "#/definitions/"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login/kakao/callback 카카오 로그인 콜백": {
+            "post": {
+                "x-swagger-router-controller": "",
+                "tags": [
+                    "글로벌 API"
+                ],
+                "description": "카카오 로그인 할때 사용됩니다.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": " to be returned",
+                        "schema": {
+                            "$ref": "#/definitions/"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/ 유저 목록 취득": {
             "get": {
                 "x-swagger-router-controller": "users",
                 "tags": [
                     "유저 관련 API"
                 ],
-                "description": "get users",
+                "description": "유저 목록 취득 할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -99,13 +127,15 @@
                         }
                     }
                 }
-            },
-            "post": {
+            }
+        },
+        "/users/ 유저정보를 취득": {
+            "get": {
                 "x-swagger-router-controller": "users",
                 "tags": [
                     "유저 관련 API"
                 ],
-                "description": "post users",
+                "description": "유저정보를 취득 할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -121,13 +151,135 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/users/:userId 유저정보를 변경": {
             "put": {
                 "x-swagger-router-controller": "users",
                 "tags": [
                     "유저 관련 API"
                 ],
-                "description": "put users",
+                "description": "유저정보를 변경 할때 사용됩니다.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "users to be returned",
+                        "schema": {
+                            "$ref": "#/definitions/users"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/:userId/send-reset-password-email 비밀번호 재설정 이메일을 전송": {
+            "post": {
+                "x-swagger-router-controller": "users",
+                "tags": [
+                    "유저 관련 API"
+                ],
+                "description": "비밀번호 재설정 이메일을 전송 할때 사용됩니다.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "users to be returned",
+                        "schema": {
+                            "$ref": "#/definitions/users"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/check-password 비밀번호가 맞는지 체크": {
+            "post": {
+                "x-swagger-router-controller": "users",
+                "tags": [
+                    "유저 관련 API"
+                ],
+                "description": "비밀번호가 맞는지 체크 할때 사용됩니다.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "users to be returned",
+                        "schema": {
+                            "$ref": "#/definitions/users"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/:userId/check-reset-password-token 비밀번호변경 토큰이 맞는지 체크": {
+            "get": {
+                "x-swagger-router-controller": "users",
+                "tags": [
+                    "유저 관련 API"
+                ],
+                "description": "비밀번호변경 토큰이 맞는지 체크 할때 사용됩니다.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "users to be returned",
+                        "schema": {
+                            "$ref": "#/definitions/users"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/:userId/password 비밀번호 변경": {
+            "put": {
+                "x-swagger-router-controller": "users",
+                "tags": [
+                    "유저 관련 API"
+                ],
+                "description": "비밀번호 변경 할때 사용됩니다.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "users to be returned",
+                        "schema": {
+                            "$ref": "#/definitions/users"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/:userId/ 유저를 삭제 ": {
+            "delete": {
+                "x-swagger-router-controller": "users",
+                "tags": [
+                    "유저 관련 API"
+                ],
+                "description": "유저를 삭제 할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -405,35 +557,13 @@
                 }
             }
         },
-        "/comments/": {
+        "/comments": {
             "get": {
                 "x-swagger-router-controller": "comments",
                 "tags": [
                     "댓글 관련 API"
                 ],
-                "description": "get comments",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "comments to be returned",
-                        "schema": {
-                            "$ref": "#/definitions/comments"
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "x-swagger-router-controller": "comments",
-                "tags": [
-                    "댓글 관련 API"
-                ],
-                "description": "post comments",
+                "description": "전체 배틀의 댓글 리스트를 취득합니다.",
                 "parameters": [],
                 "responses": {
                     "200": {

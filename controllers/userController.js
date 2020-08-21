@@ -24,7 +24,53 @@ function makeid(length) {
   return result;
 }
 
-export const users = (req, res) => res.send("Users");
+const addOperate = (operate, key, value) => {
+  console.log(operate)
+  console.log((Object.keys(operate)))
+  if (Object.keys(operate).length == 0) {
+    operate[key] = value;
+  } else {
+    let array = [operate];
+    let newObj = {};
+    newObj[key] = value;
+    array.push(newObj);
+    operate = { $and: array };
+  }
+  return operate;
+}
+export const users = async (req, res) => {
+  const {
+    query: { email, phone, count }
+  } = req;
+  console.log(email)
+  console.log(phone)
+
+  const populateList = [""];
+  let findOperate = {};
+  let limit;
+  if (email) {
+    findOperate = addOperate(findOperate, "email", email);
+  }
+  if (phone) {
+    findOperate = addOperate(findOperate, "phone", phone);
+  }
+  if (count) {
+    limit = count;
+  }
+  console.log(findOperate)
+  try {
+    const users = await User.find(findOperate).populate(populateList).limit(limit);
+    if (users) {
+      return res.status(200).json({ users });
+    } else {
+      return res.status(400).json({ error: "아이디를 찾지 못했습니다." });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ error });
+  }
+};
+
 
 export const register = async (req, res, next) => {
   const {
@@ -38,10 +84,10 @@ export const register = async (req, res, next) => {
   } else {
     try {
       const findUser = await User.findOne({
-        email
+        $or: [{ email }, { phone }],
       });
       if (findUser) {
-        res.status(400).json({ error: "이미 가입된 이메일 입니다." });
+        res.status(400).json({ error: "이미 가입된 이메일 or 핸드폰번호 입니다." });
       } else {
 
         const resetPasswordToken = makeid(12)
@@ -64,13 +110,12 @@ export const register = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   const {
-    body: { email }
+    body: { phone }
   } = req;
-  console.log(req.body)
-  const findUser = await User.findOne({ email: email });
+  const findUser = await User.findOne({ phone });
   if (!findUser) {
     console.log("존재하지 않는 아이디입니다")
-    return res.status(200).json({ error: "존재하지 않는 아이디입니다" }); // 임의 에러 처리
+    return res.status(400).json({ error: "존재하지 않는 아이디입니다" }); // 임의 에러 처리
   }
   passport.authenticate("local", { session: false }, function (err, user, info) {
     if (err) {
@@ -231,28 +276,9 @@ const snsLogin = async (req, res, snsLoginType, userObj) => {
   })(req, res);
 };
 
-export const findEmail = async (req, res, next) => {
-  const {
-    query: { eamil, phone }
-  } = req;
-  console.log(eamil)
-  console.log(phone)
-  try {
-    const user = await User.findOne({ $and: [{ eamil }, { phone }] });
-    if (user) {
-      return res.status(200).json({ user });
-    } else {
-      return res.status(400).json({ error: "아이디를 찾지 못했습니다." });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(400).json({ error });
-  }
-};
-
 export const sendResetPasswordEmail = async (req, res) => {
   const {
-    body: { email },
+    body: { email, phone },
     params: { userId }
   } = req;
   console.log("rest!!")

@@ -46,7 +46,6 @@ export const uploadAvatar = multerAvatar.single("avatarUrl");
 
 userRouter.get("/", users);
 
-userRouter.get(routes.findEmail, findEmail); //
 userRouter.post(routes.sendResetPasswordEmail, sendResetPasswordEmail); //
 userRouter.get(routes.getUserInfo, getUserInfo); //
 userRouter.put(
