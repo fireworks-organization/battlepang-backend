@@ -47,12 +47,6 @@ const BattleSchema = new mongoose.Schema({
       ref: "User"
     }
   ],
-  unlikes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
-    }
-  ],
   votes: [
     {
       type: mongoose.Schema.Types.ObjectId,

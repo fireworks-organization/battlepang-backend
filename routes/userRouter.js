@@ -45,28 +45,28 @@ const multerAvatar = multer({
 export const uploadAvatar = multerAvatar.single("avatarUrl");
 
 userRouter.get("/", users);
-
-userRouter.post(routes.sendResetPasswordEmail, sendResetPasswordEmail); //
-userRouter.get(routes.getUserInfo, getUserInfo); //
+  
+userRouter.post(routes.sendResetPasswordEmail, sendResetPasswordEmail);
+userRouter.get(routes.getUserInfo, getUserInfo);
 userRouter.put(
     routes.changeUserInfo,
     checkJWTAuthenticate,
     uploadAvatar,
     changeUserInfo
-); // 
+);
 userRouter.post(
     routes.checkUserPassword,
     checkJWTAuthenticate,
     checkUserPassword
-);//
+);
 userRouter.get(
     routes.checkResetPasswordToken,
     checkResetPasswordToken
-);//
+);
 userRouter.put(
     routes.resetUserPassword,
     resetUserPassword
-);//
-userRouter.delete(routes.deleteUser, checkJWTAuthenticate, deleteUser);//
+);
+userRouter.delete(routes.deleteUser, checkJWTAuthenticate, deleteUser);
 
 export default userRouter;

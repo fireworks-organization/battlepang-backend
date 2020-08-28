@@ -20,19 +20,16 @@ export const comments = async (req, res) => {
       findComments = await Comment.find({ battleId })
         .populate("creator")
         .populate("like")
-        .populate("unlike")
         .sort({ createdAt: -1 });
     } else if (creator) {
       findComments = await Comment.find({ creator })
         .populate("creator")
         .populate("like")
-        .populate("unlike")
         .sort({ createdAt: -1 });
     } else {
       findComments = await Comment.find()
         .populate("creator")
         .populate("like")
-        .populate("unlike")
         .sort({ createdAt: -1 });
     }
 

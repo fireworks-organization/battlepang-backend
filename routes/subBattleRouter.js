@@ -10,8 +10,6 @@ import {
   subBattles,
   addSubBattle,
   updateSubBattle,
-  // likeSubBattle,
-  // unlikeSubBattle,
   refundSubBattle
 } from "../controllers/subBattleController";
 const storage = multer.diskStorage({
@@ -29,12 +27,6 @@ const uploader = multer({ storage: storage });
 subBattleRouter.get("/", subBattles);
 subBattleRouter.post(routes.addSubBattle, uploader.any(), addSubBattle);
 subBattleRouter.post(routes.updateSubBattle, uploader.any(), updateSubBattle);
-// subBattleRouter.post(routes.likeSubBattle, checkJWTAuthenticate, likeSubBattle);
-// subBattleRouter.post(
-//   routes.unlikeSubBattle,
-//   checkJWTAuthenticate,
-//   unlikeSubBattle
-// );
 subBattleRouter.post(
   routes.refundSubBattle,
   checkJWTAuthenticate,

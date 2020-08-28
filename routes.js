@@ -23,7 +23,6 @@ const DELETE_USER = "/:userId";
 const BATTLES = "/battles";
 const ADD_BATTLE = "/add";
 const LIKE_BATTLE = "/like";
-const UNLIKE_BATTLE = "/unlike";
 const START_BATTLE = "/start";
 const REFUND_BATTLE = "/refund";
 const VOTE_BATTLE = "/vote";
@@ -33,7 +32,6 @@ const SUB_BATTLES = "/subBattles";
 const ADD_SUB_BATTLE = "/add";
 const UPDATE_SUB_BATTLE = "/update";
 // const LIKE_SUB_BATTLE = "/like";
-// const UNLIKE_SUB_BATTLE = "/unlike";
 const REFUND_SUB_BATTLE = "/refund";
 
 // Comment
@@ -78,7 +76,6 @@ const routes = {
   battles: BATTLES,
   addBattle: ADD_BATTLE,
   likeBattle: LIKE_BATTLE,
-  unlikeBattle: UNLIKE_BATTLE,
   startBattle: START_BATTLE,
   refundBattle: REFUND_BATTLE,
   comments: COMMENTS,
@@ -86,8 +83,6 @@ const routes = {
   subBattles: SUB_BATTLES,
   addSubBattle: ADD_SUB_BATTLE,
   updateSubBattle: UPDATE_SUB_BATTLE,
-  // likeSubBattle: LIKE_SUB_BATTLE,
-  // unlikeSubBattle: UNLIKE_SUB_BATTLE,
   refundSubBattle: REFUND_SUB_BATTLE,
   voteBattle: VOTE_BATTLE,
   reportBattle: REPORT_BATTLE,

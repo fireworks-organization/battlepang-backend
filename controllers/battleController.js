@@ -309,7 +309,6 @@ export const likeBattle = async (req, res) => {
     });
     if (findBattle) {
       if (likeValue) {
-        findBattle.unlikes = findBattle.unlikes.filter(item => item != userId);
         findBattle.likes = [...findBattle.likes, userId];
       } else if (likeValue === false) {
         findBattle.likes = findBattle.likes.filter(item => item != userId);
@@ -323,59 +322,9 @@ export const likeBattle = async (req, res) => {
 
       if (findSubBattle) {
         if (likeValue) {
-          findSubBattle.unlikes = findSubBattle.unlikes.filter(
-            item => item != userId
-          );
           findSubBattle.likes = [...findSubBattle.likes, userId];
         } else if (likeValue === false) {
           findSubBattle.likes = findSubBattle.likes.filter(
-            item => item != userId
-          );
-        }
-        await findSubBattle.save();
-        res.status(200).send({ battle: findSubBattle });
-      } else {
-        res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
-      }
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ error });
-  }
-};
-export const unlikeBattle = async (req, res) => {
-  const {
-    body: { data }
-  } = req;
-  const battleId = data.battleId;
-  const userId = data.userId;
-  const unlikeValue = data.unlikeValue; // true or false
-  try {
-    const findBattle = await Battle.findOne({
-      _id: battleId
-    });
-    if (findBattle) {
-      if (unlikeValue) {
-        findBattle.likes = findBattle.likes.filter(item => item != userId);
-        findBattle.unlikes = [...findBattle.unlikes, userId];
-      } else if (unlikeValue === false) {
-        findBattle.unlikes = findBattle.unlikes.filter(item => item != userId);
-      }
-      await findBattle.save();
-      res.status(200).send({ battle: findBattle });
-    } else {
-      const findSubBattle = await SubBattle.findOne({
-        _id: battleId
-      });
-
-      if (findSubBattle) {
-        if (unlikeValue) {
-          findSubBattle.unlikes = [...findSubBattle.unlikes, userId];
-          findSubBattle.likes = findSubBattle.likes.filter(
-            item => item != userId
-          );
-        } else if (unlikeValue === false) {
-          findSubBattle.unlikes = findSubBattle.unlikes.filter(
             item => item != userId
           );
         }

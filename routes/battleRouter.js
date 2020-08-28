@@ -10,7 +10,6 @@ import {
   battles,
   addBattle,
   likeBattle,
-  unlikeBattle,
   startBattle,
   refundBattle,
   voteBattle,
@@ -31,7 +30,6 @@ const uploader = multer({ storage: storage });
 battleRouter.get("/", battles);
 battleRouter.post(routes.addBattle, uploader.any(), addBattle);
 battleRouter.post(routes.likeBattle, checkJWTAuthenticate, likeBattle);
-battleRouter.post(routes.unlikeBattle, checkJWTAuthenticate, unlikeBattle);
 battleRouter.post(routes.startBattle, checkJWTAuthenticate, startBattle);
 battleRouter.post(routes.refundBattle, checkJWTAuthenticate, refundBattle);
 battleRouter.post(routes.voteBattle, checkJWTAuthenticate, voteBattle);
