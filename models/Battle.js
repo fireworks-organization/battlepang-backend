@@ -4,19 +4,27 @@ const BattleSchema = new mongoose.Schema({
   videoUrl: String,
   thumbnail: String,
   title: String,
-  tags: [
-    {
-      type: String
-    }
-  ],
-  gold: Number,
-  joinCount: Number,
-  maxCount: Number,
-  state: String,
+  description: String,
+  category1: String,
+  category2: String,
   reviewCriteria: String,
+  pro: Boolean,
+  ageLimit: Boolean,
+  gold: Number,
+  joinCount: {
+    type: Number,
+    default: 0
+  },
+  maxCount: {
+    type: Number,
+    default: 2
+  },
+  state: {
+    type: String,
+    default: "wait-battle"
+  },
   battleStartTime: String,
   voteEndTime: String,
-  description: String,
   views: {
     type: Number,
     default: 0

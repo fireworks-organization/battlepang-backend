@@ -199,7 +199,7 @@ export const battles = async (req, res) => {
 };
 export const addBattle = async (req, res) => {
   const {
-    body: { battleObj, battleTrimStartTime }
+    body: { battleObj, videoCutToStartTime }
   } = req;
 
   const videoFile = req.files
@@ -209,9 +209,9 @@ export const addBattle = async (req, res) => {
   let videoFileName = "./public/videoFiles/" + videoFile.filename;
   let newVideoFileName = "./public/videoFiles/converted-" + videoFile.filename + ".mp4";
   ffmpeg.setFfmpegPath(ffmpegPath);
-  console.log(battleTrimStartTime)
+  console.log(videoCutToStartTime)
   ffmpeg(videoFileName)
-    .setStartTime(battleTrimStartTime)
+    .setStartTime(videoCutToStartTime)
     .setDuration('30')
     .output(newVideoFileName)
     .on('end', function (err) {

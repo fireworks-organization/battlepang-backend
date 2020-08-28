@@ -59,7 +59,7 @@ export const subBattles = async (req, res) => {
 };
 export const addSubBattle = async (req, res) => {
   const {
-    body: { subBattleObj, battleTrimStartTime }
+    body: { subBattleObj, videoCutToStartTime }
   } = req;
 
   const videoFile = req.files
@@ -90,7 +90,7 @@ export const addSubBattle = async (req, res) => {
 };
 export const updateSubBattle = async (req, res) => {
   const {
-    body: { subBattleObj, battleTrimStartTime }
+    body: { subBattleObj, videoCutToStartTime }
   } = req;
 
   const videoFile = req.files
@@ -100,11 +100,11 @@ export const updateSubBattle = async (req, res) => {
   let videoFileName = "./public/videoFiles/" + videoFile.filename;
   let newVideoFileName = "./public/videoFiles/converted-" + videoFile.filename + ".mp4";
 
-  console.log(battleTrimStartTime)
+  console.log(videoCutToStartTime)
   console.log(videoFileName)
   ffmpeg.setFfmpegPath(ffmpegPath);
   ffmpeg(videoFileName)
-    .setStartTime(battleTrimStartTime)
+    .setStartTime(videoCutToStartTime)
     .setDuration('30')
     .output(newVideoFileName)
     .on('end', function (err) {
