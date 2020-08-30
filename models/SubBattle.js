@@ -8,7 +8,7 @@ const SubBattleSchema = new mongoose.Schema({
   description: String,
   state: {
     type: String,
-    default: "wait-upload"
+    default: "transcoding"
   },
   views: {
     type: Number,

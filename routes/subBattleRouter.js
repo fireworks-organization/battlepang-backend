@@ -26,7 +26,7 @@ const uploader = multer({ storage: storage });
 
 subBattleRouter.get("/", subBattles);
 subBattleRouter.post(routes.addSubBattle, uploader.any(), addSubBattle);
-subBattleRouter.post(routes.updateSubBattle, uploader.any(), updateSubBattle);
+// subBattleRouter.post(routes.updateSubBattle, uploader.any(), updateSubBattle);
 subBattleRouter.post(
   routes.refundSubBattle,
   checkJWTAuthenticate,

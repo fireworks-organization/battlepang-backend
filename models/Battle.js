@@ -21,7 +21,7 @@ const BattleSchema = new mongoose.Schema({
   },
   state: {
     type: String,
-    default: "wait-battle"
+    default: "transcoding"
   },
   battleStartTime: String,
   voteEndTime: String,

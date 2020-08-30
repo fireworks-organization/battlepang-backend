@@ -260,7 +260,7 @@ export const addBattle = async (req, res) => {
                             console.log(error);
                           }
                           console.log(body);
-                          battle.state = "transcoded";
+                          battle.state = "wait-battle";
                           battle.thumbnail = `https://i.vimeocdn.com/video/${body.uri
                             .replace("/videos/", "")
                             .replace(videoId, "")
@@ -382,7 +382,7 @@ export const refundBattle = async (req, res) => {
           console.log(error);
         }
         console.log(body);
-        battle.state = "transcoded";
+        battle.state = "wait-battle";
         battle.thumbnail = `https://i.vimeocdn.com/video/${body.uri
           .replace("/videos/", "")
           .replace(videoId, "")
