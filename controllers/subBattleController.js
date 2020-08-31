@@ -6,6 +6,8 @@ const ffmpeg = require('fluent-ffmpeg')
 
 import Battle from "../models/Battle";
 import SubBattle from "../models/SubBattle";
+import GoldHistory from "../models/GoldHistory"
+import User from "../models/User"
 
 dotenv.config();
 
@@ -90,7 +92,7 @@ export const subBattles = async (req, res) => {
 // };
 export const addSubBattle = async (req, res) => {
   const {
-    body: { subBattleObj, videoCutToStartTime }
+    body: { subBattleObj, videoCutToStartTime, gold }
   } = req;
 
   const videoFile = req.files
@@ -110,6 +112,30 @@ export const addSubBattle = async (req, res) => {
       if (findBattle.joinCount >= findBattle.maxCount) {
         res.status(400).json({ error: "신청인원이 모두 찼습니다." });
       } else {
+        const findUser = await User.findOne({
+          _id: subBattleObjJSON.creator
+        });
+        if (!findUser) {
+          const error = "유저를 찾을 수 없습니다.";
+          res.status(400).json({ error });
+          return false;
+        }
+        console.log(gold)
+        const chargeGold = -1 * gold;
+        console.log(chargeGold)
+        const goldHistoryObj = {
+          user: findUser._id,
+          payment: null,
+          chargeGold,
+          beforeGold: findUser.gold
+        }
+        const goldHistory = new GoldHistory(goldHistoryObj);
+        const insertedGoldHistory = await goldHistory.save();
+        findUser.gold = findUser.gold + chargeGold;
+        await findUser.save();
+        insertedGoldHistory.afterGold = findUser.gold;
+        await insertedGoldHistory.save();
+
         let subBattle = new SubBattle(subBattleObjJSON);
         await subBattle.save();
         findBattle.joinCount = findBattle.joinCount + 1;
@@ -147,11 +173,6 @@ export const addSubBattle = async (req, res) => {
                     // });
 
                     if (subBattle) {
-                      if (findBattle.joinCount >= findBattle.maxCount) {
-                        findBattle.battleStartTime = moment().format("YYYY-MM-DDTHH:mm:ss");
-                        findBattle.voteEndTime = moment().add(3, "days").format("YYYY-MM-DDTHH:mm:ss");
-                        await findBattle.save();
-                      }
 
                       subBattle.title = subBattleObjJSON.title;
                       subBattle.description = subBattleObjJSON.description;
@@ -180,9 +201,17 @@ export const addSubBattle = async (req, res) => {
                                   path: `/videos/${videoId}/pictures`,
                                   query: { time: 0, active: true }
                                 },
-                                function (error, body, status_code, headers) {
+                                async function (error, body, status_code, headers) {
                                   if (error) {
                                     console.log(error);
+                                  }
+                                  console.log(findBattle.joinCount);
+                                  console.log(findBattle.maxCount);
+                                  if (findBattle.joinCount >= findBattle.maxCount) {
+                                    findBattle.battleStartTime = moment().format("YYYY-MM-DDTHH:mm:ss");
+                                    findBattle.state = "battling"
+                                    findBattle.voteEndTime = moment().add(3, "days").format("YYYY-MM-DDTHH:mm:ss");
+                                    await findBattle.save();
                                   }
                                   console.log(body);
                                   subBattle.state = "transcoded";
