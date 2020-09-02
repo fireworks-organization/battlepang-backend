@@ -340,14 +340,15 @@ export const getUserInfo = async (req, res) => {
 };
 export const changeUserInfo = async (req, res) => {
   const {
-    body: { id, email, name, phone, channelName },
+    body: { email, name, phone, channelName },
+    params: { userId },
     file
   } = req;
   console.log(file);
-  const avatarUrl = file ? file.location : '';
-  console.log(id, email, name, phone, channelName);
+  console.log(userId, email, name, phone, channelName);
   // const id = data.id;
-  const findUser = await User.findOne({ _id: id });
+  const findUser = await User.findOne({ _id: userId });
+  const avatarUrl = file ? file.location : findUser.avatarUrl;
   try {
     if (email !== undefined) {
       findUser.email = email;
