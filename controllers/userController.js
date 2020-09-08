@@ -348,7 +348,7 @@ export const changeUserInfo = async (req, res) => {
   console.log(userId, email, name, phone, channelName);
   // const id = data.id;
   const findUser = await User.findOne({ _id: userId });
-  const avatarUrl = file ? file.location : findUser.avatarUrl;
+  const avatarUrl = file ? file.location : undefined;
   try {
     if (email !== undefined) {
       findUser.email = email;
@@ -357,8 +357,10 @@ export const changeUserInfo = async (req, res) => {
       findUser.channelName = channelName;
       findUser.updatedDateOfChannelName = Date.now();
     }
+    console.log(avatarUrl)
     if (avatarUrl !== undefined) {
       if (findUser.avatarUrl != "") {
+        console.log("remove1")
         const currentImagePath = findUser.avatarUrl.split('com/avatar/')[1]
         await s3.deleteObject({
           Bucket: `fireworks-triple-star`,
@@ -377,18 +379,16 @@ export const changeUserInfo = async (req, res) => {
     if (phone !== undefined) {
       findUser.phone = phone;
     }
-    if (phone !== undefined) {
-      findUser.phone = phone;
-    }
     await findUser.save(function (error, user) {
       if (error) return res.status(400).json({ error });
+      console.log(user)
       res.status(200).json({
-        email,
-        avatarUrl,
-        channelName,
-        updatedDateOfChannelName: Date.now(),
-        name,
-        phone
+        email: user.email,
+        avatarUrl: user.avatarUrl,
+        channelName: user.channelName,
+        updatedDateOfChannelName: user.updatedDateOfChannelName,
+        name: user.name,
+        phone: user.phone,
       });
     });
   } catch (error) {
@@ -398,11 +398,11 @@ export const changeUserInfo = async (req, res) => {
 };
 export const checkUserPassword = async (req, res) => {
   const {
-    body: { email, password },
+    body: { phone, password },
   } = req;
-  console.log(email);
+  console.log(phone);
   console.log(password);
-  passport.authenticate("local", { session: false }, function (
+  passport.authenticate("local", { session: false }, async function (
     error,
     user,
     info
@@ -421,9 +421,18 @@ export const checkUserPassword = async (req, res) => {
       }
       return res.status(400).json({ error: info });
     }
-    return res.status(200).json({
-      passwordValidation: true
+    const resetPasswordToken = makeid(12);
+    const findUser = await User.findOne({
+      $and: [{ _id: user._id }]
     });
+    if (findUser) {
+      findUser.resetPasswordToken = resetPasswordToken;
+      await findUser.save();
+      return res.status(200).json({
+        resetPasswordToken,
+        passwordValidation: true
+      });
+    }
   })(req, res);
 };
 export const resetUserPassword = async (req, res) => {
