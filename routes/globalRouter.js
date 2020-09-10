@@ -8,7 +8,8 @@ dotenv.config();
 const globalRouter = express.Router();
 
 import {
-  home
+  home,
+  stripePayment
 } from "../controllers/globalController";
 import {
   register,
@@ -19,6 +20,7 @@ import {
 
 const checkJWTAuthenticate = passport.authenticate("jwt", { session: false });
 globalRouter.get(routes.home, home);
+globalRouter.post('/create-payment-intent', stripePayment);
 globalRouter.post(routes.register, register);
 globalRouter.post(routes.login, login);
 globalRouter.post(routes.authLoginNaverCallback, authLoginNaverCallback);

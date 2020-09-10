@@ -8,10 +8,8 @@ import aws from "aws-sdk";
 const userRouter = express.Router();
 
 import {
-    users,
-    findEmail,
     sendResetPasswordEmail,
-    getUserInfo,
+    users,
     changeUserInfo,
     checkUserPassword,
     checkResetPasswordToken,
@@ -44,10 +42,9 @@ const multerAvatar = multer({
 });
 export const uploadAvatar = multerAvatar.single("avatarUrl");
 
-userRouter.get("/", users);
-  
+
 userRouter.post(routes.sendResetPasswordEmail, sendResetPasswordEmail);
-userRouter.get(routes.getUserInfo, getUserInfo);
+userRouter.get('/', users);
 userRouter.put(
     routes.changeUserInfo,
     checkJWTAuthenticate,

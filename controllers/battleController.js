@@ -8,7 +8,7 @@ import Battle from "../models/Battle";
 import SubBattle from "../models/SubBattle";
 import Vote from "../models/Vote";
 import Report from "../models/Report";
-import { stringify } from "querystring";
+import User from "../models/User";
 
 dotenv.config();
 
@@ -19,179 +19,91 @@ let client = new Vimeo(
   process.env.VIMEO_ACCESS_TOKEN
 );
 
+const addOperate = (operate, key, value) => {
+  console.log(operate)
+  console.log((Object.keys(operate)))
+  if (Object.keys(operate).length == 0) {
+    operate[key] = value;
+  } else {
+    let array = [operate];
+    let newObj = {};
+    newObj[key] = value;
+    array.push(newObj);
+    operate = { $and: array };
+  }
+  return operate;
+}
+
 export const battles = async (req, res) => {
   const {
-    query: { id, creator, subBattleId }
+    query: { id, creator, subBattleId, state, count, userId }
   } = req;
-  console.log(id);
-  // console.log(creator);
-  // console.log(subBattleId);
+  console.log("id", id);
+  console.log("creator", creator);
+  console.log("subBattleId", subBattleId);
+  console.log("state", state);
+  console.log("count", count);
+  console.log("userId", userId);
+
+  const populateList = ["creator", "votes", {
+    path: "subBattles",
+    populate: {
+      path: "creator"
+    }
+  }, {
+      path: "comments",
+      options: { sort: { createdAt: -1 } },
+      populate: {
+        path: "creator"
+      }
+    }];
+  let findOperate = {};
+  let limit;
+  if (id) {
+    findOperate = addOperate(findOperate, "_id", id);
+  }
+  if (creator) {
+    findOperate = addOperate(findOperate, "creator", creator);
+  }
+  if (subBattleId) {
+    findOperate = addOperate(findOperate, "subBattleId", subBattleId);
+  }
+  if (state) {
+    findOperate = addOperate(findOperate, "state", state);
+  }
+  if (count) {
+    limit = count;
+  }
+
+  console.log(findOperate)
+  console.log(limit)
+
   try {
     let findBattles = [];
-    if (id && subBattleId) {
-      // 아이디랑 서브 배틀함께 넘김
-      // 배틀 상세에서 아이디만으로 찾아보고 없으면 배틀도 찾는다
-      findBattles = await Battle.find({
-        _id: id
-      })
-        .populate("creator")
-        .populate({
-          path: "subBattles",
-          populate: {
-            path: "creator"
-          }
-        })
-        .populate("votes")
-        .populate({
-          path: "comments",
-          options: { sort: { createdAt: -1 } },
-          populate: {
-            path: "creator"
-          }
-        });
-      // 다른 영상 3개를 추출하는데 
-      // 현재 배틀 영상이랑 상태값이 타임오버, 변환중인 비디오는 제외한다
-      const otherBattles = await Battle.find(
-        { $and: [{ _id: { $nin: id } }, { state: { $nin: ["time-over", "trandcoding"] } }] }
-      ).limit(3)
-        .populate("creator")
-        .populate({
-          path: "subBattles",
-          populate: {
-            path: "creator"
-          }
-        })
-        .populate("votes")
-        .populate({
-          path: "comments",
-          options: { sort: { createdAt: -1 } },
-          populate: {
-            path: "creator"
-          }
-        });
-      findBattles = [...findBattles, ...otherBattles];
-      if (findBattles[0]) {
-        findBattles[0].views = findBattles[0].views + 1;
-        findBattles[0].save();
-      } else {
-        const findSubBattle = await SubBattle.find({
-          _id: subBattleId
-        }).populate({
-          path: "comments",
-          options: { sort: { createdAt: -1 } },
-          populate: {
-            path: "creator"
-          }
-        });
-        if (findSubBattle) {
-          findSubBattle[0].views = findSubBattle[0].views + 1;
-          findSubBattle[0].save();
-          findBattles = await Battle.find({ _id: findSubBattle[0].battleId })
-            .populate("creator")
-            .populate("votes")
-            .populate({
-              path: "subBattles",
-              populate: {
-                path: "creator"
-              }
-            })
-            .populate({
-              path: "comments",
-              options: { sort: { createdAt: -1 } },
-              populate: {
-                path: "creator"
-              }
-            });
-          res
-            .status(200)
-            .json({ battles: findBattles, currentSubBattle: findSubBattle });
-        }
-      }
-    } else if (id) {
-      findBattles = await Battle.find({ _id: id })
-        .populate("creator")
-        .populate("votes")
-        .populate({
-          path: "subBattles",
-          populate: {
-            path: "creator"
-          }
-        })
-        .populate({
-          path: "comments",
-          options: { sort: { createdAt: -1 } },
-          populate: {
-            path: "creator"
-          }
-        });
-      if (findBattles[0]) {
-        findBattles[0].views = findBattles[0].views + 1;
-        findBattles[0].save();
-      }
-    } else if (creator) {
-      findBattles = await Battle.find({ creator })
-        .populate("creator")
-        .populate("votes")
-        .populate({
-          path: "subBattles",
-          populate: {
-            path: "creator"
-          }
-        })
-        .populate({
-          path: "comments",
-          options: { sort: { createdAt: -1 } },
-          populate: {
-            path: "creator"
-          }
-        });
-
-      const findSubBattle = await SubBattle.find({ creator });
-      if (findSubBattle) {
-        res.status(200).json({ battles: findBattles, subBattles: findSubBattle });
+    findBattles = await Battle.find(findOperate).populate(populateList).limit(parseInt(limit));
+    // 다른 영상 3개를 추출하는데 
+    // 현재 배틀 영상이랑 상태값이 타임오버, 변환중인 비디오는 제외한다
+    const otherBattles = await Battle.find(
+      { $and: [{ _id: { $nin: id } }, { state: { $nin: ["time-over", "trandcoding"] } }] }
+    ).limit(3)
+      .populate(populateList);
+    if (findBattles[0]) {
+      findBattles[0].views = findBattles[0].views + 1;
+      findBattles[0].save();
+    }
+    if (userId && id) {
+      const findUser = await User.findOne({ _id: userId });
+      if (!findUser) {
+        res.status(400).json({ error: "시청기록을 기록할 유저가 없음." });
         res.end();
       }
-    } else if (subBattleId) {
-      const findSubBattle = await SubBattle.find({ _id: subBattleId });
-      if (findSubBattle) {
-        findBattles = await Battle.find({ _id: findSubBattle[0].battleId })
-          .populate("creator")
-          .populate("votes")
-          .populate({
-            path: "subBattles",
-            populate: {
-              path: "creator"
-            }
-          })
-          .populate({
-            path: "comments",
-            options: { sort: { createdAt: -1 } },
-            populate: {
-              path: "creator"
-            }
-          });
-        console.log(findBattles);
+      if (findUser.watchedBattles.indexOf(id) == -1) {
+        findUser.watchedBattles = [...findUser.watchedBattles, id]
+        await findUser.save();
       }
-    } else {
-      findBattles = await Battle.find()
-        .populate("creator")
-        .populate("votes")
-        .populate({
-          path: "subBattles",
-          populate: {
-            path: "creator"
-          }
-        })
-        .populate({
-          path: "comments",
-          options: { sort: { createdAt: -1 } },
-          populate: {
-            path: "creator"
-          }
-        });
     }
 
-    res.status(200).json({ battles: findBattles });
+    res.status(200).json({ battles: findBattles, otherBattles });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error });

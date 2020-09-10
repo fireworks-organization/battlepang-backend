@@ -35,6 +35,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: ""
   },
+  watchedBattles: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Battle"
+  }],
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
 });
 
 UserSchema.plugin(passportLocalMongoose, { usernameField: "phone" });

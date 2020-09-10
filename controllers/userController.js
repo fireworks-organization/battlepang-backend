@@ -40,14 +40,18 @@ const addOperate = (operate, key, value) => {
 }
 export const users = async (req, res) => {
   const {
-    query: { email, phone, count }
+    query: { id, email, phone, count }
   } = req;
+  console.log(id)
   console.log(email)
   console.log(phone)
 
-  const populateList = [""];
+  const populateList = ["watchedBattles"];
   let findOperate = {};
   let limit;
+  if (id) {
+    findOperate = addOperate(findOperate, "_id", id);
+  }
   if (email) {
     findOperate = addOperate(findOperate, "email", email);
   }
@@ -59,7 +63,7 @@ export const users = async (req, res) => {
   }
   console.log(findOperate)
   try {
-    const users = await User.find(findOperate).populate(populateList).limit(limit);
+    const users = await User.find(findOperate).populate(populateList).limit(parseInt(limit));
     if (users) {
       return res.status(200).json({ users });
     } else {

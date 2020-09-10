@@ -11,7 +11,6 @@ const AUTH_LOGIN_KAKAO_CALLBACK = "/auth/login/kakao/callback";
 
 // Users
 const USERS = "/users";
-const GET_USER_INFO = "/:userId";
 const CHANGE_USER_INFO = "/:userId";
 const SEND_RESET_PASSWORD_EMAIL = "/:userId/send-reset-password-email";
 const CHECK_USER_PASSWORD = "/check-password";
@@ -62,7 +61,6 @@ const routes = {
   register: REGISTER,
   login: LOGIN,
   sendResetPasswordEmail: SEND_RESET_PASSWORD_EMAIL,
-  getUserInfo: GET_USER_INFO,
   logout: LOGOUT,
   search: SEARCH,
   users: USERS,
