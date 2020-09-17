@@ -113,99 +113,127 @@ export const addBattle = async (req, res) => {
   const {
     body: { battleObj, videoCutToStartTime }
   } = req;
-
-  const videoFile = req.files
-    .filter(item => item.fieldname == "videoFile")[0];
+  const videoFile = req.files ?
+    req.files.filter(item => item.fieldname == "videoFile")[0] : null;
+  console.log(videoFile)
   let battleObjJSON = JSON.parse(battleObj);
 
-  let videoFileName = "./public/videoFiles/" + videoFile.filename;
-  let newVideoFileName = "./public/videoFiles/converted-" + videoFile.filename + ".mp4";
+  let videoFileName = "./public/videoFiles/";
+  if (videoFile) {
+    videoFileName = videoFileName + videoFile.filename;
+  }
+
+  if (battleObjJSON.videoFileName) {
+    videoFileName = videoFileName + battleObjJSON.videoFileName;
+  }
+  let newVideoFileName = "./public/videoFiles/converted-";
+  if (videoFile) {
+    newVideoFileName = newVideoFileName + videoFile.filename + ".mp4";
+  }
+
+  if (battleObjJSON.videoFileName) {
+    newVideoFileName = newVideoFileName + battleObjJSON.videoFileName;
+  }
   try {
-    ffmpeg.setFfmpegPath(ffmpegPath);
-    console.log(videoCutToStartTime)
-    ffmpeg(videoFileName)
-      .setStartTime(videoCutToStartTime)
-      .setDuration('30')
-      .output(newVideoFileName)
-      .on('end', function (err) {
-        if (!err) {
-          fs.unlinkSync(videoFileName);
-          client.upload(
-            newVideoFileName,
-            {
-              name: battleObjJSON.title ? battleObjJSON.title : "Untitled",
-              description: battleObjJSON.description
-            },
-            async function (result) {
-              const videoId = result.replace("/videos/", "");
-              const uri = "https://player.vimeo.com/video/" + videoId;
-              console.log("Your video URI is: " + uri);
-              fs.unlinkSync(newVideoFileName);
-              try {
-                battleObjJSON.videoUrl = uri;
-                battleObjJSON.thumbnail = `https://i.vimeocdn.com/video/`;
-
-                console.log(battleObjJSON);
-                const battle = new Battle(battleObjJSON);
-                await battle.save();
-                res.status(200).send({ battle });
-                function getVideoState() {
-                  //비디오 미리보기 이미지의 uri를 가져옴.
-                  client.request(
-                    {
-                      method: "GET",
-                      path: `/videos/${videoId}`
-                    },
-                    function (error, body, status_code, headers) {
-                      console.log(body.status);
-                      if (body.status != "available") {
-                        setTimeout(getVideoState, 2000);
-                      } else {
-                        // 비디오 섬네일 업로드 링크 가져오기.
-                        client.request(
-                          {
-                            method: "POST",
-                            path: `/videos/${videoId}/pictures`,
-                            query: { time: 0, active: true }
-                          },
-                          function (error, body, status_code, headers) {
-                            if (error) {
-                              console.log(error);
-                            }
-                            console.log(body);
-                            battle.state = "wait-battle";
-                            battle.thumbnail = `https://i.vimeocdn.com/video/${body.uri
-                              .replace("/videos/", "")
-                              .replace(videoId, "")
-                              .replace("/pictures/", "")}`;
-                            battle.save();
-                          }
-                        );
-                      }
-                    }
-                  );
-                }
-
-                setTimeout(getVideoState, 2000);
-              } catch (error) {
-                console.log(error);
-                res.status(400).json({ error });
-              }
-            },
-            function (bytes_uploaded, bytes_total) {
-              var percentage = ((bytes_uploaded / bytes_total) * 100).toFixed(2);
-              console.log(bytes_uploaded, bytes_total, percentage + "%");
-            },
-            function (error) {
-              console.log("Failed because: " + error);
+    if (battleObjJSON.videoFileName) {
+      vimeoUploadAndWatchingToTrancoded(videoFileName, battleObjJSON);
+    } else {
+      ffmpeg.setFfmpegPath(ffmpegPath);
+      // console.log(battleObjJSON)
+      // console.log(videoFileName)
+      // console.log(newVideoFileName)
+      ffmpeg(videoFileName)
+        .setStartTime(videoCutToStartTime)
+        .setDuration('30')
+        .output(newVideoFileName)
+        .on('end', function (err) {
+          if (!err) {
+            if (!battleObjJSON.videoFileName) {
+              fs.unlinkSync(videoFileName);
             }
-          );
+            vimeoUploadAndWatchingToTrancoded(newVideoFileName, battleObjJSON);
+          }
+        })
+        .on('error', function (err) {
+          console.log('error: ', err)
+        }).run()
+    }
 
+    function vimeoUploadAndWatchingToTrancoded(uploadFileName, battleObjJSON) {
+      // console.log(uploadFileName)
+      client.upload(
+        uploadFileName,
+        {
+          name: battleObjJSON.title ? battleObjJSON.title : "Untitled",
+          description: battleObjJSON.description
+        },
+        async function (result) {
+          const videoId = result.replace("/videos/", "");
+          const uri = "https://player.vimeo.com/video/" + videoId;
+          console.log("Your video URI is: " + uri);
+          if (!battleObjJSON.videoFileName) {
+            fs.unlinkSync(uploadFileName);
+          }
+          try {
+            battleObjJSON.videoUrl = uri;
+            battleObjJSON.thumbnail = `https://i.vimeocdn.com/video/`;
+
+            console.log(battleObjJSON);
+            const battle = new Battle(battleObjJSON).populate(creator);
+            await battle.save();
+            res.status(200).send({ battle });
+            function getVideoState() {
+              //비디오 미리보기 이미지의 uri를 가져옴.
+              client.request(
+                {
+                  method: "GET",
+                  path: `/videos/${videoId}`
+                },
+                function (error, body, status_code, headers) {
+                  console.log(body.status);
+                  if (body.status != "available") {
+                    setTimeout(getVideoState, 2000);
+                  } else {
+                    // 비디오 섬네일 업로드 링크 가져오기.
+                    client.request(
+                      {
+                        method: "POST",
+                        path: `/videos/${videoId}/pictures`,
+                        query: { time: 0, active: true }
+                      },
+                      function (error, body, status_code, headers) {
+                        if (error) {
+                          console.log(error);
+                        }
+                        console.log(body);
+                        battle.state = "wait-battle";
+                        battle.thumbnail = `https://i.vimeocdn.com/video/${body.uri
+                          .replace("/videos/", "")
+                          .replace(videoId, "")
+                          .replace("/pictures/", "")}`;
+                        battle.save();
+                      }
+                    );
+                  }
+                }
+              );
+            }
+
+            setTimeout(getVideoState, 2000);
+          } catch (error) {
+            console.log(error);
+            res.status(400).json({ error });
+          }
+        },
+        function (bytes_uploaded, bytes_total) {
+          var percentage = ((bytes_uploaded / bytes_total) * 100).toFixed(2);
+          console.log(bytes_uploaded, bytes_total, percentage + "%");
+        },
+        function (error) {
+          console.log("Failed because: " + error);
         }
-      })
-      .on('error', function (err) {
-        console.log('error: ', err)
-      }).run()
+      );
+    }
   } catch (error) {
     res.status(400).json({ error });
   }
