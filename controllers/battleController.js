@@ -179,7 +179,7 @@ export const addBattle = async (req, res) => {
             battleObjJSON.thumbnail = `https://i.vimeocdn.com/video/`;
 
             console.log(battleObjJSON);
-            const battle = new Battle(battleObjJSON).populate(creator);
+            const battle = new Battle(battleObjJSON);
             await battle.save();
             res.status(200).send({ battle });
             function getVideoState() {
