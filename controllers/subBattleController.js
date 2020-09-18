@@ -206,64 +206,52 @@ export const addSubBattle = async (req, res) => {
             subBattle.thumbnail = `https://i.vimeocdn.com/video/`;
             console.log(subBattle);
             await subBattle.save();
-            // const subBattle = await SubBattle.findOne({
-            //   _id: subBattleObjJSON._id
-            // });
-            if (subBattle) {
-              subBattle.title = subBattleObjJSON.title;
-              subBattle.description = subBattleObjJSON.description;
-              subBattle.thumbnail = subBattleObjJSON.thumbnail;
-              subBattle.videoUrl = subBattleObjJSON.videoUrl;
-              subBattle.uploadedAt = Date.now();
-              subBattle.state = subBattleObjJSON.state;
-              await subBattle.save();
-              res.status(200).send({ subBattle });
-              function getVideoState() {
-                //비디오 미리보기 이미지의 uri를 가져옴.
-                client.request(
-                  {
-                    method: "GET",
-                    path: `/videos/${videoId}`
-                  },
-                  function (error, body, status_code, headers) {
-                    console.log(body.status);
-                    if (body.status != "available") {
-                      setTimeout(getVideoState, 2000);
-                    } else {
-                      // 비디오 섬네일 업로드 링크 가져오기.
-                      client.request(
-                        {
-                          method: "POST",
-                          path: `/videos/${videoId}/pictures`,
-                          query: { time: 0, active: true }
-                        },
-                        async function (error, body, status_code, headers) {
-                          if (error) {
-                            console.log(error);
-                          }
-                          console.log(findBattle.joinCount);
-                          console.log(findBattle.maxCount);
-                          if (findBattle.joinCount >= findBattle.maxCount) {
-                            findBattle.battleStartTime = moment().format("YYYY-MM-DDTHH:mm:ss");
-                            findBattle.state = "battling"
-                            findBattle.voteEndTime = moment().add(3, "days").format("YYYY-MM-DDTHH:mm:ss");
-                            await findBattle.save();
-                          }
-                          console.log(body);
-                          subBattle.state = "transcoded";
-                          subBattle.thumbnail = `https://i.vimeocdn.com/video/${body.uri
-                            .replace("/videos/", "")
-                            .replace(videoId, "")
-                            .replace("/pictures/", "")}`;
-                          subBattle.save();
+            res.status(200).send({ subBattle });
+            function getVideoState() {
+              //비디오 미리보기 이미지의 uri를 가져옴.
+              client.request(
+                {
+                  method: "GET",
+                  path: `/videos/${videoId}`
+                },
+                function (error, body, status_code, headers) {
+                  console.log(body.status);
+                  if (body.status != "available") {
+                    setTimeout(getVideoState, 2000);
+                  } else {
+                    // 비디오 섬네일 업로드 링크 가져오기.
+                    client.request(
+                      {
+                        method: "POST",
+                        path: `/videos/${videoId}/pictures`,
+                        query: { time: 0, active: true }
+                      },
+                      async function (error, body, status_code, headers) {
+                        if (error) {
+                          console.log(error);
                         }
-                      );
-                    }
+                        console.log(findBattle.joinCount);
+                        console.log(findBattle.maxCount);
+                        if (findBattle.joinCount >= findBattle.maxCount) {
+                          findBattle.battleStartTime = moment().format("YYYY-MM-DDTHH:mm:ss");
+                          findBattle.state = "battling"
+                          findBattle.voteEndTime = moment().add(3, "days").format("YYYY-MM-DDTHH:mm:ss");
+                          await findBattle.save();
+                        }
+                        console.log(body);
+                        subBattle.state = "transcoded";
+                        subBattle.thumbnail = `https://i.vimeocdn.com/video/${body.uri
+                          .replace("/videos/", "")
+                          .replace(videoId, "")
+                          .replace("/pictures/", "")}`;
+                        subBattle.save();
+                      }
+                    );
                   }
-                );
-              }
-              setTimeout(getVideoState, 2000);
+                }
+              );
             }
+            setTimeout(getVideoState, 2000);
           } catch (error) {
             console.log(error);
             res.status(400).json({ error });
