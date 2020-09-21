@@ -87,7 +87,7 @@ export const battles = async (req, res) => {
       { $and: [{ _id: { $nin: id } }, { state: { $nin: ["time-over", "trandcoding"] } }] }
     ).limit(3)
       .populate(populateList);
-    if (findBattles[0]) {
+    if (findBattles[0]&&id) {
       findBattles[0].views = findBattles[0].views + 1;
       findBattles[0].save();
     }
@@ -239,6 +239,42 @@ export const addBattle = async (req, res) => {
   }
 
   // console.log(data);
+};
+
+export const updateBattle = async(req,res)=>{
+const {
+    body: { state,battleStartTime,voteEndTime },
+    params: { battleId },
+  } = req;
+  console.log(state)
+  try {
+    const findBattle = await Battle.findOne({
+      _id: battleId
+    });
+    if (!findBattle) {
+        res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
+        return false;
+    }
+    
+    if (state !== undefined) {
+      findBattle.state = state;
+    }
+    if (battleStartTime !== undefined) {
+      findBattle.battleStartTime = battleStartTime;
+    }
+    if (voteEndTime !== undefined) {
+      findBattle.voteEndTime = voteEndTime;
+    }
+    await findBattle.save(function (error, battle) {
+      if (error) return res.status(400).json({ error });
+      console.log(battle)
+      res.status(200).json({battle:{...battle}});
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+
 };
 export const likeBattle = async (req, res) => {
   const {

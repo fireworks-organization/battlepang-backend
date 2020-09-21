@@ -9,6 +9,7 @@ const checkJWTAuthenticate = passport.authenticate("jwt", { session: false });
 import {
   battles,
   addBattle,
+  updateBattle,
   likeBattle,
   startBattle,
   refundBattle,
@@ -29,6 +30,7 @@ const uploader = multer({ storage: storage });
 
 battleRouter.get("/", battles);
 battleRouter.post(routes.addBattle, uploader.any(), addBattle);
+battleRouter.put(routes.updateBattle, uploader.any(), updateBattle);
 battleRouter.post(routes.likeBattle, checkJWTAuthenticate, likeBattle);
 battleRouter.post(routes.startBattle, checkJWTAuthenticate, startBattle);
 battleRouter.post(routes.refundBattle, checkJWTAuthenticate, refundBattle);

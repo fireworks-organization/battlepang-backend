@@ -297,13 +297,37 @@
                 }
             }
         },
-        "/battles/add - 배틀 생성": {
+        "/battles/ - 배틀 생성": {
             "post": {
                 "x-swagger-router-controller": "battles",
                 "tags": [
                     "배틀 관련 API"
                 ],
                 "description": "배틀 생성할때 사용됩니다.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "battles to be returned",
+                        "schema": {
+                            "$ref": "#/definitions/battles"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/battles/:battleId 배틀정보를 변경": {
+            "put": {
+                "x-swagger-router-controller": "battles",
+                "tags": [
+                    "배틀 관련 API"
+                ],
+                "description": "배틀정보를 변경 할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {

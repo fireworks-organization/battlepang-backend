@@ -20,7 +20,8 @@ const DELETE_USER = "/:userId";
 
 // Battles
 const BATTLES = "/battles";
-const ADD_BATTLE = "/add";
+const ADD_BATTLE = "/";
+const UPDATE_BATTLE = "/:battleId";
 const LIKE_BATTLE = "/like";
 const START_BATTLE = "/start";
 const REFUND_BATTLE = "/refund";
@@ -73,6 +74,7 @@ const routes = {
   deleteUser: DELETE_USER,
   battles: BATTLES,
   addBattle: ADD_BATTLE,
+  updateBattle: UPDATE_BATTLE,
   likeBattle: LIKE_BATTLE,
   startBattle: START_BATTLE,
   refundBattle: REFUND_BATTLE,

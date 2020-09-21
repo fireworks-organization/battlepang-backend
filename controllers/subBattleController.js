@@ -122,7 +122,10 @@ export const addSubBattle = async (req, res) => {
     });
     console.log("findBattle", findBattle);
     if (findBattle) {
-      if (findBattle.joinCount >= findBattle.maxCount) {
+      if (findBattle.state != "wait-battle") {
+        console.log("도전을 기다리는 배틀이 아닙니다.")
+        res.status(400).json({ error: "도전을 기다리는 배틀이 아닙니다." });
+      } else if (findBattle.joinCount >= findBattle.maxCount) {
         console.log("신청인원이 모두 찼습니다.")
         res.status(400).json({ error: "신청인원이 모두 찼습니다." });
       } else {
