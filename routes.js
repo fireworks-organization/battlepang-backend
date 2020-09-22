@@ -23,16 +23,11 @@ const BATTLES = "/battles";
 const ADD_BATTLE = "/";
 const UPDATE_BATTLE = "/:battleId";
 const LIKE_BATTLE = "/like";
-const START_BATTLE = "/start";
-const REFUND_BATTLE = "/refund";
 const VOTE_BATTLE = "/vote";
 const REPORT_BATTLE = "/:battleId/reports";
 // SubBattles
-const SUB_BATTLES = "/subBattles";
-const ADD_SUB_BATTLE = "/add";
-const UPDATE_SUB_BATTLE = "/update";
-// const LIKE_SUB_BATTLE = "/like";
-const REFUND_SUB_BATTLE = "/refund";
+const SUB_BATTLES = "/sub-battles";
+const ADD_SUB_BATTLE = "/";
 
 // Comment
 const COMMENTS = "/comments";
@@ -46,7 +41,7 @@ const UNLIKE_COMMENT = "/:commentId/unlike";
 // Rank
 const RANKS = "/ranks";
 // GoldHistory
-const GOLD_HISTORYS = "/gold-history";
+const GOLD_HISTORYS = "/gold-histories";
 const UPDATE_GOLD_HISTORYS = "/:goldHistoryId";
 // PaymentHistory
 const PAYMENT_HISTORYS = "/payment-history";
@@ -76,14 +71,10 @@ const routes = {
   addBattle: ADD_BATTLE,
   updateBattle: UPDATE_BATTLE,
   likeBattle: LIKE_BATTLE,
-  startBattle: START_BATTLE,
-  refundBattle: REFUND_BATTLE,
   comments: COMMENTS,
   addComment: ADD_COMMENT,
   subBattles: SUB_BATTLES,
   addSubBattle: ADD_SUB_BATTLE,
-  updateSubBattle: UPDATE_SUB_BATTLE,
-  refundSubBattle: REFUND_SUB_BATTLE,
   voteBattle: VOTE_BATTLE,
   reportBattle: REPORT_BATTLE,
   reportComment: REPORT_COMMENT,

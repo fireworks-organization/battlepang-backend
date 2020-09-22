@@ -105,7 +105,7 @@
                 }
             }
         },
-        "/users/ 유저 목록 취득": {
+        "/users 유저 목록 취득": {
             "get": {
                 "x-swagger-router-controller": "users",
                 "tags": [
@@ -297,7 +297,7 @@
                 }
             }
         },
-        "/battles/ - 배틀 생성": {
+        "/battles - 배틀 생성": {
             "post": {
                 "x-swagger-router-controller": "battles",
                 "tags": [
@@ -393,30 +393,6 @@
                 }
             }
         },
-        "/battles/refund - 배틀 환급": {
-            "post": {
-                "x-swagger-router-controller": "battles",
-                "tags": [
-                    "배틀 관련 API"
-                ],
-                "description": "배틀 환급할때 사용됩니다.",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "battles to be returned",
-                        "schema": {
-                            "$ref": "#/definitions/battles"
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            }
-        },
         "/battles/vote - 배틀 투표": {
             "post": {
                 "x-swagger-router-controller": "battles",
@@ -465,19 +441,19 @@
                 }
             }
         },
-        "/sub-battles/": {
+        "/sub-battles 배틀 신청 목록 취득": {
             "get": {
-                "x-swagger-router-controller": "sub-battles",
+                "x-swagger-router-controller": "users",
                 "tags": [
-                    "신청한 배틀 관련 API"
+                    "배틀 신청 관련 API"
                 ],
-                "description": "get sub-battles",
+                "description": "배틀 신청 목록 취득 할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
-                        "description": "sub-battles to be returned",
+                        "description": "users to be returned",
                         "schema": {
-                            "$ref": "#/definitions/sub-battles"
+                            "$ref": "#/definitions/users"
                         }
                     },
                     "default": {
@@ -487,41 +463,21 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/sub-battles 배틀 신청": {
             "post": {
-                "x-swagger-router-controller": "sub-battles",
+                "x-swagger-router-controller": "users",
                 "tags": [
-                    "신청한 배틀 관련 API"
+                    "배틀 신청 관련 API"
                 ],
-                "description": "post sub-battles",
+                "description": "배틀 신청 할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
-                        "description": "sub-battles to be returned",
+                        "description": "users to be returned",
                         "schema": {
-                            "$ref": "#/definitions/sub-battles"
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "x-swagger-router-controller": "sub-battles",
-                "tags": [
-                    "신청한 배틀 관련 API"
-                ],
-                "description": "put sub-battles",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "sub-battles to be returned",
-                        "schema": {
-                            "$ref": "#/definitions/sub-battles"
+                            "$ref": "#/definitions/users"
                         }
                     },
                     "default": {
@@ -647,19 +603,19 @@
                 }
             }
         },
-        "/gold-history/": {
+        "/gold-histories/": {
             "get": {
-                "x-swagger-router-controller": "gold-history",
+                "x-swagger-router-controller": "gold-histories",
                 "tags": [
                     "골드이력 관련 API"
                 ],
-                "description": "get gold-history",
+                "description": "get gold-histories",
                 "parameters": [],
                 "responses": {
                     "200": {
-                        "description": "gold-history to be returned",
+                        "description": "gold-histories to be returned",
                         "schema": {
-                            "$ref": "#/definitions/gold-history"
+                            "$ref": "#/definitions/gold-histories"
                         }
                     },
                     "default": {
@@ -671,17 +627,17 @@
                 }
             },
             "post": {
-                "x-swagger-router-controller": "gold-history",
+                "x-swagger-router-controller": "gold-histories",
                 "tags": [
                     "골드이력 관련 API"
                 ],
-                "description": "post gold-history",
+                "description": "post gold-histories",
                 "parameters": [],
                 "responses": {
                     "200": {
-                        "description": "gold-history to be returned",
+                        "description": "gold-histories to be returned",
                         "schema": {
-                            "$ref": "#/definitions/gold-history"
+                            "$ref": "#/definitions/gold-histories"
                         }
                     },
                     "default": {
@@ -693,17 +649,17 @@
                 }
             },
             "put": {
-                "x-swagger-router-controller": "gold-history",
+                "x-swagger-router-controller": "gold-histories",
                 "tags": [
                     "골드이력 관련 API"
                 ],
-                "description": "put gold-history",
+                "description": "put gold-histories",
                 "parameters": [],
                 "responses": {
                     "200": {
-                        "description": "gold-history to be returned",
+                        "description": "gold-histories to be returned",
                         "schema": {
-                            "$ref": "#/definitions/gold-history"
+                            "$ref": "#/definitions/gold-histories"
                         }
                     },
                     "default": {

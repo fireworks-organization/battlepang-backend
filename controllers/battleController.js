@@ -9,6 +9,7 @@ import SubBattle from "../models/SubBattle";
 import Vote from "../models/Vote";
 import Report from "../models/Report";
 import User from "../models/User";
+import GoldHistory from "../models/GoldHistory"
 
 dotenv.config();
 
@@ -87,7 +88,7 @@ export const battles = async (req, res) => {
       { $and: [{ _id: { $nin: id } }, { state: { $nin: ["time-over", "trandcoding"] } }] }
     ).limit(3)
       .populate(populateList);
-    if (findBattles[0]&&id) {
+    if (findBattles[0] && id) {
       findBattles[0].views = findBattles[0].views + 1;
       findBattles[0].save();
     }
@@ -178,9 +179,38 @@ export const addBattle = async (req, res) => {
             battleObjJSON.videoUrl = uri;
             battleObjJSON.thumbnail = `https://i.vimeocdn.com/video/`;
 
+            const findUser = await User.findOne({
+              _id: battleObjJSON.creator
+            });
+            console.log("findUser", findUser);
+            if (!findUser) {
+              const error = "유저를 찾을 수 없습니다.";
+              console.log(error)
+              res.status(400).json({ error });
+              return false;
+            }
             console.log(battleObjJSON);
             const battle = new Battle(battleObjJSON);
             await battle.save();
+
+            const gold = battleObjJSON.gold;
+            const chargeGold = -1 * gold;
+            console.log("chargeGold", chargeGold);
+            const goldHistoryObj = {
+              user: findUser._id,
+              battle: battle._id,
+              payment: null,
+              chargeGold,
+              beforeGold: findUser.gold,
+              status: "create-battle",
+              message: `배틀 생성 비용으로 ${chargeGold}G 결제`
+            }
+            const goldHistory = new GoldHistory(goldHistoryObj);
+            const insertedGoldHistory = await goldHistory.save();
+            findUser.gold = findUser.gold + chargeGold;
+            await findUser.save();
+            insertedGoldHistory.afterGold = findUser.gold;
+            await insertedGoldHistory.save();
             res.status(200).send({ battle });
             function getVideoState() {
               //비디오 미리보기 이미지의 uri를 가져옴.
@@ -235,15 +265,16 @@ export const addBattle = async (req, res) => {
       );
     }
   } catch (error) {
+    console.log(error)
     res.status(400).json({ error });
   }
 
   // console.log(data);
 };
 
-export const updateBattle = async(req,res)=>{
-const {
-    body: { state,battleStartTime,voteEndTime },
+export const updateBattle = async (req, res) => {
+  const {
+    body: { state, battleStartTime, voteEndTime },
     params: { battleId },
   } = req;
   console.log(state)
@@ -252,10 +283,10 @@ const {
       _id: battleId
     });
     if (!findBattle) {
-        res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
-        return false;
+      res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
+      return false;
     }
-    
+
     if (state !== undefined) {
       findBattle.state = state;
     }
@@ -268,7 +299,7 @@ const {
     await findBattle.save(function (error, battle) {
       if (error) return res.status(400).json({ error });
       console.log(battle)
-      res.status(200).json({battle:{...battle}});
+      res.status(200).json({ battle: { ...battle } });
     });
   } catch (error) {
     console.log(error);
@@ -313,70 +344,6 @@ export const likeBattle = async (req, res) => {
       } else {
         res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
       }
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ error });
-  }
-};
-export const startBattle = async (req, res) => {
-  const {
-    body: { data }
-  } = req;
-  const battleId = data.battleId;
-  try {
-    const findBattle = await Battle.findOne({
-      _id: battleId
-    });
-    if (findBattle) {
-      findBattle.battleStartTime = moment().format("YYYY-MM-DDTHH:mm:ss");
-      findBattle.voteEndTime = moment().add(3, "days").format("YYYY-MM-DDTHH:mm:ss");
-      await findBattle.save();
-      res.status(200).send({ battle: findBattle });
-    } else {
-      res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ error });
-  }
-};
-export const refundBattle = async (req, res) => {
-  const {
-    body: { data }
-  } = req;
-  console.log(data.refundSubBattle)
-  const videoId = data.refundSubBattle.videoUrl.split("/video/");
-  const subBattleId = data.refundSubBattle._id;
-  console.log(videoId);
-  return false;
-  try {
-    client.request(
-      {
-        method: "DELETE",
-        path: `/videos/${videoId}`,
-        query: { time: 0, active: true }
-      },
-      function (error, body, status_code, headers) {
-        if (error) {
-          console.log(error);
-        }
-        console.log(body);
-        battle.state = "wait-battle";
-        battle.thumbnail = `https://i.vimeocdn.com/video/${body.uri
-          .replace("/videos/", "")
-          .replace(videoId, "")
-          .replace("/pictures/", "")}`;
-        battle.save();
-      }
-    );
-    const findSubBattle = await SubBattle.findOneAndRemove({
-      _id: subBattleId
-    });
-    if (findSubBattle) {
-      res.status(200).send({ subBattle: findSubBattle });
-    } else {
-      res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
     }
   } catch (error) {
     console.log(error);

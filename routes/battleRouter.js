@@ -11,8 +11,6 @@ import {
   addBattle,
   updateBattle,
   likeBattle,
-  startBattle,
-  refundBattle,
   voteBattle,
   reportBattle
 } from "../controllers/battleController";
@@ -32,8 +30,6 @@ battleRouter.get("/", battles);
 battleRouter.post(routes.addBattle, uploader.any(), addBattle);
 battleRouter.put(routes.updateBattle, uploader.any(), updateBattle);
 battleRouter.post(routes.likeBattle, checkJWTAuthenticate, likeBattle);
-battleRouter.post(routes.startBattle, checkJWTAuthenticate, startBattle);
-battleRouter.post(routes.refundBattle, checkJWTAuthenticate, refundBattle);
 battleRouter.post(routes.voteBattle, checkJWTAuthenticate, voteBattle);
 battleRouter.post(routes.reportBattle, checkJWTAuthenticate, reportBattle);
 
