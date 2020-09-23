@@ -23,7 +23,7 @@ const BATTLES = "/battles";
 const ADD_BATTLE = "/";
 const UPDATE_BATTLE = "/:battleId";
 const LIKE_BATTLE = "/like";
-const VOTE_BATTLE = "/vote";
+const VOTE_BATTLE = "/:battleId/vote";
 const REPORT_BATTLE = "/:battleId/reports";
 // SubBattles
 const SUB_BATTLES = "/sub-battles";

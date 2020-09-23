@@ -352,14 +352,13 @@ export const likeBattle = async (req, res) => {
 };
 export const voteBattle = async (req, res) => {
   const {
-    body: { data }
+    body: { voteObj },
+    params: { battleId }
   } = req;
-  console.log(data.battleId)
-  const battleId = data.battleId;
-  const voteObj = data.voteObj;
+  console.log(battleId)
   console.log(voteObj)
   try {
-    const findBattle = await Battle.findOne({
+    let findBattle = await Battle.findOne({
       _id: battleId
     });
     if (findBattle) {
@@ -369,7 +368,18 @@ export const voteBattle = async (req, res) => {
       await findBattle.save();
       res.status(200).send({ voteObj: addedVoteObj });
     } else {
-      res.status(400).json({ error: "투표 실패 에러가 발생하였습니다." });
+      const findBattle = await Battle.findOne({
+        subBattles: battleId
+      });
+      if (findBattle) {
+        const vote = new Vote(voteObj);
+        const addedVoteObj = await vote.save();
+        findBattle.votes = findBattle.votes = [...findBattle.votes, addedVoteObj._id];
+        await findBattle.save();
+        res.status(200).send({ voteObj: addedVoteObj });
+      } else {
+        res.status(400).json({ error: "해당하는 배틀을 찾을 수 없습니다 투표실패." });
+      }
     }
   } catch (error) {
     console.log(error);

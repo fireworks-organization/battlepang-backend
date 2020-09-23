@@ -393,7 +393,7 @@
                 }
             }
         },
-        "/battles/vote - 배틀 투표": {
+        "/battles/:battleId/vote - 배틀 투표": {
             "post": {
                 "x-swagger-router-controller": "battles",
                 "tags": [
