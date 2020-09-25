@@ -37,7 +37,7 @@ const addOperate = (operate, key, value) => {
 
 export const battles = async (req, res) => {
   const {
-    query: { id, creator, subBattleId, state, count, userId }
+    query: { id, creator, subBattleId, state, count, userId, sortBy }
   } = req;
   console.log("id", id);
   console.log("creator", creator);
@@ -48,18 +48,16 @@ export const battles = async (req, res) => {
 
   const populateList = ["creator", "votes", {
     path: "subBattles",
-    populate: {
-      path: "creator"
-    }
+    populate: ["creator", "votes"]
   }, {
       path: "comments",
       options: { sort: { createdAt: -1 } },
-      populate: {
-        path: "creator"
-      }
+      populate: ["creator", "votes"]
     }];
   let findOperate = {};
   let limit;
+  const sort = {}
+
   if (id) {
     findOperate = addOperate(findOperate, "_id", id);
   }
@@ -75,23 +73,20 @@ export const battles = async (req, res) => {
   if (count) {
     limit = count;
   }
+  if (sortBy) {
+    const str = sortBy.split(':');
+    console.log(str)
+    sort[str[0]] = str[1] === 'desc' ? -1 : 1;
+    console.log(sort)
+  }
 
   console.log(findOperate)
   console.log(limit)
 
   try {
     let findBattles = [];
-    findBattles = await Battle.find(findOperate).populate(populateList).limit(parseInt(limit));
-    // 다른 영상 3개를 추출하는데 
-    // 현재 배틀 영상이랑 상태값이 타임오버, 변환중인 비디오는 제외한다
-    const otherBattles = await Battle.find(
-      { $and: [{ _id: { $nin: id } }, { state: { $nin: ["time-over", "trandcoding"] } }] }
-    ).limit(3)
-      .populate(populateList);
-    if (findBattles[0] && id) {
-      findBattles[0].views = findBattles[0].views + 1;
-      findBattles[0].save();
-    }
+    findBattles = await Battle.find(findOperate).populate(populateList).limit(parseInt(limit)).sort(sort);
+
     if (userId && id) {
       const findUser = await User.findOne({ _id: userId });
       if (!findUser) {
@@ -104,7 +99,21 @@ export const battles = async (req, res) => {
       }
     }
 
-    res.status(200).json({ battles: findBattles, otherBattles });
+    if (findBattles[0] && id) {
+      findBattles[0].views = findBattles[0].views + 1;
+      findBattles[0].save();
+      // 다른 영상 12개를 추출하는데 
+      // 현재 배틀 영상이랑 상태값이 타임오버, 변환중인 비디오는 제외한다
+
+      const otherBattles = await Battle.find(
+        { $and: [{ _id: { $nin: id } }, { state: { $nin: ["battling", "wait-battle", "time-over", "trandcoding"] } }] }
+      ).limit(12)
+        .populate(populateList);
+
+      res.status(200).json({ battles: findBattles, otherBattles });
+      return false
+    }
+    res.status(200).json({ battles: findBattles });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error });
@@ -360,8 +369,17 @@ export const voteBattle = async (req, res) => {
   try {
     let findBattle = await Battle.findOne({
       _id: battleId
-    });
+    }).populate("votes");
     if (findBattle) {
+      console.log(findBattle)
+      if (findBattle.creator == voteObj.creator) {
+        res.status(400).json({ error: "자신의 배틀에는 투표할 수 없습니다." });
+        return false;
+      }
+      if (findBattle.votes.filter(vote => vote.creator == voteObj.creator)[0]) {
+        res.status(400).json({ error: "이미 투표한 배틀입니다." });
+        return false;
+      }
       const vote = new Vote(voteObj);
       const addedVoteObj = await vote.save();
       findBattle.votes = findBattle.votes = [...findBattle.votes, addedVoteObj._id];
@@ -370,8 +388,17 @@ export const voteBattle = async (req, res) => {
     } else {
       const findBattle = await Battle.findOne({
         subBattles: battleId
-      });
+      }).populate("votes");
       if (findBattle) {
+        if (findBattle.creator == voteObj.creator) {
+          res.status(400).json({ error: "자신의 배틀에는 투표할 수 없습니다." });
+          return false;
+        }
+
+        if (findBattle.votes.filter(vote => vote.creator == voteObj.creator)[0]) {
+          res.status(400).json({ error: "이미 투표한 배틀입니다." });
+          return false;
+        }
         const vote = new Vote(voteObj);
         const addedVoteObj = await vote.save();
         findBattle.votes = findBattle.votes = [...findBattle.votes, addedVoteObj._id];
