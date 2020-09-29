@@ -36,6 +36,7 @@ const addOperate = (operate, key, value) => {
 }
 
 export const battles = async (req, res) => {
+
   const {
     query: { id, creator, subBattleId, state, count, userId, sortBy }
   } = req;
@@ -106,7 +107,7 @@ export const battles = async (req, res) => {
       // 현재 배틀 영상이랑 상태값이 타임오버, 변환중인 비디오는 제외한다
 
       const otherBattles = await Battle.find(
-        { $and: [{ _id: { $nin: id } }, { state: { $nin: ["battling", "wait-battle", "time-over", "trandcoding"] } }] }
+        { $and: [{ _id: { $nin: id } }, { state: { $nin: ["battling", "wait-battle", "time-over", "transcoding"] } }] }
       ).limit(12)
         .populate(populateList);
 
@@ -125,7 +126,9 @@ export const addBattle = async (req, res) => {
   } = req;
   const videoFile = req.files ?
     req.files.filter(item => item.fieldname == "videoFile")[0] : null;
-  console.log(videoFile)
+  const thumbnailFile = req.files ?
+    req.files.filter(item => item.fieldname == "thumbnail")[0] : null;
+  console.log(thumbnailFile)
   let battleObjJSON = JSON.parse(battleObj);
 
   let videoFileName = "./public/videoFiles/";
@@ -186,7 +189,7 @@ export const addBattle = async (req, res) => {
           }
           try {
             battleObjJSON.videoUrl = uri;
-            battleObjJSON.thumbnail = `https://i.vimeocdn.com/video/`;
+            // battleObjJSON.thumbnail = `https://i.vimeocdn.com/video/`;
 
             const findUser = await User.findOne({
               _id: battleObjJSON.creator
@@ -202,6 +205,11 @@ export const addBattle = async (req, res) => {
             const battle = new Battle(battleObjJSON);
             await battle.save();
 
+            var bitmap = fs.readFileSync(thumbnailFile.path);
+            let base64Data = new Buffer.from(bitmap).toString('base64');
+            battle.thumbnail = "data:image/png;base64," + base64Data;
+            battle.save();
+            fs.unlinkSync(thumbnailFile.path);
             const gold = battleObjJSON.gold;
             const chargeGold = -1 * gold;
             console.log("chargeGold", chargeGold);
@@ -245,7 +253,7 @@ export const addBattle = async (req, res) => {
                           console.log(error);
                         }
                         console.log(body);
-                        battle.state = "wait-battle";
+                        // battle.state = "wait-battle";
                         battle.thumbnail = `https://i.vimeocdn.com/video/${body.uri
                           .replace("/videos/", "")
                           .replace(videoId, "")

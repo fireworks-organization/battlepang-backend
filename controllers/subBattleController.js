@@ -99,6 +99,9 @@ export const addSubBattle = async (req, res) => {
 
   const videoFile = req.files ?
     req.files.filter(item => item.fieldname == "videoFile")[0] : null;
+  const thumbnailFile = req.files ?
+    req.files.filter(item => item.fieldname == "thumbnail")[0] : null;
+  console.log(thumbnailFile)
 
   let videoFileName = "./public/videoFiles/";
   if (videoFile) {
@@ -180,9 +183,13 @@ export const addSubBattle = async (req, res) => {
           }
           try {
             subBattle.videoUrl = uri;
-            subBattle.thumbnail = `https://i.vimeocdn.com/video/`;
+            // subBattle.thumbnail = `https://i.vimeocdn.com/video/`;
             console.log(subBattle);
+            var bitmap = fs.readFileSync(thumbnailFile.path);
+            let base64Data = new Buffer.from(bitmap).toString('base64');
+            subBattle.thumbnail = "data:image/png;base64," + base64Data;
             await subBattle.save();
+            fs.unlinkSync(thumbnailFile.path);
 
             const findUser = await User.findOne({
               _id: subBattleObjJSON.creator
@@ -214,6 +221,14 @@ export const addSubBattle = async (req, res) => {
             insertedGoldHistory.afterGold = findUser.gold;
             await insertedGoldHistory.save();
 
+            console.log(findBattle.joinCount);
+            console.log(findBattle.maxCount);
+            if (findBattle.joinCount >= findBattle.maxCount) {
+              findBattle.battleStartTime = moment().format("YYYY-MM-DDTHH:mm:ss");
+              findBattle.state = "battling"
+              findBattle.voteEndTime = moment().add(3, "days").format("YYYY-MM-DDTHH:mm:ss");
+              await findBattle.save();
+            }
             res.status(200).send({ subBattle });
             function getVideoState() {
               //비디오 미리보기 이미지의 uri를 가져옴.
@@ -237,14 +252,6 @@ export const addSubBattle = async (req, res) => {
                       async function (error, body, status_code, headers) {
                         if (error) {
                           console.log(error);
-                        }
-                        console.log(findBattle.joinCount);
-                        console.log(findBattle.maxCount);
-                        if (findBattle.joinCount >= findBattle.maxCount) {
-                          findBattle.battleStartTime = moment().format("YYYY-MM-DDTHH:mm:ss");
-                          findBattle.state = "battling"
-                          findBattle.voteEndTime = moment().add(3, "days").format("YYYY-MM-DDTHH:mm:ss");
-                          await findBattle.save();
                         }
                         console.log(body);
                         subBattle.state = "transcoded";
