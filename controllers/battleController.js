@@ -204,12 +204,16 @@ export const addBattle = async (req, res) => {
             console.log(battleObjJSON);
             const battle = new Battle(battleObjJSON);
             await battle.save();
-
-            var bitmap = fs.readFileSync(thumbnailFile.path);
-            let base64Data = new Buffer.from(bitmap).toString('base64');
-            battle.thumbnail = "data:image/png;base64," + base64Data;
-            battle.save();
-            fs.unlinkSync(thumbnailFile.path);
+            if (thumbnailFile) {
+              var bitmap = fs.readFileSync(thumbnailFile.path);
+              let base64Data = new Buffer.from(bitmap).toString('base64');
+              battle.thumbnail = "data:image/png;base64," + base64Data;
+              battle.save();
+              fs.unlinkSync(thumbnailFile.path);
+            } else {
+              battle.thumbnail = `https://i.vimeocdn.com/video/`;
+              battle.save();
+            }
             const gold = battleObjJSON.gold;
             const chargeGold = -1 * gold;
             console.log("chargeGold", chargeGold);

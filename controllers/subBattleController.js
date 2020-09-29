@@ -185,12 +185,17 @@ export const addSubBattle = async (req, res) => {
             subBattle.videoUrl = uri;
             // subBattle.thumbnail = `https://i.vimeocdn.com/video/`;
             console.log(subBattle);
-            var bitmap = fs.readFileSync(thumbnailFile.path);
-            let base64Data = new Buffer.from(bitmap).toString('base64');
-            subBattle.thumbnail = "data:image/png;base64," + base64Data;
-            await subBattle.save();
-            fs.unlinkSync(thumbnailFile.path);
 
+            if (thumbnailFile) {
+              var bitmap = fs.readFileSync(thumbnailFile.path);
+              let base64Data = new Buffer.from(bitmap).toString('base64');
+              subBattle.thumbnail = "data:image/png;base64," + base64Data;
+              await subBattle.save();
+              fs.unlinkSync(thumbnailFile.path);
+            } else {
+              subBattle.thumbnail = `https://i.vimeocdn.com/video/`;
+              await subBattle.save();
+            }
             const findUser = await User.findOne({
               _id: subBattleObjJSON.creator
             });
