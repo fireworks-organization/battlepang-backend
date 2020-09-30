@@ -257,7 +257,9 @@ export const addBattle = async (req, res) => {
                           console.log(error);
                         }
                         console.log(body);
-                        // battle.state = "wait-battle";
+                        if (!thumbnailFile) {
+                          battle.state = "wait-battle";
+                        }
                         battle.thumbnail = `https://i.vimeocdn.com/video/${body.uri
                           .replace("/videos/", "")
                           .replace(videoId, "")
