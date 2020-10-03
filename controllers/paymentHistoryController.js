@@ -27,11 +27,36 @@ export const addPaymentHistory = async (req, res) => {
     body: { data },
   } = req;
   const paymentHistoryObj = data.paymentHistoryObj;
-  console.log(paymentHistoryObj)
   try {
     let paymentHistoryObjJSON = JSON.parse(paymentHistoryObj);
     const paymentHistory = new PaymentHistory(paymentHistoryObjJSON);
     const insertedPaymentHistory = await paymentHistory.save();
+    if (paymentHistoryObjJSON.payMethod == "무통장 입금") {
+      const findUser = await User.findOne({
+        _id: paymentHistoryObjJSON.user
+      });
+      if (!findUser) {
+        const error = "충전할 유저를 찾을 수 없습니다.";
+        if (paymentHistoryObjJSON.message) {
+          paymentHistory.status = paymentHistoryObjJSON.status + " / error";
+          paymentHistory.message = paymentHistoryObjJSON.message + " / " + error;
+        }
+        await paymentHistory.save();
+        res.status(400).json({ error });
+        return false;
+      }
+      const goldHistoryObj = {
+        user: findUser._id,
+        payment: paymentHistory._id,
+        chargeGold: paymentHistoryObjJSON.chargeGold,
+        beforeGold: findUser.gold,
+        afterGold: findUser.gold
+      }
+      const goldHistory = new GoldHistory(goldHistoryObj);
+      const insertedGoldHistory = await goldHistory.save();
+      paymentHistory.goldHistory = insertedGoldHistory._id;
+      await paymentHistory.save();
+    }
     res.status(200).send({ paymentHistory: insertedPaymentHistory });
   } catch (error) {
     console.log(error);
