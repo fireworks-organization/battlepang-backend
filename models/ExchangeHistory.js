@@ -5,9 +5,13 @@ const ExchangeHistorySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
-  BankAccountNumber: { // 환급 계좌
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "BankAccountNumber"
+  bankAccountNumber: { // 환급 계좌
+    type: String,
+    default: ""
+  },
+  bankName: { // 은행명
+    type: String,
+    default: ""
   },
   status: { // 상태값 status
     type: String,

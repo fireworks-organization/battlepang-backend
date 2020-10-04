@@ -48,6 +48,7 @@ const PAYMENT_HISTORYS = "/payment-history";
 const UPDATE_PAYMENT_HISTORYS = "/:paymentHistoryId";
 // PaymentHistory
 const BANK_ACCOUNT_NUMBER = "/bank-account-number";
+const DELETE_BANK_ACCOUNT_NUMBER = "/:bankAccountNumberId";
 // ExchangeHistory
 const EXCHANGE_HISTORY = "/exchange-history";
 const UPDATE_EXCHANGE_HISTORY = "/:exchangeHistoryId";
@@ -88,6 +89,7 @@ const routes = {
   paymentHistory: PAYMENT_HISTORYS,
   updatePaymentHistory: UPDATE_PAYMENT_HISTORYS,
   bankAccountNumber: BANK_ACCOUNT_NUMBER,
+  deleteBankAccountNumber: DELETE_BANK_ACCOUNT_NUMBER,
   exchangeHistory: EXCHANGE_HISTORY,
   updateExchangeHistory: UPDATE_EXCHANGE_HISTORY,
 };

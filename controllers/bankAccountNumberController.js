@@ -44,3 +44,19 @@ export const addBankAccountNumber = async (req, res) => {
     res.status(400).json({ error });
   }
 };
+export const deleteBankAccountNumber = async (req, res) => {
+  const {
+    params: { bankAccountNumberId }
+
+  } = req;
+
+  try {
+    await BankAccountNumber.deleteOne({
+      _id: bankAccountNumberId
+    });
+    res.status(200).send();
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};

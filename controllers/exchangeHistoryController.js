@@ -10,7 +10,7 @@ export const exchangeHistory = async (req, res) => {
     query: { },
   } = req;
   try {
-    const exchangeHistories = await ExchangeHistory.find().populate("user").populate("BankAccountNumber");
+    const exchangeHistories = await ExchangeHistory.find().populate("user");
     console.log(exchangeHistories)
     res.status(200).send({ exchangeHistories });
   } catch (error) {
@@ -23,16 +23,19 @@ export const addExchangeHistory = async (req, res) => {
     body: { data },
   } = req;
   console.log(data)
-  const exchangeHistoryObj = data.exchangeHistoryObj;
-  const userId = data.exchangeHistoryObj.user;
-  console.log(exchangeHistoryObj)
+  const exchangeHistoryObjJSON = JSON.parse(data.exchangeHistoryObj);
+  const userId = exchangeHistoryObjJSON.user;
+  console.log(exchangeHistoryObjJSON)
   try {
-    const findUser = User.find({ _id: userId });
+    const findUser = await User.findOne({ _id: userId });
     if (!findUser) {
-      res.status(400).json({ error: "환불할 유저를 찾을 수 없음." });
+      const error = "환불할 유저를 찾을 수 없음.";
+      console.log(error)
+      res.status(400).json({ error });
       res.end();
+      return false
     }
-    const chargeGold = exchangeHistoryObj.exchangeGold;
+    const chargeGold = exchangeHistoryObjJSON.exchangeGold;
     const goldHistoryObj = {
       user: findUser._id,
       chargeGold,
@@ -42,12 +45,10 @@ export const addExchangeHistory = async (req, res) => {
     const insertedGoldHistory = await goldHistory.save();
     findUser.gold = findUser.gold + chargeGold;
     await findUser.save();
-    insertedGoldHistory.exchangeHistory = findUser.gold;
-    await insertedGoldHistory.save();
-
-    let exchangeHistoryObjJSON = JSON.parse(exchangeHistoryObj);
     const exchangeHistory = new ExchangeHistory(exchangeHistoryObjJSON);
     await exchangeHistory.save();
+    insertedGoldHistory.exchangeHistory = exchangeHistory._id;
+    await insertedGoldHistory.save();
     res.status(200).send({ exchangeHistory });
   } catch (error) {
     console.log(error);

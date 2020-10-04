@@ -6,10 +6,12 @@ const checkJWTAuthenticate = passport.authenticate("jwt", { session: false });
 
 import {
     bankAccountNumber,
-    addBankAccountNumber
+    addBankAccountNumber,
+    deleteBankAccountNumber,
 } from "../controllers/bankAccountNumberController";
 bankAccountNumberRouter.get("/", bankAccountNumber);
-bankAccountNumberRouter.post("/", checkJWTAuthenticate, addBankAccountNumber); //add payment history
+bankAccountNumberRouter.post("/", checkJWTAuthenticate, addBankAccountNumber);
+bankAccountNumberRouter.delete(routes.deleteBankAccountNumber, deleteBankAccountNumber);
 // bankAccountNumberRouter.put(routes.updatePaymentHistory, checkJWTAuthenticate, updatePaymentHistory); //add payment history
 
 export default bankAccountNumberRouter;

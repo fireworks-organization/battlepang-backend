@@ -249,7 +249,7 @@
                 }
             }
         },
-        "/users/:userId/ 유저를 삭제 ": {
+        "/users/:userId 유저를 삭제 ": {
             "delete": {
                 "x-swagger-router-controller": "users",
                 "tags": [
@@ -807,13 +807,13 @@
                 }
             }
         },
-        "/bank-account-number/": {
+        "/bank-account-number - 환급 계좌 목록 취득": {
             "get": {
                 "x-swagger-router-controller": "bank-account-number",
                 "tags": [
                     "환급계좌 관련 API"
                 ],
-                "description": "get bank-account-number",
+                "description": "환급 계좌 목록 취득할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -829,13 +829,15 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/bank-account-number - 환급 계좌 등록": {
             "post": {
                 "x-swagger-router-controller": "bank-account-number",
                 "tags": [
                     "환급계좌 관련 API"
                 ],
-                "description": "post bank-account-number",
+                "description": "환급 계좌 등록할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -851,13 +853,15 @@
                         }
                     }
                 }
-            },
-            "put": {
+            }
+        },
+        "/bank-account-number/:bankAccountNumberId - 환급 계좌 삭제": {
+            "delete": {
                 "x-swagger-router-controller": "bank-account-number",
                 "tags": [
                     "환급계좌 관련 API"
                 ],
-                "description": "put bank-account-number",
+                "description": "환급 계좌 삭제할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
