@@ -739,13 +739,13 @@
                 }
             }
         },
-        "/exchange-history/": {
+        "/exchange-history - 환전 신청된 목록 취득": {
             "get": {
                 "x-swagger-router-controller": "exchange-history",
                 "tags": [
                     "환전이력 관련 API"
                 ],
-                "description": "get exchange-history",
+                "description": "환전 신청된 목록 취득할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -761,13 +761,15 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/exchange-history - 환전 신청": {
             "post": {
                 "x-swagger-router-controller": "exchange-history",
                 "tags": [
                     "환전이력 관련 API"
                 ],
-                "description": "post exchange-history",
+                "description": "환전 신청할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -783,13 +785,15 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/exchange-history/:exchangeHistoryId - 환전 신청에 대한 반려 / 승인처리": {
             "put": {
                 "x-swagger-router-controller": "exchange-history",
                 "tags": [
                     "환전이력 관련 API"
                 ],
-                "description": "put exchange-history",
+                "description": "환전 신청에 대한 반려 / 승인처리할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -807,13 +811,13 @@
                 }
             }
         },
-        "/bank-account-number - 환급 계좌 목록 취득": {
+        "/bank-account-number - 환전 계좌 목록 취득": {
             "get": {
                 "x-swagger-router-controller": "bank-account-number",
                 "tags": [
-                    "환급계좌 관련 API"
+                    "환전계좌 관련 API"
                 ],
-                "description": "환급 계좌 목록 취득할때 사용됩니다.",
+                "description": "환전 계좌 목록 취득할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -831,13 +835,13 @@
                 }
             }
         },
-        "/bank-account-number - 환급 계좌 등록": {
+        "/bank-account-number - 환전 계좌 등록": {
             "post": {
                 "x-swagger-router-controller": "bank-account-number",
                 "tags": [
-                    "환급계좌 관련 API"
+                    "환전계좌 관련 API"
                 ],
-                "description": "환급 계좌 등록할때 사용됩니다.",
+                "description": "환전 계좌 등록할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -855,13 +859,13 @@
                 }
             }
         },
-        "/bank-account-number/:bankAccountNumberId - 환급 계좌 삭제": {
+        "/bank-account-number/:bankAccountNumberId - 환전 계좌 삭제": {
             "delete": {
                 "x-swagger-router-controller": "bank-account-number",
                 "tags": [
-                    "환급계좌 관련 API"
+                    "환전계좌 관련 API"
                 ],
-                "description": "환급 계좌 삭제할때 사용됩니다.",
+                "description": "환전 계좌 삭제할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {

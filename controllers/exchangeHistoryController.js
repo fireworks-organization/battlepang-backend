@@ -57,10 +57,10 @@ export const addExchangeHistory = async (req, res) => {
 };
 export const updateExchangeHistory = async (req, res) => {
   const {
-    body: { data },
+    body: { exchangeHistoryObj },
   } = req;
-  console.log(data)
-  const exchangeHistoryObj = data.exchangeHistoryObj;
+  console.log("updateExchangeHistory")
+  console.log(updateExchangeHistory)
   let exchangeHistoryObjJSON = JSON.parse(exchangeHistoryObj);
   try {
     const findExchangeHistoryObj = await ExchangeHistory.findOne({
