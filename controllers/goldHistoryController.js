@@ -14,7 +14,7 @@ export const goldHistory = async (req, res) => {
     if (goldHistoryId) {
       findOperate = { _id: goldHistoryId };
     }
-    const goldHistories = await GoldHistory.find(findOperate).populate(populateList);
+    const goldHistories = await GoldHistory.find(findOperate).populate(populateList).sort({ createdAt: -1 });
     res.status(200).send({ goldHistories });
   } catch (error) {
     console.log(error);
