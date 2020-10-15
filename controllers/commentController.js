@@ -9,30 +9,45 @@ import Comment from "../models/Comment";
 
 dotenv.config();
 
+const addOperate = (operate, key, value) => {
+  console.log(operate)
+  console.log((Object.keys(operate)))
+  if (Object.keys(operate).length == 0) {
+    operate[key] = value;
+  } else {
+    let array = [operate];
+    let newObj = {};
+    newObj[key] = value;
+    array.push(newObj);
+    operate = { $and: array };
+  }
+  return operate;
+}
+
 export const comments = async (req, res) => {
   const {
-    query: { battleId, creator }
+    query: { battleId, creator, count }
   } = req;
   console.log(creator);
   try {
-    let findComments = [];
-    if (battleId) {
-      findComments = await Comment.find({ battleId })
-        .populate("creator")
-        .populate("like")
-        .sort({ createdAt: -1 });
-    } else if (creator) {
-      findComments = await Comment.find({ creator })
-        .populate("creator")
-        .populate("like")
-        .sort({ createdAt: -1 });
-    } else {
-      findComments = await Comment.find()
-        .populate("creator")
-        .populate("like")
-        .sort({ createdAt: -1 });
-    }
 
+    console.log("battleId", battleId);
+    console.log("creator", creator);
+    console.log("count", count);
+    const populateList = ["creator", "like", "battleId"];
+    let findOperate = {};
+    let limit;
+    const sort = { createdAt: -1 }
+
+    let findComments = [];
+
+    if (battleId) {
+      findOperate = addOperate(findOperate, "battleId", battleId);
+    }
+    if (creator) {
+      findOperate = addOperate(findOperate, "creator", creator);
+    }
+    findComments = await Comment.find(findOperate).populate(populateList).limit(parseInt(limit)).sort(sort);
     res.status(200).json({ comments: findComments });
   } catch (error) {
     console.log(error);
