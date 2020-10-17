@@ -489,19 +489,19 @@
                 }
             }
         },
-        "/comments": {
+        "/comments - 댓글 리스트 취득": {
             "get": {
-                "x-swagger-router-controller": "comments",
+                "x-swagger-router-controller": "exchange-history",
                 "tags": [
                     "댓글 관련 API"
                 ],
-                "description": "전체 배틀의 댓글 리스트를 취득합니다.",
+                "description": "댓글 리스트 취득할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
-                        "description": "comments to be returned",
+                        "description": "exchange-history to be returned",
                         "schema": {
-                            "$ref": "#/definitions/comments"
+                            "$ref": "#/definitions/exchange-history"
                         }
                     },
                     "default": {
@@ -511,19 +511,45 @@
                         }
                     }
                 }
-            },
-            "put": {
-                "x-swagger-router-controller": "comments",
+            }
+        },
+        "/comments - 댓글 작성": {
+            "post": {
+                "x-swagger-router-controller": "exchange-history",
                 "tags": [
                     "댓글 관련 API"
                 ],
-                "description": "put comments",
+                "description": "댓글 작성할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
-                        "description": "comments to be returned",
+                        "description": "exchange-history to be returned",
                         "schema": {
-                            "$ref": "#/definitions/comments"
+                            "$ref": "#/definitions/exchange-history"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/comments/:commentId - 댓글 수정": {
+            "put": {
+                "x-swagger-router-controller": "exchange-history",
+                "tags": [
+                    "댓글 관련 API"
+                ],
+                "description": "댓글 수정할때 사용됩니다.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "exchange-history to be returned",
+                        "schema": {
+                            "$ref": "#/definitions/exchange-history"
                         }
                     },
                     "default": {
@@ -671,7 +697,7 @@
                 }
             }
         },
-        "/payment-history/": {
+        "/payment-histories/": {
             "get": {
                 "x-swagger-router-controller": "payment-history",
                 "tags": [
@@ -739,7 +765,7 @@
                 }
             }
         },
-        "/exchange-history - 환전 신청된 목록 취득": {
+        "/exchange-histories - 환전 신청된 목록 취득": {
             "get": {
                 "x-swagger-router-controller": "exchange-history",
                 "tags": [
@@ -763,7 +789,7 @@
                 }
             }
         },
-        "/exchange-history - 환전 신청": {
+        "/exchange-histories - 환전 신청": {
             "post": {
                 "x-swagger-router-controller": "exchange-history",
                 "tags": [
@@ -787,7 +813,7 @@
                 }
             }
         },
-        "/exchange-history/:exchangeHistoryId - 환전 신청에 대한 반려 / 승인처리": {
+        "/exchange-histories/:exchangeHistoryId - 환전 신청에 대한 반려 / 승인처리": {
             "put": {
                 "x-swagger-router-controller": "exchange-history",
                 "tags": [

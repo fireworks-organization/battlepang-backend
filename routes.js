@@ -31,8 +31,8 @@ const ADD_SUB_BATTLE = "/";
 
 // Comment
 const COMMENTS = "/comments";
-const ADD_COMMENT = "/add";
-const UPDATE_COMMENT = "/:commentId/update";
+const ADD_COMMENT = "/";
+const UPDATE_COMMENT = "/:commentId";
 const DELETE_COMMENT = "/:commentId/delete";
 const REPORT_COMMENT = "/:commentId/reports";
 const LIKE_COMMENT = "/:commentId/like";

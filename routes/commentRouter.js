@@ -14,11 +14,11 @@ import {
 } from "../controllers/commentController";
 const checkJWTAuthenticate = passport.authenticate("jwt", { session: false });
 commentRouter.get("/", comments);
-commentRouter.post(routes.addComment, checkJWTAuthenticate, addComment);
+commentRouter.post("/", checkJWTAuthenticate, addComment);
 commentRouter.post(routes.reportComment, checkJWTAuthenticate, reportComment);
 commentRouter.post(routes.likeComment, checkJWTAuthenticate, likeComment);
 commentRouter.post(routes.unlikeComment, checkJWTAuthenticate, unlikeComment);
-commentRouter.post(routes.updateComment, checkJWTAuthenticate, updateComment);
+commentRouter.put(routes.updateComment, updateComment);
 commentRouter.post(routes.deleteComment, checkJWTAuthenticate, deleteComment);
 
 export default commentRouter;
