@@ -44,13 +44,13 @@ const RANKS = "/ranks";
 const GOLD_HISTORYS = "/gold-histories";
 const UPDATE_GOLD_HISTORYS = "/:goldHistoryId";
 // PaymentHistory
-const PAYMENT_HISTORYS = "/payment-history";
+const PAYMENT_HISTORYS = "/payment-histories";
 const UPDATE_PAYMENT_HISTORYS = "/:paymentHistoryId";
 // PaymentHistory
 const BANK_ACCOUNT_NUMBER = "/bank-account-number";
 const DELETE_BANK_ACCOUNT_NUMBER = "/:bankAccountNumberId";
 // ExchangeHistory
-const EXCHANGE_HISTORY = "/exchange-history";
+const EXCHANGE_HISTORY = "/exchange-histories";
 const UPDATE_EXCHANGE_HISTORY = "/:exchangeHistoryId";
 
 const routes = {

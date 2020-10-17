@@ -11,6 +11,6 @@ import {
 } from "../controllers/goldHistoryController";
 goldHistoryRouter.get("/", goldHistory);
 goldHistoryRouter.post("/", checkJWTAuthenticate, addGoldHistory); //add gold history
-goldHistoryRouter.put(routes.updateGoldHistory, checkJWTAuthenticate, updateGoldHistory); //add gold history
+goldHistoryRouter.put(routes.updateGoldHistory, updateGoldHistory); //add gold history
 
 export default goldHistoryRouter;

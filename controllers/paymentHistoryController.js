@@ -65,27 +65,24 @@ export const addPaymentHistory = async (req, res) => {
 };
 export const updatePaymentHistory = async (req, res) => {
   const {
-    body: { data },
+    body: { paymentHistoryObj, userId },
     params: { paymentHistoryId },
   } = req;
-  const paymentHistoryObj = data.paymentHistoryObj;
   let paymentHistoryObjJSON = JSON.parse(paymentHistoryObj);
-  const userObjJSON = JSON.parse(data.userObj);
-  console.log(paymentHistoryId)
 
   try {
     const findPaymentHistoryObj = await PaymentHistory.findOne({
       _id: paymentHistoryId
     });
+
     const findUser = await User.findOne({
-      _id: userObjJSON._id
+      _id: userId
     });
     if (!findPaymentHistoryObj) {
-      const error = "변경할 paymentHistoryId는 필수입니다.";
-      res.status(400).json({ error });
-    }
-    if (!findUser) {
-      const error = "충전할 유저를 찾을 수 없습니다.";
+      if (paymentHistoryObjJSON.message) {
+        findPaymentHistoryObj.message = paymentHistoryObjJSON.message;
+      }
+      const error = "업데이트할 기록이 없습니다.";
       if (paymentHistoryObjJSON.message) {
         findPaymentHistoryObj.status = paymentHistoryObjJSON.status + " / error";
         findPaymentHistoryObj.message = paymentHistoryObjJSON.message + " / " + error;
@@ -94,26 +91,8 @@ export const updatePaymentHistory = async (req, res) => {
       res.status(400).json({ error });
       return false;
     }
-    console.log(findUser.payment)
-    const chargeGold = parseInt(paymentHistoryObjJSON.chargeGold);
-    const goldHistoryObj = {
-      user: findUser._id,
-      payment: findPaymentHistoryObj._id,
-      chargeGold,
-      beforeGold: findUser.gold
-    }
-    const goldHistory = new GoldHistory(goldHistoryObj);
-    const insertedGoldHistory = await goldHistory.save();
-    findUser.gold = findUser.gold + chargeGold;
-    await findUser.save();
-    insertedGoldHistory.afterGold = findUser.gold;
-    await insertedGoldHistory.save();
-    findPaymentHistoryObj.goldHistory = insertedGoldHistory._id;
-    if (!findPaymentHistoryObj) {
-      if (paymentHistoryObjJSON.message) {
-        findPaymentHistoryObj.message = paymentHistoryObjJSON.message;
-      }
-      const error = "업데이트할 기록이 없습니다.";
+    if (!findUser) {
+      const error = "충전할 유저를 찾을 수 없습니다.";
       if (paymentHistoryObjJSON.message) {
         findPaymentHistoryObj.status = paymentHistoryObjJSON.status + " / error";
         findPaymentHistoryObj.message = paymentHistoryObjJSON.message + " / " + error;
@@ -155,8 +134,23 @@ export const updatePaymentHistory = async (req, res) => {
     if (paymentHistoryObjJSON.message) {
       findPaymentHistoryObj.message = paymentHistoryObjJSON.message;
     }
+    const findGoldHistory = await GoldHistory.findOne({ _id: paymentHistoryObjJSON.goldHistory._id });
+    if (!findGoldHistory) {
+      const error = "환급처리를 진행할 골드 이력이 없습니다.";
+      res.status(400).json({ error });
+      return false;
+    }
+    if (findPaymentHistoryObj.status === "charge") {
+      const chargeGold = parseInt(paymentHistoryObjJSON.goldHistory.chargeGold);
+      findUser.gold = findUser.gold + chargeGold;
+      await findUser.save();
+
+      findGoldHistory.afterGold = findUser.gold;
+      await findGoldHistory.save();
+    }
     const paymentHistory = await findPaymentHistoryObj.save();
     res.status(200).send({ paymentHistory });
+
   } catch (error) {
     console.log(error);
     const findPaymentHistoryObj = await PaymentHistory.findOne({

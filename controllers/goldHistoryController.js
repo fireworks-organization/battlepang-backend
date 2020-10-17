@@ -43,6 +43,9 @@ export const goldHistory = async (req, res) => {
       limit = count;
     }
     const goldHistories = await GoldHistory.find(findOperate).populate(populateList).sort({ createdAt: -1 });
+    // await Battle.deleteMany({});
+    // await SubBattle.deleteMany({});
+    // await GoldHistory.deleteMany({});
     res.status(200).send({ goldHistories });
   } catch (error) {
     console.log(error);
