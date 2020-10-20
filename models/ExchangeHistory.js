@@ -5,7 +5,7 @@ const ExchangeHistorySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
-  bankAccountNumber: { // 환급 계좌
+  bankAccountNumber: { // 환전 계좌
     type: String,
     default: ""
   },
@@ -21,11 +21,11 @@ const ExchangeHistorySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "GoldHistory"
   },
-  exchangeGold: { // 수수료 제외 환급금액
+  exchangeGold: { // 수수료 제외 환전금액
     type: String,
     default: ""
   },
-  exchangeMoney: { // 수수료 제외 환급금액
+  exchangeMoney: { // 수수료 제외 환전금액
     type: String,
     default: ""
   },

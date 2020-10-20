@@ -39,6 +39,7 @@ export const addExchangeHistory = async (req, res) => {
     const goldHistoryObj = {
       user: findUser._id,
       chargeGold,
+      status: "wait-exchange",
       beforeGold: findUser.gold,
       message: `환전 신청으로 ${chargeGold}G 차감`
     }
@@ -86,15 +87,13 @@ export const updateExchangeHistory = async (req, res) => {
     if (exchangeHistoryObjJSON.status) {
       findExchangeHistoryObj.status = exchangeHistoryObjJSON.status;
     }
+    const findGoldHistory = await GoldHistory.findOne({ _id: exchangeHistoryObjJSON.goldHistory });
+    if (!findGoldHistory) {
+      const error = "환전처리를 진행할 골드 이력이 없습니다.";
+      res.status(400).json({ error });
+      return false;
+    }
     if (exchangeHistoryObjJSON.status === "reject") {
-
-      console.log(exchangeHistoryObjJSON.goldHistory)
-      const findGoldHistory = await GoldHistory.findOne({ _id: exchangeHistoryObjJSON.goldHistory });
-      if (!findGoldHistory) {
-        const error = "환급처리를 진행할 골드 이력이 없습니다.";
-        res.status(400).json({ error });
-        return false;
-      }
 
       const findUser = await User.findOne({
         _id: exchangeHistoryObjJSON.user._id
@@ -105,26 +104,20 @@ export const updateExchangeHistory = async (req, res) => {
         res.status(400).json({ error });
         return false;
       }
+      findGoldHistory.beforeGold = findUser.gold;
       const chargeGold = findGoldHistory.chargeGold * -1;
-
-      const goldHistoryObj = {
-        user: findUser._id,
-        chargeGold,
-        beforeGold: findUser.gold,
-        message: `환전신청이 반려되어 ${chargeGold}G 환불`
-      }
-      const goldHistory = new GoldHistory(goldHistoryObj);
-      const insertedGoldHistory = await goldHistory.save();
       findUser.gold = findUser.gold + chargeGold;
       await findUser.save();
-      insertedGoldHistory.afterGold = findUser.gold;
-      await insertedGoldHistory.save();
-      exchangeHistoryObjJSON.goldHistory = insertedGoldHistory._id;
-      findExchangeHistoryObj.message = "환급처리가 반려되었습니다.";
+      findGoldHistory.afterGold = findUser.gold;
+      findGoldHistory.message = "환전처리가 반려되었습니다.";
+      findGoldHistory.chargeGold = chargeGold;
+      findGoldHistory.status = "reject-exchange";
     }
     if (exchangeHistoryObjJSON.status === "exchanged") {
-      findExchangeHistoryObj.message = "환급처리가 완료되었습니다.";
+      findGoldHistory.message = "환전처리가 완료되었습니다.";
+      findGoldHistory.status = "exchanged";
     }
+    await findGoldHistory.save();
     findExchangeHistoryObj.exchangedAt = Date.now();
     const exchangeHistory = await findExchangeHistoryObj.save();
     res.status(200).send({ exchangeHistory });

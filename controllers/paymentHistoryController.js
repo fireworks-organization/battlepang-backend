@@ -136,7 +136,7 @@ export const updatePaymentHistory = async (req, res) => {
     }
     const findGoldHistory = await GoldHistory.findOne({ _id: paymentHistoryObjJSON.goldHistory._id });
     if (!findGoldHistory) {
-      const error = "환급처리를 진행할 골드 이력이 없습니다.";
+      const error = "환전처리를 진행할 골드 이력이 없습니다.";
       res.status(400).json({ error });
       return false;
     }

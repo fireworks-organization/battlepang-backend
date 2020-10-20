@@ -9,7 +9,7 @@ const GoldHistorySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "PaymentHistory"
   },
-  exchangeHistory: { // 환급신청 Id
+  exchangeHistory: { // 환전신청 Id
     type: mongoose.Schema.Types.ObjectId,
     ref: "ExchangeHistory"
   },
