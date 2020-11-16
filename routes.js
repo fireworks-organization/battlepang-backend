@@ -25,6 +25,7 @@ const UPDATE_BATTLE = "/:battleId";
 const LIKE_BATTLE = "/like";
 const VOTE_BATTLE = "/:battleId/vote";
 const REPORT_BATTLE = "/:battleId/reports";
+const DELETE_BATTLE = "/:battleId";
 // SubBattles
 const SUB_BATTLES = "/sub-battles";
 const ADD_SUB_BATTLE = "/";
@@ -70,6 +71,7 @@ const routes = {
   deleteUser: DELETE_USER,
   battles: BATTLES,
   addBattle: ADD_BATTLE,
+  deleteBattle: DELETE_BATTLE,
   updateBattle: UPDATE_BATTLE,
   likeBattle: LIKE_BATTLE,
   comments: COMMENTS,

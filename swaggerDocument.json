@@ -441,6 +441,30 @@
                 }
             }
         },
+        "/battles/{battleId} - 배틀 삭제": {
+            "delete": {
+                "x-swagger-router-controller": "battles",
+                "tags": [
+                    "배틀 관련 API"
+                ],
+                "description": "배틀 삭제할때 사용됩니다.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "battles to be returned",
+                        "schema": {
+                            "$ref": "#/definitions/battles"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
         "/sub-battles 배틀 신청 목록 취득": {
             "get": {
                 "x-swagger-router-controller": "users",

@@ -464,3 +464,18 @@ export const reportBattle = async (req, res) => {
     res.status(400).json({ error });
   }
 };
+
+
+
+export const deleteBattle = async (req, res) => {
+  const {
+    params: { battleId }
+  } = req;
+  try {
+    const battle = await Battle.findOneAndRemove({ _id: battleId });
+    res.status(200).send({ battle });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};
