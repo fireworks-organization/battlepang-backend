@@ -46,7 +46,13 @@ export const users = async (req, res) => {
   console.log(email)
   console.log(phone)
 
-  const populateList = ["watchedBattles", "bankAccountNumbers"];
+  const populateList = ["watchedBattles", "bankAccountNumbers", {
+    path: "likeBattles",
+    populate: ["creator", {
+      path: "subBattles",
+      populate: ["creator"]
+    }]
+  },];
   let findOperate = {};
   let limit;
   if (id) {

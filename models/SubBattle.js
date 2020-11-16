@@ -10,10 +10,6 @@ const SubBattleSchema = new mongoose.Schema({
     type: String,
     default: "transcoding"
   },
-  views: {
-    type: Number,
-    default: 0
-  },
   uploadedAt: Date,
   createdAt: {
     type: Date,

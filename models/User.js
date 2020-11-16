@@ -29,7 +29,8 @@ const UserSchema = new mongoose.Schema({
   },
   bankAccountNumbers: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "BankAccountNumber"
+    ref: "BankAccountNumber",
+    default: []
   }],
   resetPasswordToken: {
     type: String,
@@ -37,7 +38,13 @@ const UserSchema = new mongoose.Schema({
   },
   watchedBattles: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Battle"
+    ref: "Battle",
+    default: []
+  }],
+  likeBattles: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Battle",
+    default: []
   }],
   createdAt: {
     type: Date,
