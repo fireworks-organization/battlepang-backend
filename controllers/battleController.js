@@ -77,6 +77,9 @@ export const battles = async (req, res) => {
   if (sortBy) {
     const str = sortBy.split(':');
     console.log(str)
+    if (str[0] == "likes") {
+      str[0] = "likes.length"
+    }
     sort[str[0]] = str[1] === 'desc' ? -1 : 1;
     console.log(sort)
   }
