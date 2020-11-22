@@ -482,3 +482,73 @@ export const deleteBattle = async (req, res) => {
     res.status(400).json({ error });
   }
 };
+
+export const mostPopulatedBattlesOnThreeDays = async (req, res) => {
+
+  const {
+    query: { count, sortBy }
+  } = req;
+
+  const populateList = [];
+  // const populateList = ["creator", "votes", {
+  //   path: "subBattles",
+  //   populate: ["creator", "votes"]
+  // }, {
+  //     path: "comments",
+  //     options: { sort: { createdAt: -1 } },
+  //     populate: ["creator", "votes"]
+  //   }];
+  let findOperate = {};
+  let limit;
+  const sort = { "views": -1, "votesLength": -1, "gold": -1 };
+
+  if (count) {
+    limit = count;
+  }
+
+  console.log(findOperate)
+  console.log(limit)
+
+  try {
+    let findBattles = [];
+    var d = new Date();
+    d.setDate(d.getDate() - 3);
+    findBattles = await Battle.aggregate(
+      [{ $match: { "createdAt": { $gt: d } } },
+      {
+        "$project": {
+          videoUrl: 1,
+          thumbnail: 1,
+          title: 1,
+          description: 1,
+          category1: 1,
+          category2: 1,
+          reviewCriteria: 1,
+          pro: 1,
+          ageLimit: 1,
+          gold: 1,
+          joinCount: 1,
+          maxCount: 1,
+          state: 1,
+          battleStartTime: 1,
+          voteEndTime: 1,
+          views: 1,
+          createdAt: 1,
+          comments: 1,
+          creator: 1,
+          subBattles: 1,
+          likes: 1,
+          votes: 1,
+          "votesLength": { "$size": "$votes" }
+        }
+      }, {
+        "$sort": sort
+      }]
+    );
+
+    res.status(200).json({ battles: findBattles });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};

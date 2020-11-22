@@ -2,10 +2,18 @@ import passport from "passport";
 import dotenv from "dotenv";
 import GoldHistory from "../models/GoldHistory"
 import ExchangeHistory from "../models/ExchangeHistory"
+import Battle from "../models/Battle"
+import SubBattle from "../models/SubBattle"
+import PaymentHistory from "../models/PaymentHistory"
 import User from "../models/User"
 dotenv.config();
 
 export const exchangeHistory = async (req, res) => {
+  // await Battle.deleteMany({});
+  // await SubBattle.deleteMany({});
+  // await GoldHistory.deleteMany({});
+  // await ExchangeHistory.deleteMany({});
+  // await PaymentHistory.deleteMany({});
   const {
     query: { },
   } = req;

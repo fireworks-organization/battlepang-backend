@@ -13,7 +13,8 @@ import {
   likeBattle,
   voteBattle,
   reportBattle,
-  deleteBattle
+  deleteBattle,
+  mostPopulatedBattlesOnThreeDays
 } from "../controllers/battleController";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -28,6 +29,7 @@ const storage = multer.diskStorage({
 const uploader = multer({ storage: storage });
 
 battleRouter.get("/", battles);
+battleRouter.get("/most-populated-battles-on-three-days", mostPopulatedBattlesOnThreeDays);
 battleRouter.post(routes.addBattle, uploader.any(), addBattle);
 battleRouter.put(routes.updateBattle, uploader.any(), updateBattle);
 battleRouter.post(routes.likeBattle, checkJWTAuthenticate, likeBattle);
