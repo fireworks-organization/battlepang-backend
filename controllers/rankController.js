@@ -14,17 +14,26 @@ export const ranks = async (req, res) => {
     if (!rankObject) {
       res.status(400).json({ error: "rankObject 파라미너를 확인해주세요. user, battle" });
     }
+
+    const populateList = ["creator", "votes", {
+      path: "subBattles",
+      populate: ["creator", "votes"]
+    }, {
+        path: "comments",
+        options: { sort: { createdAt: -1 } },
+        populate: ["creator", "votes"]
+      }];
     if (rankObject === "users") {
       const ranks = await User.aggregate([{ $sample: { size: 30 } }]);
       const beforeDateRanks = await Rank.find({ dateKeywordForSearch: rankDataForSearch }).sort({ rank: -1 });
       res.status(200).send({ ranks, beforeDateRanks });
     } else if (rankObject === "battles") {
       if (rankDataForSearch == "gold") {
-        const ranks = await Battle.find().sort({ gold: -1 }).populate("creator").limit(30);
+        const ranks = await Battle.find().sort({ gold: -1 }).populate(populateList).limit(30);
         res.status(200).send({ ranks });
       }
       if (rankDataForSearch == "views") {
-        const ranks = await Battle.find().sort({ views: -1 }).populate("creator").limit(30);
+        const ranks = await Battle.find().sort({ views: -1 }).populate(populateList).limit(30);
         res.status(200).send({ ranks });
       }
     }
