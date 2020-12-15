@@ -47,6 +47,8 @@ export const users = async (req, res) => {
   console.log(phone)
 
   const populateList = ["watchedBattles", "bankAccountNumbers", {
+    path: "follows",
+    path: "followers",
     path: "likeBattles",
     populate: ["creator", {
       path: "subBattles",
