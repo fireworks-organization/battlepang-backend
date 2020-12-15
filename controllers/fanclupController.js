@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import routes from "../routes";
 import User from "../models/User";
+import Battle from "../models/Battle";
 
 dotenv.config();
 
@@ -20,44 +21,57 @@ const addOperate = (operate, key, value) => {
 }
 export const fanclups = async (req, res) => {
   const {
-    query: { id, email, phone, count }
+    query: { userId, count, sortBy }
   } = req;
-  console.log(id)
-  console.log(email)
-  console.log(phone)
+  console.log("userId", userId);
 
-  const populateList = ["watchedBattles", "bankAccountNumbers", {
-    path: "likeBattles",
-    populate: ["creator", {
-      path: "subBattles",
-      populate: ["creator"]
-    }]
-  },];
-  let findOperate = {};
+  const populateList = ["creator", "votes", {
+    path: "subBattles",
+    populate: ["creator", "votes"]
+  }, {
+      path: "comments",
+      options: { sort: { createdAt: -1 } },
+      populate: ["creator", "votes"]
+    }];
+  let findOperate = [];
   let limit;
-  if (id) {
-    findOperate = addOperate(findOperate, "_id", id);
-  }
-  if (email) {
-    findOperate = addOperate(findOperate, "email", email);
-  }
-  if (phone) {
-    findOperate = addOperate(findOperate, "phone", phone);
+  const sort = {}
+
+  const findUser = await User.findOne({ _id: userId }).populate("follows");
+  if (!findUser) {
+    res.status(400).json({ error: "해당유저를 찾을 수 없습니다." });
+    return false;
   }
   if (count) {
     limit = count;
   }
+  if (sortBy) {
+    const str = sortBy.split(':');
+    console.log(str)
+    if (str[0] == "likes") {
+      str[0] = "likes.length"
+    }
+    sort[str[0]] = str[1] === 'desc' ? -1 : 1;
+    console.log(sort)
+  }
+  findUser.follows.map(item => {
+    findOperate.push({
+      creator: item._id
+    });
+  })
+
   console.log(findOperate)
   try {
-    const users = await User.find(findOperate).populate(populateList).limit(parseInt(limit));
-    if (users) {
-      return res.status(200).json({ users });
-    } else {
-      return res.status(400).json({ error: "아이디를 찾지 못했습니다." });
-    }
+    let findBattles = [];
+    findBattles = await Battle.find({
+      $or: findOperate,
+    }).populate(populateList).limit(parseInt(limit)).sort(sort);
+
+    console.log(findBattles.length)
+    res.status(200).json({ battles: findBattles });
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ error });
+    res.status(400).json({ error });
   }
 };
 
