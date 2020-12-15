@@ -53,6 +53,9 @@ const DELETE_BANK_ACCOUNT_NUMBER = "/:bankAccountNumberId";
 // ExchangeHistory
 const EXCHANGE_HISTORY = "/exchange-histories";
 const UPDATE_EXCHANGE_HISTORY = "/:exchangeHistoryId";
+// ExchangeHistory
+const FANCLUP = "/fanclup";
+const ADD_FANCLUP = "/";
 
 const routes = {
   home: HOME,
@@ -94,6 +97,9 @@ const routes = {
   deleteBankAccountNumber: DELETE_BANK_ACCOUNT_NUMBER,
   exchangeHistory: EXCHANGE_HISTORY,
   updateExchangeHistory: UPDATE_EXCHANGE_HISTORY,
+  fanclup: FANCLUP,
+  addFanclup: ADD_FANCLUP,
+
 };
 
 export default routes;

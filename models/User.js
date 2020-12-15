@@ -50,6 +50,16 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  follows: [{// 내가 팬으로 등록한 사람들
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: []
+  }],
+  followers: [{//나를 팬으로 등록한 사람들
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: []
+  }],
 });
 
 UserSchema.plugin(passportLocalMongoose, { usernameField: "phone" });

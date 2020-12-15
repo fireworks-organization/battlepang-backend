@@ -417,9 +417,6 @@ export const checkUserPassword = async (req, res) => {
     user,
     info
   ) {
-    console.log(error);
-    console.log(user);
-    console.log(info);
     if (error) {
       return res.status(400).json({ error });
     }
