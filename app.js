@@ -15,7 +15,7 @@ import goldHistoryRouter from "./routes/goldHistoryRouter";
 import paymentHistoryRouter from "./routes/paymentHistoryRouter";
 import bankAccountNumberRouter from "./routes/bankAccountNumberRouter";
 import exchangeHistoryRouter from "./routes/exchangeHistoryRouter";
-import fanclupRouter from "./routes/fanclupRouter";
+import fanclubRouter from "./routes/fanclubRouter";
 import passport from "passport";
 import passportConfig from "./passport";
 import cors from "cors";
@@ -90,7 +90,7 @@ app.use(routes.goldHistory, goldHistoryRouter);
 app.use(routes.paymentHistory, paymentHistoryRouter);
 app.use(routes.bankAccountNumber, bankAccountNumberRouter);
 app.use(routes.exchangeHistory, exchangeHistoryRouter);
-app.use(routes.fanclup, fanclupRouter);
+app.use(routes.fanclub, fanclubRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -46,15 +46,13 @@ export const users = async (req, res) => {
   console.log(email)
   console.log(phone)
 
-  const populateList = ["watchedBattles", "bankAccountNumbers",
-    "follows",
-    "followers", {
-      path: "likeBattles",
-      populate: ["creator", {
-        path: "subBattles",
-        populate: ["creator"]
-      }]
-    },];
+  const populateList = ["watchedBattles", "bankAccountNumbers", "follows", "followers", {
+    path: "likeBattles",
+    populate: ["creator", {
+      path: "subBattles",
+      populate: ["creator"]
+    }]
+  },];
   let findOperate = {};
   let limit;
   if (id) {
@@ -70,8 +68,10 @@ export const users = async (req, res) => {
     limit = count;
   }
   console.log(findOperate)
+  console.log(populateList)
   try {
     const users = await User.find(findOperate).populate(populateList).limit(parseInt(limit));
+    console.log(users.length)
     if (users) {
       return res.status(200).json({ users });
     } else {

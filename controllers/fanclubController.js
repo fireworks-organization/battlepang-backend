@@ -19,7 +19,7 @@ const addOperate = (operate, key, value) => {
   }
   return operate;
 }
-export const fanclups = async (req, res) => {
+export const fanclubs = async (req, res) => {
   const {
     query: { userId, count, sortBy }
   } = req;
@@ -75,7 +75,7 @@ export const fanclups = async (req, res) => {
   }
 };
 
-export const addFanclup = async (req, res, next) => {
+export const addFanclub = async (req, res, next) => {
   const {
     body: { data }
   } = req;
