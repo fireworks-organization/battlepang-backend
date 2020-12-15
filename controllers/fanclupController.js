@@ -78,7 +78,7 @@ export const addFanclup = async (req, res, next) => {
       res.status(400).json({ error: "팬클럽 가입할 유저를 찾을 수 없습니다." });
       return false;
     }
-    const isAlreadyFollow = currentUser.follows.filter(item => item === follwToUserId)[0];
+    const isAlreadyFollow = currentUser.follows.filter(item => item == follwToUserId)[0];
     console.log(isAlreadyFollow)
     if (isAlreadyFollow) {
       currentUser.follows = currentUser.follows.filter(item => item != follwToUserId);
