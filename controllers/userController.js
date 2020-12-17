@@ -40,7 +40,7 @@ const addOperate = (operate, key, value) => {
 }
 export const users = async (req, res) => {
   const {
-    query: { id, email, phone, count }
+    query: { id, email, phone, count, sortBy }
   } = req;
   console.log(id)
   console.log(email)
@@ -54,7 +54,23 @@ export const users = async (req, res) => {
     }]
   },];
   let findOperate = {};
-  let limit;
+  let limit = {};
+  const sort = { "$sort": {} };
+  let aggregateQuery = [
+    {
+      $match: findOperate
+    },
+    {
+      $addFields: {
+        followsLength: {
+          $size: { "$ifNull": ["$follows", []] }
+        },
+        followersLength: {
+          $size: { "$ifNull": ["$followers", []] }
+        }
+      }
+    },
+  ]
   if (id) {
     findOperate = addOperate(findOperate, "_id", id);
   }
@@ -65,13 +81,26 @@ export const users = async (req, res) => {
     findOperate = addOperate(findOperate, "phone", phone);
   }
   if (count) {
-    limit = count;
+    limit = { $limit: parseInt(count) };
+    aggregateQuery.push(limit)
   }
-  console.log(findOperate)
-  console.log(populateList)
+  if (sortBy) {
+    const str = sortBy.split(':');
+    console.log(str)
+    if (str[0] == "follows") {
+      str[0] = "followsLength"
+    }
+    if (str[0] == "followers") {
+      str[0] = "followersLength"
+    }
+    sort["$sort"][str[0]] = str[1] === 'desc' ? -1 : 1;
+    console.log(sort)
+    aggregateQuery.push(sort)
+  }
+
+
   try {
-    const users = await User.find(findOperate).populate(populateList).limit(parseInt(limit));
-    console.log(users.length)
+    const users = await User.aggregate(aggregateQuery);
     if (users) {
       return res.status(200).json({ users });
     } else {
