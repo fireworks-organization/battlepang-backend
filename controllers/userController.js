@@ -5,6 +5,7 @@ import aws from "aws-sdk";
 import dotenv from "dotenv";
 import routes from "../routes";
 import User from "../models/User";
+import mongoose from "mongoose";
 
 dotenv.config();
 
@@ -56,6 +57,18 @@ export const users = async (req, res) => {
   let findOperate = {};
   let limit = {};
   const sort = { "$sort": {} };
+  if (id) {
+    findOperate = addOperate(findOperate, "_id", new mongoose.Types.ObjectId(id));
+  }
+  if (email) {
+    findOperate = addOperate(findOperate, "email", email);
+  }
+  if (phone) {
+    findOperate = addOperate(findOperate, "phone", phone);
+  }
+
+  console.log(findOperate)
+
   let aggregateQuery = [
     {
       $match: findOperate
@@ -71,15 +84,6 @@ export const users = async (req, res) => {
       }
     },
   ]
-  if (id) {
-    findOperate = addOperate(findOperate, "_id", id);
-  }
-  if (email) {
-    findOperate = addOperate(findOperate, "email", email);
-  }
-  if (phone) {
-    findOperate = addOperate(findOperate, "phone", phone);
-  }
   if (count) {
     limit = { $limit: parseInt(count) };
     aggregateQuery.push(limit)
@@ -98,10 +102,13 @@ export const users = async (req, res) => {
     aggregateQuery.push(sort)
   }
 
+  console.log(aggregateQuery)
+
 
   try {
-    const users = await User.aggregate(aggregateQuery);
-    if (users) {
+    let users = await User.aggregate(aggregateQuery);
+    users = await User.populate(users, populateList);
+    if (users.length != 0) {
       return res.status(200).json({ users });
     } else {
       return res.status(400).json({ error: "아이디를 찾지 못했습니다." });

@@ -489,15 +489,14 @@ export const mostPopulatedBattlesOnThreeDays = async (req, res) => {
     query: { count, sortBy }
   } = req;
 
-  const populateList = [];
-  // const populateList = ["creator", "votes", {
-  //   path: "subBattles",
-  //   populate: ["creator", "votes"]
-  // }, {
-  //     path: "comments",
-  //     options: { sort: { createdAt: -1 } },
-  //     populate: ["creator", "votes"]
-  //   }];
+  const populateList = ["creator", "votes", {
+    path: "subBattles",
+    populate: ["creator", "votes"]
+  }, {
+      path: "comments",
+      options: { sort: { createdAt: -1 } },
+      populate: ["creator", "votes"]
+    }];
   let findOperate = {};
   let limit;
   const sort = { "views": -1, "votesLength": -1, "gold": -1 };
@@ -514,6 +513,7 @@ export const mostPopulatedBattlesOnThreeDays = async (req, res) => {
     var d = new Date();
     d.setDate(d.getDate() - 3);
     findBattles = await Battle.aggregate(
+
       [{ $match: { "createdAt": { $gt: d } } },
       {
         "$project": {
@@ -546,7 +546,10 @@ export const mostPopulatedBattlesOnThreeDays = async (req, res) => {
       }]
     );
 
+
+    findBattles = await Battle.populate(findBattles, populateList);
     res.status(200).json({ battles: findBattles });
+
   } catch (error) {
     console.log(error);
     res.status(400).json({ error });
