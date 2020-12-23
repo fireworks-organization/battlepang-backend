@@ -71,7 +71,6 @@ export const battles = async (req, res) => {
   if (state) {
     findOperate = addOperate(findOperate, "state", state);
   }
-  findOperate = addOperate(findOperate, "state", state);
   if (count) {
     limit = count;
   }
@@ -84,9 +83,6 @@ export const battles = async (req, res) => {
     sort[str[0]] = str[1] === 'desc' ? -1 : 1;
     console.log(sort)
   }
-
-  console.log(findOperate)
-  console.log(limit)
 
   try {
     let findBattles = [];
