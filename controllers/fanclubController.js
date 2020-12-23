@@ -36,7 +36,9 @@ export const fanclubs = async (req, res) => {
   let findOperate = [];
   let limit;
   const sort = {}
-
+  if(userId){
+    findOperate = { _id: userId };
+  }
   const findUser = await User.findOne({ _id: userId }).populate("follows");
   if (!findUser) {
     res.status(400).json({ error: "해당유저를 찾을 수 없습니다." });

@@ -71,6 +71,7 @@ export const battles = async (req, res) => {
   if (state) {
     findOperate = addOperate(findOperate, "state", state);
   }
+  findOperate = addOperate(findOperate, "state", state);
   if (count) {
     limit = count;
   }
@@ -300,7 +301,7 @@ export const addBattle = async (req, res) => {
 
 export const updateBattle = async (req, res) => {
   const {
-    body: { state, battleStartTime, voteEndTime },
+    body: { title, description, state, battleStartTime, voteEndTime },
     params: { battleId },
   } = req;
   console.log(state)
@@ -315,6 +316,12 @@ export const updateBattle = async (req, res) => {
 
     if (state !== undefined) {
       findBattle.state = state;
+    }
+    if (title !== undefined) {
+      findBattle.title = title;
+    }
+    if (description !== undefined) {
+      findBattle.description = description;
     }
     if (battleStartTime !== undefined) {
       findBattle.battleStartTime = battleStartTime;
