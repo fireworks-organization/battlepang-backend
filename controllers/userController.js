@@ -47,13 +47,19 @@ export const users = async (req, res) => {
   console.log(email)
   console.log(phone)
 
-  const populateList = ["watchedBattles", "bankAccountNumbers", "follows", "followers", {
+  const populateList = ["bankAccountNumbers", "follows", "followers", {
     path: "likeBattles",
     populate: ["creator", {
       path: "subBattles",
       populate: ["creator"]
     }]
-  },];
+  }, {
+      path: "watchedBattles",
+      populate: ["creator", {
+        path: "subBattles",
+        populate: ["creator"]
+      }]
+    }];
   let findOperate = {};
   let limit = {};
   const sort = { "$sort": {} };

@@ -36,9 +36,6 @@ export const fanclubs = async (req, res) => {
   let findOperate = [];
   let limit;
   const sort = {}
-  if(userId){
-    findOperate = { _id: userId };
-  }
   const findUser = await User.findOne({ _id: userId }).populate("follows");
   if (!findUser) {
     res.status(400).json({ error: "해당유저를 찾을 수 없습니다." });
@@ -84,8 +81,8 @@ export const addFanclub = async (req, res, next) => {
   console.log(data);
   const { follwToUserId, currentUserId } = data;
   try {
-    const followUser = await User.findOne({ _id: follwToUserId });
-    const currentUser = await User.findOne({ _id: currentUserId });
+    let followUser = await User.findOne({ _id: follwToUserId }).populate(["follows", "followers"]);
+    let currentUser = await User.findOne({ _id: currentUserId }).populate(["follows", "followers"]);
     if (!currentUser) {
       res.status(400).json({ error: "해당유저를 찾을 수 없습니다." });
       return false;
@@ -94,17 +91,20 @@ export const addFanclub = async (req, res, next) => {
       res.status(400).json({ error: "팬클럽 가입할 유저를 찾을 수 없습니다." });
       return false;
     }
-    const isAlreadyFollow = currentUser.follows.filter(item => item == follwToUserId)[0];
+    const isAlreadyFollow = currentUser.follows.filter(item => item._id == follwToUserId)[0];
     console.log(isAlreadyFollow)
     if (isAlreadyFollow) {
-      currentUser.follows = currentUser.follows.filter(item => item != follwToUserId);
-      followUser.followers = followUser.followers.filter(item => item != currentUserId);
+      currentUser.follows = currentUser.follows.filter(item => item._id != follwToUserId);
+      followUser.followers = followUser.followers.filter(item => item._id != currentUserId);
     } else {
-      currentUser.follows = [...currentUser.follows, follwToUserId];
-      followUser.followers = [...followUser.followers, currentUserId];
+      currentUser.follows = [...currentUser.follows.map(item => item._id), follwToUserId];
+      followUser.followers = [...followUser.followers.map(item => item._id), currentUserId];
     }
     await currentUser.save();
     await followUser.save();
+    followUser = await User.findOne({ _id: follwToUserId }).populate(["follows", "followers"]);
+    currentUser = await User.findOne({ _id: currentUserId }).populate(["follows", "followers"]);
+
     res.status(200).send({ currentUser, followUser });
   } catch (error) {
     console.log(error);
