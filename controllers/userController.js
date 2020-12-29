@@ -541,13 +541,12 @@ export const checkResetPasswordToken = async (req, res) => {
 };
 export const deleteUser = async (req, res) => {
   const {
-    body: { data }
+    params: { userId },
+    body: { secessionReason }
   } = req;
-  const id = data.id;
-  const secessionReason = data.secessionReason ?? "";
   try {
     const findUser = await User.findOne({
-      _id: id,
+      _id: userId,
     });
 
     if (!findUser) {
@@ -555,7 +554,7 @@ export const deleteUser = async (req, res) => {
     }
     findUser.deleteFlag = 1;
     findUser.deletedAt = Date.now();
-    findUser.secessionReason = secessionReason;
+    findUser.secessionReason = secessionReason ?? "";
     await findUser.save();
     res.status(200).send({ user });
   } catch (error) {
