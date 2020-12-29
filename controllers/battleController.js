@@ -86,6 +86,7 @@ export const battles = async (req, res) => {
 
   try {
     let findBattles = [];
+    let findSubBattles = [];
     findBattles = await Battle.find(findOperate).populate(populateList).limit(parseInt(limit)).sort(sort);
 
     if (userId && id) {
@@ -114,7 +115,26 @@ export const battles = async (req, res) => {
       res.status(200).json({ battles: findBattles, otherBattles });
       return false
     }
-    res.status(200).json({ battles: findBattles });
+    if (creator) {
+      findSubBattles = await SubBattle.find(findOperate).populate([{
+        path: "battleId",
+        populate: ["creator", "votes", {
+          path: "subBattles",
+          populate: ["creator", "votes"]
+        }]
+      }]).limit(parseInt(limit)).sort(sort);
+      findSubBattles = findSubBattles.filter(item => item.battleId)
+    }
+
+    let newBattles = [...findBattles]
+
+    const battleIdsFromSubBattles = findSubBattles.map(item2 => item2.battleId._id.toString());
+    const newBattlesWithOutJoinBattles = newBattles.filter(item => {
+      return battleIdsFromSubBattles.indexOf(item._id.toString()) == -1
+    });
+    newBattles = [...newBattlesWithOutJoinBattles, ...findSubBattles.map(item => item.battleId)]
+
+    res.status(200).json({ battles: newBattles });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error });
