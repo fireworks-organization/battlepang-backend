@@ -544,6 +544,7 @@ export const deleteUser = async (req, res) => {
     body: { data }
   } = req;
   const id = data.id;
+  const secessionReason = data.secessionReason ?? "";
   try {
     const findUser = await User.findOne({
       _id: id,
@@ -554,6 +555,7 @@ export const deleteUser = async (req, res) => {
     }
     findUser.deleteFlag = 1;
     findUser.deletedAt = Date.now();
+    findUser.secessionReason = secessionReason;
     await findUser.save();
     res.status(200).send({ user });
   } catch (error) {

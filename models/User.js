@@ -65,6 +65,10 @@ const UserSchema = new mongoose.Schema({
     default: 0
   },
   deletedAt: Date,
+  secessionReason: {
+    type: String,
+    default: ""
+  },
 });
 
 UserSchema.plugin(passportLocalMongoose, { usernameField: "phone" });
