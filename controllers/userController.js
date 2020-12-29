@@ -171,6 +171,10 @@ export const login = async (req, res, next) => {
     console.log("존재하지 않는 아이디입니다")
     return res.status(400).json({ error: "존재하지 않는 아이디입니다" }); // 임의 에러 처리
   }
+  if (findUser.deleteFlag === 1) {
+    console.log("탈퇴한 유저입니다.")
+    return res.status(400).json({ error: "탈퇴한 유저입니다." }); // 임의 에러 처리
+  }
   passport.authenticate("local", { session: false }, function (err, user, info) {
     if (err) {
       console.log("에러발생:" + err)
