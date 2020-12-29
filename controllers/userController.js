@@ -556,7 +556,7 @@ export const deleteUser = async (req, res) => {
     findUser.deletedAt = Date.now();
     findUser.secessionReason = secessionReason ?? "";
     await findUser.save();
-    res.status(200).send({ user });
+    res.status(200).send({ user: findUser });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error });
