@@ -505,7 +505,6 @@ export const resetUserPassword = async (req, res) => {
       await findUser.setPassword(password);
       findUser.resetPasswordToken = newResetPasswordToken;
       await findUser.save();
-      findUser.save();
       res.status(200).send({ user: findUser });
     } else {
       res.status(400).json({ error: "유저를 찾을 수 없습니다." });
@@ -546,7 +545,16 @@ export const deleteUser = async (req, res) => {
   } = req;
   const id = data.id;
   try {
-    const user = await User.findOneAndRemove({ _id: id });
+    const findUser = await User.findOne({
+      _id: id,
+    });
+
+    if (!findUser) {
+      res.status(400).json({ error: "유저를 찾을 수 없습니다." });
+    }
+    findUser.deleteFlag = 1;
+    findUser.deletedAt = Date.now();
+    await findUser.save();
     res.status(200).send({ user });
   } catch (error) {
     console.log(error);

@@ -60,6 +60,11 @@ const UserSchema = new mongoose.Schema({
     ref: "User",
     default: []
   }],
+  deleteFlag: {
+    type: Number,
+    default: 0
+  },
+  deletedAt: Date,
 });
 
 UserSchema.plugin(passportLocalMongoose, { usernameField: "phone" });
