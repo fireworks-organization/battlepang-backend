@@ -64,6 +64,6 @@ userRouter.put(
     routes.resetUserPassword,
     resetUserPassword
 );
-userRouter.delete(routes.deleteUser, checkJWTAuthenticate, deleteUser);
+userRouter.delete(routes.deleteUser, deleteUser);
 
 export default userRouter;
