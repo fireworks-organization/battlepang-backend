@@ -48,7 +48,7 @@ export const comments = async (req, res) => {
       findOperate = addOperate(findOperate, "creator", creator);
     }
     findComments = await Comment.find(findOperate).populate(populateList).limit(parseInt(limit)).sort(sort);
-    res.status(200).json({ comments: findComments });
+    res.status(200).json({ comments: findComments.filter(item => item.battleId) });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error });
