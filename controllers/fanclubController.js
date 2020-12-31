@@ -81,6 +81,10 @@ export const addFanclub = async (req, res, next) => {
   console.log(data);
   const { follwToUserId, currentUserId } = data;
   try {
+    if (follwToUserId === currentUserId) {
+      res.status(400).json({ error: "자신의 채널은 팬가입이 불가능합니다." });
+      return false;
+    }
     let followUser = await User.findOne({ _id: follwToUserId }).populate(["follows", "followers"]);
     let currentUser = await User.findOne({ _id: currentUserId }).populate(["follows", "followers"]);
     if (!currentUser) {
@@ -92,7 +96,7 @@ export const addFanclub = async (req, res, next) => {
       return false;
     }
     const isAlreadyFollow = currentUser.follows.filter(item => item._id == follwToUserId)[0];
-    console.log(isAlreadyFollow)
+
     if (isAlreadyFollow) {
       currentUser.follows = currentUser.follows.filter(item => item._id != follwToUserId);
       followUser.followers = followUser.followers.filter(item => item._id != currentUserId);
