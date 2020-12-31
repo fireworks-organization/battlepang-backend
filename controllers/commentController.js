@@ -135,6 +135,10 @@ export const likeComment = async (req, res) => {
       _id: commentId
     });
     if (findComment) {
+      if (findComment.creator.toString() === userId.toString()) {
+        res.status(400).json({ error: "자신의 댓글은 추천 불가능합니다." });
+        return false;
+      }
       if (likeValue) {
         findComment.unlikes = findComment.unlikes.filter(item => item != userId);
         findComment.likes = [...findComment.likes, userId];
