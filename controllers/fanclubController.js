@@ -33,7 +33,7 @@ export const fanclubs = async (req, res) => {
       options: { sort: { createdAt: -1 } },
       populate: ["creator", "votes"]
     }];
-  let findOperate = [];
+  let findOperate = {};
   let limit;
   const sort = {}
   const findUser = await User.findOne({ _id: userId }).populate("follows");
@@ -53,24 +53,28 @@ export const fanclubs = async (req, res) => {
     sort[str[0]] = str[1] === 'desc' ? -1 : 1;
     console.log(sort)
   }
-  findUser.follows.map(item => {
-    findOperate.push({
-      creator: item._id
-    });
-  })
 
-  console.log(findOperate)
-  try {
-    let findBattles = [];
-    findBattles = await Battle.find({
-      $or: findOperate,
-    }).populate(populateList).limit(parseInt(limit)).sort(sort);
+  if (findUser.follows.length > 0) {
+    findOperate = [];
+    findUser.follows.map(item => {
+      findOperate.push({
+        creator: item._id
+      });
+    })
+    findOperate = { $or: findOperate };
+    console.log(findOperate)
+    try {
+      let findBattles = [];
+      findBattles = await Battle.find(findOperate).populate(populateList).limit(parseInt(limit)).sort(sort);
 
-    console.log(findBattles.length)
-    res.status(200).json({ battles: findBattles });
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ error });
+      console.log(findBattles.length)
+      res.status(200).json({ battles: findBattles });
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ error });
+    }
+  } else {
+    res.status(200).json({ battles: [] });
   }
 };
 
