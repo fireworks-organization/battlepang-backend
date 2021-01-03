@@ -363,37 +363,32 @@ export const likeBattle = async (req, res) => {
   const battleId = data.battleId;
   const userId = data.userId;
   const likeValue = data.likeValue; // true or false
+
+
+  const populateList = ["creator", "votes", {
+    path: "subBattles",
+    populate: ["creator", "votes"]
+  }, {
+      path: "comments",
+      options: { sort: { createdAt: -1 } },
+      populate: ["creator", "votes"]
+    }];
+
   try {
     const findBattle = await Battle.findOne({
       _id: battleId
-    });
-    if (findBattle) {
-      if (likeValue) {
-        findBattle.likes = [...findBattle.likes, userId];
-      } else if (likeValue === false) {
-        findBattle.likes = findBattle.likes.filter(item => item != userId);
-      }
-      await findBattle.save();
-      res.status(200).send({ battle: findBattle });
-    } else {
-      const findSubBattle = await SubBattle.findOne({
-        _id: battleId
-      });
-
-      if (findSubBattle) {
-        if (likeValue) {
-          findSubBattle.likes = [...findSubBattle.likes, userId];
-        } else if (likeValue === false) {
-          findSubBattle.likes = findSubBattle.likes.filter(
-            item => item != userId
-          );
-        }
-        await findSubBattle.save();
-        res.status(200).send({ battle: findSubBattle });
-      } else {
-        res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
-      }
+    }).populate(populateList);
+    if (!findBattle) {
+      res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
+      return false;
     }
+    if (likeValue) {
+      findBattle.likes = [...findBattle.likes, userId];
+    } else if (likeValue === false) {
+      findBattle.likes = findBattle.likes.filter(item => item != userId);
+    }
+    await findBattle.save();
+    res.status(200).send({ battle: findBattle });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error });
