@@ -111,7 +111,7 @@
                                         "type": "String",
                                         "default": ""
                                     },
-                                    "loginType": "local"
+                                    "loginType": "local || kakao || naver"
                                 },
                                 "token": "token string"
                             }
@@ -267,7 +267,7 @@
                                         "type": "String",
                                         "default": ""
                                     },
-                                    "loginType": "local"
+                                    "loginType": "local || kakao || naver"
                                 }
                             }
                         }
@@ -392,7 +392,7 @@
                                         "type": "String",
                                         "default": ""
                                     },
-                                    "loginType": "local"
+                                    "loginType": "local || kakao || naver"
                                 }
                             }
                         }
@@ -517,7 +517,7 @@
                                         "type": "String",
                                         "default": ""
                                     },
-                                    "loginType": "local"
+                                    "loginType": "local || kakao || naver"
                                 }
                             }
                         }
@@ -542,18 +542,130 @@
                     "유저 관련 API"
                 ],
                 "description": "유저 목록 취득 할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "phone",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "sortBy",
+                        "in": "query",
+                        "required": false
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "users to be returned",
+                        "description": "유저 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/users"
+                            "example": {
+                                "users": [
+                                    {
+                                        "name": "String",
+                                        "email": "String",
+                                        "channelName": {
+                                            "type": "String",
+                                            "default": "채널명 없음"
+                                        },
+                                        "avatarUrl": {
+                                            "type": "String",
+                                            "default": "https://fireworks-triple-star.s3.ap-northeast-2.amazonaws.com/default-user-white.png"
+                                        },
+                                        "updatedDateOfChannelName": "Date",
+                                        "phone": "String",
+                                        "sex": "String",
+                                        "kakaoId": "Number",
+                                        "naverId": "Number",
+                                        "facebookId": "Number",
+                                        "googleId": "Number",
+                                        "gold": {
+                                            "type": "Number",
+                                            "default": 0
+                                        },
+                                        "permission": {
+                                            "type": "String",
+                                            "default": "public"
+                                        },
+                                        "bankAccountNumbers": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "BankAccountNumber",
+                                                "default": []
+                                            }
+                                        ],
+                                        "resetPasswordToken": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "watchedBattles": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "Battle",
+                                                "default": []
+                                            }
+                                        ],
+                                        "likeBattles": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "Battle",
+                                                "default": []
+                                            }
+                                        ],
+                                        "createdAt": {
+                                            "type": "Date",
+                                            "default": "Date.now"
+                                        },
+                                        "follows": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "User",
+                                                "default": []
+                                            }
+                                        ],
+                                        "followers": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "User",
+                                                "default": []
+                                            }
+                                        ],
+                                        "deleteFlag": {
+                                            "type": "Number",
+                                            "default": 0
+                                        },
+                                        "deletedAt": "Date",
+                                        "secessionReason": {
+                                            "type": "String",
+                                            "default": ""
+                                        }
+                                    }
+                                ]
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "에러발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "각 에러메세지 그대로 전달"
+                                }
+                            ]
                         }
                     }
                 }
@@ -566,18 +678,78 @@
                     "유저 관련 API"
                 ],
                 "description": "유저정보를 변경 할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "params",
+                        "required": true
+                    },
+                    {
+                        "name": "email",
+                        "in": "body.",
+                        "required": false
+                    },
+                    {
+                        "name": "phone",
+                        "in": "body.",
+                        "required": false
+                    },
+                    {
+                        "name": "name",
+                        "in": "body.",
+                        "required": false
+                    },
+                    {
+                        "name": "channelName",
+                        "in": "body.",
+                        "required": false
+                    },
+                    {
+                        "name": "avatarUrl",
+                        "in": "body.",
+                        "required": false
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "users to be returned",
+                        "description": "유저 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/users"
+                            "example": {
+                                "users": {
+                                    "name": "String",
+                                    "email": "String",
+                                    "channelName": {
+                                        "type": "String",
+                                        "default": "채널명 없음"
+                                    },
+                                    "avatarUrl": {
+                                        "type": "String",
+                                        "default": "https://fireworks-triple-star.s3.ap-northeast-2.amazonaws.com/default-user-white.png"
+                                    },
+                                    "updatedDateOfChannelName": "Date",
+                                    "phone": "String"
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "amazon s3에 있는 이미지 삭제 실패했을시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "이미지 삭제 실패"
+                                }
+                            ]
+                        }
+                    },
+                    "400-2": {
+                        "description": "에러발생시",
+                        "schema": {
+                            "example": [
+                                {
+                                    "error": "각 에러메세지 그대로 전달"
+                                }
+                            ]
                         }
                     }
                 }
@@ -590,18 +762,35 @@
                     "유저 관련 API"
                 ],
                 "description": "비밀번호 재설정 이메일을 전송 할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "params",
+                        "required": true
+                    },
+                    {
+                        "name": "email",
+                        "in": "body.",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "users to be returned",
+                        "description": "성공 메세지 반환",
                         "schema": {
-                            "$ref": "#/definitions/users"
+                            "example": {
+                                "message": "임시 비밀번호 발급 성공"
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "해당 이메일을 가진 유저가 없을경우.",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "이름과 이메일을 확인해주세요."
+                                }
+                            ]
                         }
                     }
                 }
@@ -614,18 +803,44 @@
                     "유저 관련 API"
                 ],
                 "description": "비밀번호가 맞는지 체크 할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "phone",
+                        "in": "body.",
+                        "required": true
+                    },
+                    {
+                        "name": "password",
+                        "in": "body.",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "users to be returned",
+                        "description": "비밀번호가 맞을때",
                         "schema": {
-                            "$ref": "#/definitions/users"
+                            "example": {
+                                "passwordValidation": true,
+                                "resetPasswordToken": "리셋에 사용되는 토큰 문자열"
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "200-2": {
+                        "description": "비밀번호가 틀릴때",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": {
+                                "passwordValidation": false
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "에러발생시",
+                        "schema": {
+                            "example": [
+                                {
+                                    "error": "각 에러메세지 그대로 전달"
+                                }
+                            ]
                         }
                     }
                 }
@@ -638,18 +853,36 @@
                     "유저 관련 API"
                 ],
                 "description": "비밀번호변경 토큰이 맞는지 체크 할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "params",
+                        "required": true
+                    },
+                    {
+                        "name": "resetPasswordToken",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "users to be returned",
+                        "description": "해당 리셋 토큰이 일치할때",
                         "schema": {
-                            "$ref": "#/definitions/users"
+                            "example": {
+                                "result": true
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "에러발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "result": false,
+                                    "error": "토큰을 확인해주세요."
+                                }
+                            ]
                         }
                     }
                 }
@@ -662,18 +895,114 @@
                     "유저 관련 API"
                 ],
                 "description": "비밀번호 변경 할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "params",
+                        "required": true
+                    },
+                    {
+                        "name": "password",
+                        "in": "body.data",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "users to be returned",
+                        "description": "정상적으로 변경완료되었을때",
                         "schema": {
-                            "$ref": "#/definitions/users"
+                            "example": {
+                                "user": {
+                                    "name": "String",
+                                    "email": "String",
+                                    "channelName": {
+                                        "type": "String",
+                                        "default": "채널명 없음"
+                                    },
+                                    "avatarUrl": {
+                                        "type": "String",
+                                        "default": "https://fireworks-triple-star.s3.ap-northeast-2.amazonaws.com/default-user-white.png"
+                                    },
+                                    "updatedDateOfChannelName": "Date",
+                                    "phone": "String",
+                                    "sex": "String",
+                                    "kakaoId": "Number",
+                                    "naverId": "Number",
+                                    "facebookId": "Number",
+                                    "googleId": "Number",
+                                    "gold": {
+                                        "type": "Number",
+                                        "default": 0
+                                    },
+                                    "permission": {
+                                        "type": "String",
+                                        "default": "public"
+                                    },
+                                    "bankAccountNumbers": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "BankAccountNumber",
+                                            "default": []
+                                        }
+                                    ],
+                                    "resetPasswordToken": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "watchedBattles": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Battle",
+                                            "default": []
+                                        }
+                                    ],
+                                    "likeBattles": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Battle",
+                                            "default": []
+                                        }
+                                    ],
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "follows": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User",
+                                            "default": []
+                                        }
+                                    ],
+                                    "followers": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User",
+                                            "default": []
+                                        }
+                                    ],
+                                    "deleteFlag": {
+                                        "type": "Number",
+                                        "default": 0
+                                    },
+                                    "deletedAt": "Date",
+                                    "secessionReason": {
+                                        "type": "String",
+                                        "default": ""
+                                    }
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "해당 유저아이디가 없을경우",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "result": false,
+                                    "error": "유저를 찾을 수 없습니다."
+                                }
+                            ]
                         }
                     }
                 }
@@ -686,18 +1015,114 @@
                     "유저 관련 API"
                 ],
                 "description": "유저를 삭제 할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "params",
+                        "required": true
+                    },
+                    {
+                        "name": "secessionReason",
+                        "in": "body.",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "users to be returned",
+                        "description": "정상적으로 삭제완료되었을때",
                         "schema": {
-                            "$ref": "#/definitions/users"
+                            "example": {
+                                "user": {
+                                    "name": "String",
+                                    "email": "String",
+                                    "channelName": {
+                                        "type": "String",
+                                        "default": "채널명 없음"
+                                    },
+                                    "avatarUrl": {
+                                        "type": "String",
+                                        "default": "https://fireworks-triple-star.s3.ap-northeast-2.amazonaws.com/default-user-white.png"
+                                    },
+                                    "updatedDateOfChannelName": "Date",
+                                    "phone": "String",
+                                    "sex": "String",
+                                    "kakaoId": "Number",
+                                    "naverId": "Number",
+                                    "facebookId": "Number",
+                                    "googleId": "Number",
+                                    "gold": {
+                                        "type": "Number",
+                                        "default": 0
+                                    },
+                                    "permission": {
+                                        "type": "String",
+                                        "default": "public"
+                                    },
+                                    "bankAccountNumbers": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "BankAccountNumber",
+                                            "default": []
+                                        }
+                                    ],
+                                    "resetPasswordToken": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "watchedBattles": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Battle",
+                                            "default": []
+                                        }
+                                    ],
+                                    "likeBattles": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Battle",
+                                            "default": []
+                                        }
+                                    ],
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "follows": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User",
+                                            "default": []
+                                        }
+                                    ],
+                                    "followers": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User",
+                                            "default": []
+                                        }
+                                    ],
+                                    "deleteFlag": {
+                                        "type": "Number",
+                                        "default": 0
+                                    },
+                                    "deletedAt": "Date",
+                                    "secessionReason": {
+                                        "type": "String",
+                                        "default": ""
+                                    }
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "해당 유저아이디가 없을경우",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "result": false,
+                                    "error": "유저를 찾을 수 없습니다."
+                                }
+                            ]
                         }
                     }
                 }
@@ -710,18 +1135,217 @@
                     "배틀 관련 API"
                 ],
                 "description": "배틀 목록 취득할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "subBattleId",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "sortBy",
+                        "in": "query",
+                        "required": false
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "battles to be returned",
+                        "description": "배틀 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/battles"
+                            "example": {
+                                "battles": [
+                                    {
+                                        "videoUrl": "String",
+                                        "thumbnail": "String",
+                                        "title": "String",
+                                        "description": "String",
+                                        "category1": "String",
+                                        "category2": "String",
+                                        "reviewCriteria": "String",
+                                        "pro": "Boolean",
+                                        "ageLimit": "Boolean",
+                                        "gold": "Number",
+                                        "joinCount": {
+                                            "type": "Number",
+                                            "default": 0
+                                        },
+                                        "maxCount": {
+                                            "type": "Number",
+                                            "default": 2
+                                        },
+                                        "state": {
+                                            "type": "String",
+                                            "default": "transcoding"
+                                        },
+                                        "battleStartTime": "String",
+                                        "voteEndTime": "String",
+                                        "views": {
+                                            "type": "Number",
+                                            "default": 0
+                                        },
+                                        "createdAt": {
+                                            "type": "Date",
+                                            "default": "Date.now"
+                                        },
+                                        "comments": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "Comment"
+                                            }
+                                        ],
+                                        "creator": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        },
+                                        "subBattles": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "SubBattle"
+                                            }
+                                        ],
+                                        "likes": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "User"
+                                            }
+                                        ],
+                                        "votes": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "Vote"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/battles/most-populated-battles-on-three-days - 랭크쪽 3일간 인기 배틀 목록 취득": {
+            "get": {
+                "x-swagger-router-controller": "battles",
+                "tags": [
+                    "배틀 관련 API"
+                ],
+                "description": "랭크쪽 3일간 인기 배틀 목록 취득할때 사용됩니다.",
+                "parameters": [
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "배틀 모델 반환",
+                        "schema": {
+                            "example": {
+                                "battles": [
+                                    {
+                                        "videoUrl": "String",
+                                        "thumbnail": "String",
+                                        "title": "String",
+                                        "description": "String",
+                                        "category1": "String",
+                                        "category2": "String",
+                                        "reviewCriteria": "String",
+                                        "pro": "Boolean",
+                                        "ageLimit": "Boolean",
+                                        "gold": "Number",
+                                        "joinCount": {
+                                            "type": "Number",
+                                            "default": 0
+                                        },
+                                        "maxCount": {
+                                            "type": "Number",
+                                            "default": 2
+                                        },
+                                        "state": {
+                                            "type": "String",
+                                            "default": "transcoding"
+                                        },
+                                        "battleStartTime": "String",
+                                        "voteEndTime": "String",
+                                        "views": {
+                                            "type": "Number",
+                                            "default": 0
+                                        },
+                                        "createdAt": {
+                                            "type": "Date",
+                                            "default": "Date.now"
+                                        },
+                                        "comments": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "Comment"
+                                            }
+                                        ],
+                                        "creator": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        },
+                                        "subBattles": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "SubBattle"
+                                            }
+                                        ],
+                                        "likes": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "User"
+                                            }
+                                        ],
+                                        "votes": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "Vote"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "각 에러 발생시",
+                        "schema": {
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -734,18 +1358,106 @@
                     "배틀 관련 API"
                 ],
                 "description": "배틀 생성할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "battleObj",
+                        "in": "FormData",
+                        "required": true
+                    },
+                    {
+                        "name": "videoFile",
+                        "in": "FormData",
+                        "required": true
+                    },
+                    {
+                        "name": "thumbnail",
+                        "in": "FormData",
+                        "required": true
+                    },
+                    {
+                        "name": "videoCutToStartTime",
+                        "in": "FormData",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "battles to be returned",
+                        "description": "배틀 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/battles"
+                            "example": {
+                                "battle": {
+                                    "videoUrl": "String",
+                                    "thumbnail": "String",
+                                    "title": "String",
+                                    "description": "String",
+                                    "category1": "String",
+                                    "category2": "String",
+                                    "reviewCriteria": "String",
+                                    "pro": "Boolean",
+                                    "ageLimit": "Boolean",
+                                    "gold": "Number",
+                                    "joinCount": {
+                                        "type": "Number",
+                                        "default": 0
+                                    },
+                                    "maxCount": {
+                                        "type": "Number",
+                                        "default": 2
+                                    },
+                                    "state": {
+                                        "type": "String",
+                                        "default": "transcoding"
+                                    },
+                                    "battleStartTime": "String",
+                                    "voteEndTime": "String",
+                                    "views": {
+                                        "type": "Number",
+                                        "default": 0
+                                    },
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "comments": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Comment"
+                                        }
+                                    ],
+                                    "creator": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    },
+                                    "subBattles": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "SubBattle"
+                                        }
+                                    ],
+                                    "likes": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        }
+                                    ],
+                                    "votes": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Vote"
+                                        }
+                                    ]
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -758,18 +1470,116 @@
                     "배틀 관련 API"
                 ],
                 "description": "배틀정보를 변경 할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "battleId",
+                        "in": "params",
+                        "required": true
+                    },
+                    {
+                        "name": "title",
+                        "in": "body.",
+                        "required": false
+                    },
+                    {
+                        "name": "description",
+                        "in": "body.",
+                        "required": false
+                    },
+                    {
+                        "name": "state",
+                        "in": "body.",
+                        "required": false
+                    },
+                    {
+                        "name": "battleStartTime",
+                        "in": "body.",
+                        "required": false
+                    },
+                    {
+                        "name": "voteEndTime",
+                        "in": "body.",
+                        "required": false
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "battles to be returned",
+                        "description": "배틀 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/battles"
+                            "example": {
+                                "battle": {
+                                    "videoUrl": "String",
+                                    "thumbnail": "String",
+                                    "title": "String",
+                                    "description": "String",
+                                    "category1": "String",
+                                    "category2": "String",
+                                    "reviewCriteria": "String",
+                                    "pro": "Boolean",
+                                    "ageLimit": "Boolean",
+                                    "gold": "Number",
+                                    "joinCount": {
+                                        "type": "Number",
+                                        "default": 0
+                                    },
+                                    "maxCount": {
+                                        "type": "Number",
+                                        "default": 2
+                                    },
+                                    "state": {
+                                        "type": "String",
+                                        "default": "transcoding"
+                                    },
+                                    "battleStartTime": "String",
+                                    "voteEndTime": "String",
+                                    "views": {
+                                        "type": "Number",
+                                        "default": 0
+                                    },
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "comments": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Comment"
+                                        }
+                                    ],
+                                    "creator": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    },
+                                    "subBattles": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "SubBattle"
+                                        }
+                                    ],
+                                    "likes": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        }
+                                    ],
+                                    "votes": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Vote"
+                                        }
+                                    ]
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -782,42 +1592,111 @@
                     "배틀 관련 API"
                 ],
                 "description": "배틀 좋아요할때 사용됩니다.",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "battles to be returned",
-                        "schema": {
-                            "$ref": "#/definitions/battles"
-                        }
+                "parameters": [
+                    {
+                        "name": "battleId",
+                        "in": "body.data",
+                        "required": true
                     },
-                    "default": {
-                        "description": "400 error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
+                    {
+                        "name": "userId",
+                        "in": "body.data",
+                        "required": true
+                    },
+                    {
+                        "name": "likeValue",
+                        "in": "body.data",
+                        "required": true
                     }
-                }
-            }
-        },
-        "/battles/start - 배틀 즉시시작": {
-            "post": {
-                "x-swagger-router-controller": "battles",
-                "tags": [
-                    "배틀 관련 API"
                 ],
-                "description": "배틀 즉시시작할때 사용됩니다.",
-                "parameters": [],
                 "responses": {
                     "200": {
-                        "description": "battles to be returned",
+                        "description": "배틀 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/battles"
+                            "example": {
+                                "battle": {
+                                    "videoUrl": "String",
+                                    "thumbnail": "String",
+                                    "title": "String",
+                                    "description": "String",
+                                    "category1": "String",
+                                    "category2": "String",
+                                    "reviewCriteria": "String",
+                                    "pro": "Boolean",
+                                    "ageLimit": "Boolean",
+                                    "gold": "Number",
+                                    "joinCount": {
+                                        "type": "Number",
+                                        "default": 0
+                                    },
+                                    "maxCount": {
+                                        "type": "Number",
+                                        "default": 2
+                                    },
+                                    "state": {
+                                        "type": "String",
+                                        "default": "transcoding"
+                                    },
+                                    "battleStartTime": "String",
+                                    "voteEndTime": "String",
+                                    "views": {
+                                        "type": "Number",
+                                        "default": 0
+                                    },
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "comments": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Comment"
+                                        }
+                                    ],
+                                    "creator": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    },
+                                    "subBattles": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "SubBattle"
+                                        }
+                                    ],
+                                    "likes": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        }
+                                    ],
+                                    "votes": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Vote"
+                                        }
+                                    ]
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
+                        }
+                    },
+                    "400-2": {
+                        "description": "배틀을 찾을 수 없을때",
+                        "schema": {
+                            "example": [
+                                {
+                                    "error": "배틀을 찾을 수 없습니다."
+                                }
+                            ]
                         }
                     }
                 }
@@ -830,66 +1709,241 @@
                     "배틀 관련 API"
                 ],
                 "description": "배틀 투표할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "battleId",
+                        "in": "params",
+                        "required": true
+                    },
+                    {
+                        "name": "voteObj",
+                        "in": "body.",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "battles to be returned",
+                        "description": "투표 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/battles"
+                            "example": {
+                                "voteObj": {
+                                    "battleId": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "Battle"
+                                    },
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "creator": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    }
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
+                        }
+                    },
+                    "400-2": {
+                        "description": "투표하려는 배틀이 자신의 배틀일때",
+                        "schema": {
+                            "example": [
+                                {
+                                    "error": "자신의 배틀에는 투표할 수 없습니다."
+                                }
+                            ]
+                        }
+                    },
+                    "400-3": {
+                        "description": "이미 투표한 배틀인경우",
+                        "schema": {
+                            "example": [
+                                {
+                                    "error": "이미 투표한 배틀입니다."
+                                }
+                            ]
+                        }
+                    },
+                    "400-4": {
+                        "description": "해당하는 배틀이 없을때.",
+                        "schema": {
+                            "example": [
+                                {
+                                    "error": "해당하는 배틀을 찾을 수 없습니다 투표실패."
+                                }
+                            ]
                         }
                     }
                 }
             }
         },
-        "/battles/{battleId}/reports - 배틀 신고": {
+        "/battles/:battleId/reports - 배틀 신고": {
             "post": {
                 "x-swagger-router-controller": "battles",
                 "tags": [
                     "배틀 관련 API"
                 ],
                 "description": "배틀 신고할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "battleId",
+                        "in": "params",
+                        "required": true
+                    },
+                    {
+                        "name": "reportObj",
+                        "in": "body.data",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "battles to be returned",
+                        "description": "신고 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/battles"
+                            "example": {
+                                "reportObj": {
+                                    "battleId": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "Battle"
+                                    },
+                                    "subBattlesId": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "SubBattle"
+                                    },
+                                    "commentId": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "Comment"
+                                    },
+                                    "content": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "creator": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    }
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
             }
         },
-        "/battles/{battleId} - 배틀 삭제": {
+        "/battles/:battleId - 배틀 삭제": {
             "delete": {
                 "x-swagger-router-controller": "battles",
                 "tags": [
                     "배틀 관련 API"
                 ],
                 "description": "배틀 삭제할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "battleId",
+                        "in": "params",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "battles to be returned",
+                        "description": "배틀 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/battles"
+                            "example": {
+                                "battle": {
+                                    "videoUrl": "String",
+                                    "thumbnail": "String",
+                                    "title": "String",
+                                    "description": "String",
+                                    "category1": "String",
+                                    "category2": "String",
+                                    "reviewCriteria": "String",
+                                    "pro": "Boolean",
+                                    "ageLimit": "Boolean",
+                                    "gold": "Number",
+                                    "joinCount": {
+                                        "type": "Number",
+                                        "default": 0
+                                    },
+                                    "maxCount": {
+                                        "type": "Number",
+                                        "default": 2
+                                    },
+                                    "state": {
+                                        "type": "String",
+                                        "default": "transcoding"
+                                    },
+                                    "battleStartTime": "String",
+                                    "voteEndTime": "String",
+                                    "views": {
+                                        "type": "Number",
+                                        "default": 0
+                                    },
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "comments": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Comment"
+                                        }
+                                    ],
+                                    "creator": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    },
+                                    "subBattles": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "SubBattle"
+                                        }
+                                    ],
+                                    "likes": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        }
+                                    ],
+                                    "votes": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Vote"
+                                        }
+                                    ]
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -1015,57 +2069,85 @@
                 }
             }
         },
-        "/ranks/": {
+        "/comments/:commentId - 댓글 삭제": {
+            "delete": {
+                "x-swagger-router-controller": "exchange-history",
+                "tags": [
+                    "댓글 관련 API"
+                ],
+                "description": "댓글 삭제할때 사용됩니다.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "exchange-history to be returned",
+                        "schema": {
+                            "$ref": "#/definitions/exchange-history"
+                        }
+                    },
+                    "default": {
+                        "description": "400 error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/comments/:commentId/reports - 댓글 신고": {
+            "post": {
+                "x-swagger-router-controller": "exchange-history",
+                "tags": [
+                    "댓글 관련 API"
+                ],
+                "description": "댓글 신고할때 사용됩니다.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "exchange-history to be returned",
+                        "schema": {
+                            "$ref": "#/definitions/exchange-history"
+                        }
+                    },
+                    "default": {
+                        "description": "400 error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/comments/:commentId/like - 댓글 좋아요": {
+            "post": {
+                "x-swagger-router-controller": "exchange-history",
+                "tags": [
+                    "댓글 관련 API"
+                ],
+                "description": "댓글 좋아요할때 사용됩니다.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "exchange-history to be returned",
+                        "schema": {
+                            "$ref": "#/definitions/exchange-history"
+                        }
+                    },
+                    "default": {
+                        "description": "400 error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/ranks - 랭크 리스트 취득": {
             "get": {
                 "x-swagger-router-controller": "ranks",
                 "tags": [
                     "랭크 관련 API"
                 ],
-                "description": "get ranks",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "ranks to be returned",
-                        "schema": {
-                            "$ref": "#/definitions/ranks"
-                        }
-                    },
-                    "default": {
-                        "description": "400 error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "x-swagger-router-controller": "ranks",
-                "tags": [
-                    "랭크 관련 API"
-                ],
-                "description": "post ranks",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "ranks to be returned",
-                        "schema": {
-                            "$ref": "#/definitions/ranks"
-                        }
-                    },
-                    "default": {
-                        "description": "400 error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "x-swagger-router-controller": "ranks",
-                "tags": [
-                    "랭크 관련 API"
-                ],
-                "description": "put ranks",
+                "description": "랭크 리스트 취득할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -1083,57 +2165,13 @@
                 }
             }
         },
-        "/gold-histories/": {
+        "/gold-histories - 골드 이력 리스트 취득": {
             "get": {
                 "x-swagger-router-controller": "gold-histories",
                 "tags": [
                     "골드이력 관련 API"
                 ],
-                "description": "get gold-histories",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "gold-histories to be returned",
-                        "schema": {
-                            "$ref": "#/definitions/gold-histories"
-                        }
-                    },
-                    "default": {
-                        "description": "400 error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "x-swagger-router-controller": "gold-histories",
-                "tags": [
-                    "골드이력 관련 API"
-                ],
-                "description": "post gold-histories",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "gold-histories to be returned",
-                        "schema": {
-                            "$ref": "#/definitions/gold-histories"
-                        }
-                    },
-                    "default": {
-                        "description": "400 error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "x-swagger-router-controller": "gold-histories",
-                "tags": [
-                    "골드이력 관련 API"
-                ],
-                "description": "put gold-histories",
+                "description": "골드 이력 리스트 취득할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -1151,13 +2189,13 @@
                 }
             }
         },
-        "/payment-histories/": {
+        "/payment-histories - 결제 이력 리스트 취득": {
             "get": {
                 "x-swagger-router-controller": "payment-history",
                 "tags": [
-                    "결제이력 관련 API"
+                    "결제 이력 관련 API"
                 ],
-                "description": "get payment-history",
+                "description": "결제 이력 리스트 취득할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -1173,13 +2211,15 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/payment-histories - 결제 이력 추가": {
             "post": {
                 "x-swagger-router-controller": "payment-history",
                 "tags": [
-                    "결제이력 관련 API"
+                    "결제 이력 관련 API"
                 ],
-                "description": "post payment-history",
+                "description": "결제 이력 추가할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -1195,13 +2235,15 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/payment-histories/:paymentHistoryId - 결제 이력 수정": {
             "put": {
                 "x-swagger-router-controller": "payment-history",
                 "tags": [
-                    "결제이력 관련 API"
+                    "결제 이력 관련 API"
                 ],
-                "description": "put payment-history",
+                "description": "결제 이력 수정할때 사용됩니다.",
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -1352,6 +2394,54 @@
                         "description": "bank-account-number to be returned",
                         "schema": {
                             "$ref": "#/definitions/bank-account-number"
+                        }
+                    },
+                    "default": {
+                        "description": "400 error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/fanclub - 팬클럽 목록 취득": {
+            "get": {
+                "x-swagger-router-controller": "fanclub",
+                "tags": [
+                    "팬클럽 관련 API"
+                ],
+                "description": "팬클럽 목록 취득할때 사용됩니다.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "fanclub to be returned",
+                        "schema": {
+                            "$ref": "#/definitions/fanclub"
+                        }
+                    },
+                    "default": {
+                        "description": "400 error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/fanclub - 팬클럽 등록": {
+            "post": {
+                "x-swagger-router-controller": "fanclub",
+                "tags": [
+                    "팬클럽 관련 API"
+                ],
+                "description": "팬클럽 등록할때 사용됩니다.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "fanclub to be returned",
+                        "schema": {
+                            "$ref": "#/definitions/fanclub"
                         }
                     },
                     "default": {

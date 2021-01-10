@@ -34,16 +34,14 @@ const ADD_SUB_BATTLE = "/";
 const COMMENTS = "/comments";
 const ADD_COMMENT = "/";
 const UPDATE_COMMENT = "/:commentId";
-const DELETE_COMMENT = "/:commentId/delete";
+const DELETE_COMMENT = "/:commentId";
 const REPORT_COMMENT = "/:commentId/reports";
 const LIKE_COMMENT = "/:commentId/like";
-const UNLIKE_COMMENT = "/:commentId/unlike";
 
 // Rank
 const RANKS = "/ranks";
 // GoldHistory
 const GOLD_HISTORYS = "/gold-histories";
-const UPDATE_GOLD_HISTORYS = "/:goldHistoryId";
 // PaymentHistory
 const PAYMENT_HISTORYS = "/payment-histories";
 const UPDATE_PAYMENT_HISTORYS = "/:paymentHistoryId";
@@ -85,12 +83,10 @@ const routes = {
   reportBattle: REPORT_BATTLE,
   reportComment: REPORT_COMMENT,
   likeComment: LIKE_COMMENT,
-  unlikeComment: UNLIKE_COMMENT,
   updateComment: UPDATE_COMMENT,
   deleteComment: DELETE_COMMENT,
   ranks: RANKS,
   goldHistory: GOLD_HISTORYS,
-  updateGoldHistory: UPDATE_GOLD_HISTORYS,
   paymentHistory: PAYMENT_HISTORYS,
   updatePaymentHistory: UPDATE_PAYMENT_HISTORYS,
   bankAccountNumber: BANK_ACCOUNT_NUMBER,

@@ -426,7 +426,7 @@ export const changeUserInfo = async (req, res) => {
         }, function (err, data) {
           if (err) {
             console.log("이미지 삭제 실패")
-            // return res.status(400).json({ error: "이미지 삭제 실패" });
+            return res.status(400).json({ error: "이미지 삭제 실패" });
           }
           console.log("data")
           console.log(data)
