@@ -1956,18 +1956,60 @@
                     "배틀 신청 관련 API"
                 ],
                 "description": "배틀 신청 목록 취득 할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "creator",
+                        "in": "query",
+                        "required": false
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "users to be returned",
+                        "description": "댓글 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/users"
+                            "example": {
+                                "subBbattles": [
+                                    {
+                                        "videoUrl": "String",
+                                        "thumbnail": "String",
+                                        "title": "String",
+                                        "gold": "Number",
+                                        "description": "String",
+                                        "state": {
+                                            "type": "String",
+                                            "default": "transcoding"
+                                        },
+                                        "uploadedAt": "Date",
+                                        "createdAt": {
+                                            "type": "Date",
+                                            "default": "Date.now"
+                                        },
+                                        "creator": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        },
+                                        "battleId": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Battle"
+                                        }
+                                    }
+                                ]
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -1980,18 +2022,73 @@
                     "배틀 신청 관련 API"
                 ],
                 "description": "배틀 신청 할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "subBattleObj",
+                        "in": "FormData",
+                        "required": true
+                    },
+                    {
+                        "name": "videoFile",
+                        "in": "FormData",
+                        "required": true
+                    },
+                    {
+                        "name": "thumbnail",
+                        "in": "FormData",
+                        "required": true
+                    },
+                    {
+                        "name": "videoCutToStartTime",
+                        "in": "FormData",
+                        "required": true
+                    },
+                    {
+                        "name": "gold",
+                        "in": "FormData",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "users to be returned",
+                        "description": "서브 배틀 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/users"
+                            "example": {
+                                "subBbattle": {
+                                    "videoUrl": "String",
+                                    "thumbnail": "String",
+                                    "title": "String",
+                                    "gold": "Number",
+                                    "description": "String",
+                                    "state": {
+                                        "type": "String",
+                                        "default": "transcoding"
+                                    },
+                                    "uploadedAt": "Date",
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "creator": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    },
+                                    "battleId": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "Battle"
+                                    }
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2004,18 +2101,69 @@
                     "댓글 관련 API"
                 ],
                 "description": "댓글 리스트 취득할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "battleId",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "creator",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "required": false
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "exchange-history to be returned",
+                        "description": "댓글 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/exchange-history"
+                            "example": {
+                                "comments": [
+                                    {
+                                        "battleId": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Battle"
+                                        },
+                                        "content": "String",
+                                        "createdAt": {
+                                            "type": "Date",
+                                            "default": "Date.now"
+                                        },
+                                        "updatedAt": "Date",
+                                        "creator": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        },
+                                        "likes": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "User"
+                                            }
+                                        ],
+                                        "unlikes": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "User"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2028,18 +2176,67 @@
                     "댓글 관련 API"
                 ],
                 "description": "댓글 작성할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "battleId",
+                        "in": "body.data",
+                        "required": true
+                    },
+                    {
+                        "name": "creator",
+                        "in": "body.data",
+                        "required": true
+                    },
+                    {
+                        "name": "count",
+                        "in": "body.data",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "exchange-history to be returned",
+                        "description": "댓글 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/exchange-history"
+                            "example": {
+                                "comment": {
+                                    "battleId": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "Battle"
+                                    },
+                                    "content": "String",
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "updatedAt": "Date",
+                                    "creator": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    },
+                                    "likes": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        }
+                                    ],
+                                    "unlikes": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        }
+                                    ]
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2052,18 +2249,62 @@
                     "댓글 관련 API"
                 ],
                 "description": "댓글 수정할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "commentId",
+                        "in": "barams",
+                        "required": true
+                    },
+                    {
+                        "name": "content",
+                        "in": "body.data",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "exchange-history to be returned",
+                        "description": "댓글 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/exchange-history"
+                            "example": {
+                                "comment": {
+                                    "battleId": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "Battle"
+                                    },
+                                    "content": "String",
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "updatedAt": "Date",
+                                    "creator": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    },
+                                    "likes": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        }
+                                    ],
+                                    "unlikes": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        }
+                                    ]
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2076,18 +2317,62 @@
                     "댓글 관련 API"
                 ],
                 "description": "댓글 삭제할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "commentId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "comment",
+                        "in": "body.data",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "exchange-history to be returned",
+                        "description": "댓글 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/exchange-history"
+                            "example": {
+                                "comment": {
+                                    "battleId": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "Battle"
+                                    },
+                                    "content": "String",
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "updatedAt": "Date",
+                                    "creator": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    },
+                                    "likes": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        }
+                                    ],
+                                    "unlikes": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        }
+                                    ]
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2100,18 +2385,60 @@
                     "댓글 관련 API"
                 ],
                 "description": "댓글 신고할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "commentId",
+                        "in": "params",
+                        "required": true
+                    },
+                    {
+                        "name": "reportObj",
+                        "in": "body.data",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "exchange-history to be returned",
+                        "description": "신고 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/exchange-history"
+                            "example": {
+                                "reportObj": {
+                                    "battleId": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "Battle"
+                                    },
+                                    "subBattlesId": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "SubBattle"
+                                    },
+                                    "commentId": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "Comment"
+                                    },
+                                    "content": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "creator": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    }
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2124,18 +2451,67 @@
                     "댓글 관련 API"
                 ],
                 "description": "댓글 좋아요할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "commentId",
+                        "in": "params",
+                        "required": true
+                    },
+                    {
+                        "name": "userId",
+                        "in": "body.data",
+                        "required": true
+                    },
+                    {
+                        "name": "likeValue",
+                        "in": "body.data",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "exchange-history to be returned",
+                        "description": "댓글 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/exchange-history"
+                            "example": {
+                                "comment": {
+                                    "battleId": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "Battle"
+                                    },
+                                    "content": "String",
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "updatedAt": "Date",
+                                    "creator": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    },
+                                    "likes": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        }
+                                    ],
+                                    "unlikes": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        }
+                                    ]
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2148,18 +2524,49 @@
                     "랭크 관련 API"
                 ],
                 "description": "랭크 리스트 취득할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "rankObject",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "rankDataForSearch",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "ranks to be returned",
+                        "description": "랭크 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/ranks"
+                            "example": {
+                                "ranks": [
+                                    {
+                                        "rank": "Number",
+                                        "user": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        },
+                                        "dateKeywordForSearch": "String",
+                                        "categoryKeywordForSearch": "String",
+                                        "createdAt": {
+                                            "type": "Date",
+                                            "default": "Date.now"
+                                        }
+                                    }
+                                ]
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2172,18 +2579,87 @@
                     "골드이력 관련 API"
                 ],
                 "description": "골드 이력 리스트 취득할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "goldHistoryId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "user",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "gold-histories to be returned",
+                        "description": "골드 이력 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/gold-histories"
+                            "example": {
+                                "goldHistories": [
+                                    {
+                                        "user": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        },
+                                        "payment": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "PaymentHistory"
+                                        },
+                                        "exchangeHistory": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "ExchangeHistory"
+                                        },
+                                        "status": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "battle": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Battle"
+                                        },
+                                        "subBattle": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "SubBattle"
+                                        },
+                                        "message": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "chargeGold": {
+                                            "type": "Number",
+                                            "default": ""
+                                        },
+                                        "beforeGold": {
+                                            "type": "Number",
+                                            "default": ""
+                                        },
+                                        "afterGold": {
+                                            "type": "Number",
+                                            "default": ""
+                                        },
+                                        "createdAt": {
+                                            "type": "Date",
+                                            "default": "Date.now"
+                                        }
+                                    }
+                                ]
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2196,18 +2672,81 @@
                     "결제 이력 관련 API"
                 ],
                 "description": "결제 이력 리스트 취득할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "paymentHistoryId",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "payment-history to be returned",
+                        "description": "결제 이력 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/payment-history"
+                            "example": {
+                                "paymentHistories": [
+                                    {
+                                        "impUid": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "merchantUid": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "requestId": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "applyNum": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "paidAmount": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "currency": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "payMethod": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "status": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "paidAt": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "goldHistory": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "GoldHistory"
+                                        },
+                                        "user": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        },
+                                        "message": {
+                                            "type": "String",
+                                            "default": ""
+                                        }
+                                    }
+                                ]
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2220,18 +2759,79 @@
                     "결제 이력 관련 API"
                 ],
                 "description": "결제 이력 추가할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "paymentHistoryObj",
+                        "in": "body.data",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "payment-history to be returned",
+                        "description": "결제 이력 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/payment-history"
+                            "example": {
+                                "paymentHistory": {
+                                    "impUid": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "merchantUid": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "requestId": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "applyNum": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "paidAmount": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "currency": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "payMethod": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "status": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "paidAt": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "goldHistory": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "GoldHistory"
+                                    },
+                                    "user": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    },
+                                    "message": {
+                                        "type": "String",
+                                        "default": ""
+                                    }
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2244,18 +2844,89 @@
                     "결제 이력 관련 API"
                 ],
                 "description": "결제 이력 수정할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "paymentHistoryId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "paymentHistoryObj",
+                        "in": "body.",
+                        "required": true
+                    },
+                    {
+                        "name": "userId",
+                        "in": "body.",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "payment-history to be returned",
+                        "description": "결제 이력 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/payment-history"
+                            "example": {
+                                "paymentHistory": {
+                                    "impUid": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "merchantUid": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "requestId": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "applyNum": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "paidAmount": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "currency": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "payMethod": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "status": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "paidAt": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "goldHistory": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "GoldHistory"
+                                    },
+                                    "user": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    },
+                                    "message": {
+                                        "type": "String",
+                                        "default": ""
+                                    }
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2271,15 +2942,64 @@
                 "parameters": [],
                 "responses": {
                     "200": {
-                        "description": "exchange-history to be returned",
+                        "description": "환전 이력 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/exchange-history"
+                            "example": {
+                                "exchangeHistories": [
+                                    {
+                                        "user": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        },
+                                        "bankAccountNumber": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "bankName": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "status": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "goldHistory": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "GoldHistory"
+                                        },
+                                        "exchangeGold": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "exchangeMoney": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "message": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "createdAt": {
+                                            "type": "Date",
+                                            "default": "Date.now"
+                                        },
+                                        "exchangedAt": {
+                                            "type": "Date",
+                                            "default": ""
+                                        }
+                                    }
+                                ]
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2292,18 +3012,71 @@
                     "환전이력 관련 API"
                 ],
                 "description": "환전 신청할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "exchangeHistoryObj",
+                        "in": "body.data",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "exchange-history to be returned",
+                        "description": "환전 이력 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/exchange-history"
+                            "example": {
+                                "exchangeHistory": {
+                                    "user": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    },
+                                    "bankAccountNumber": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "bankName": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "status": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "goldHistory": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "GoldHistory"
+                                    },
+                                    "exchangeGold": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "exchangeMoney": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "message": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "exchangedAt": {
+                                        "type": "Date",
+                                        "default": ""
+                                    }
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2316,18 +3089,71 @@
                     "환전이력 관련 API"
                 ],
                 "description": "환전 신청에 대한 반려 / 승인처리할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "exchangeHistoryObj",
+                        "in": "body.data",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "exchange-history to be returned",
+                        "description": "환전 이력 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/exchange-history"
+                            "example": {
+                                "exchangeHistory": {
+                                    "user": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    },
+                                    "bankAccountNumber": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "bankName": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "status": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "goldHistory": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "GoldHistory"
+                                    },
+                                    "exchangeGold": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "exchangeMoney": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "message": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "exchangedAt": {
+                                        "type": "Date",
+                                        "default": ""
+                                    }
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2343,15 +3169,40 @@
                 "parameters": [],
                 "responses": {
                     "200": {
-                        "description": "bank-account-number to be returned",
+                        "description": "환전 계좌 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/bank-account-number"
+                            "example": {
+                                "bankAccountNumberObj": [
+                                    {
+                                        "user": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        },
+                                        "createdAt": {
+                                            "type": "Date",
+                                            "default": "Date.now"
+                                        },
+                                        "bankAccountNumber": {
+                                            "type": "String",
+                                            "default": ""
+                                        },
+                                        "bankName": {
+                                            "type": "String",
+                                            "default": ""
+                                        }
+                                    }
+                                ]
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2364,18 +3215,47 @@
                     "환전계좌 관련 API"
                 ],
                 "description": "환전 계좌 등록할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "bankAccountNumberObj",
+                        "in": "body.data",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "bank-account-number to be returned",
+                        "description": "환전 계좌 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/bank-account-number"
+                            "example": {
+                                "bankAccountNumberObj": {
+                                    "user": {
+                                        "type": "mongoose.Schema.Types.ObjectId",
+                                        "ref": "User"
+                                    },
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "bankAccountNumber": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "bankName": {
+                                        "type": "String",
+                                        "default": ""
+                                    }
+                                }
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2388,18 +3268,30 @@
                     "환전계좌 관련 API"
                 ],
                 "description": "환전 계좌 삭제할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "bankAccountNumberId",
+                        "in": "params",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "bank-account-number to be returned",
+                        "description": "환전 계좌 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/bank-account-number"
+                            "example": {
+                                "result": "환전계좌 삭제 성공"
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2412,18 +3304,103 @@
                     "팬클럽 관련 API"
                 ],
                 "description": "팬클럽 목록 취득할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "sortBy",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "fanclub to be returned",
+                        "description": "팬클럽에 등록한 유저의 배틀 모델 반환",
                         "schema": {
-                            "$ref": "#/definitions/fanclub"
+                            "example": {
+                                "battles": [
+                                    {
+                                        "videoUrl": "String",
+                                        "thumbnail": "String",
+                                        "title": "String",
+                                        "description": "String",
+                                        "category1": "String",
+                                        "category2": "String",
+                                        "reviewCriteria": "String",
+                                        "pro": "Boolean",
+                                        "ageLimit": "Boolean",
+                                        "gold": "Number",
+                                        "joinCount": {
+                                            "type": "Number",
+                                            "default": 0
+                                        },
+                                        "maxCount": {
+                                            "type": "Number",
+                                            "default": 2
+                                        },
+                                        "state": {
+                                            "type": "String",
+                                            "default": "transcoding"
+                                        },
+                                        "battleStartTime": "String",
+                                        "voteEndTime": "String",
+                                        "views": {
+                                            "type": "Number",
+                                            "default": 0
+                                        },
+                                        "createdAt": {
+                                            "type": "Date",
+                                            "default": "Date.now"
+                                        },
+                                        "comments": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "Comment"
+                                            }
+                                        ],
+                                        "creator": {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User"
+                                        },
+                                        "subBattles": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "SubBattle"
+                                            }
+                                        ],
+                                        "likes": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "User"
+                                            }
+                                        ],
+                                        "votes": [
+                                            {
+                                                "type": "mongoose.Schema.Types.ObjectId",
+                                                "ref": "Vote"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
@@ -2436,12 +3413,182 @@
                     "팬클럽 관련 API"
                 ],
                 "description": "팬클럽 등록할때 사용됩니다.",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "follwToUserId",
+                        "in": "body.data",
+                        "required": true
+                    },
+                    {
+                        "name": "currentUserId",
+                        "in": "body.data",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "fanclub to be returned",
                         "schema": {
-                            "$ref": "#/definitions/fanclub"
+                            "example": {
+                                "currentUser": {
+                                    "name": "String",
+                                    "email": "String",
+                                    "channelName": {
+                                        "type": "String",
+                                        "default": "채널명 없음"
+                                    },
+                                    "avatarUrl": {
+                                        "type": "String",
+                                        "default": "https://fireworks-triple-star.s3.ap-northeast-2.amazonaws.com/default-user-white.png"
+                                    },
+                                    "updatedDateOfChannelName": "Date",
+                                    "phone": "String",
+                                    "sex": "String",
+                                    "kakaoId": "Number",
+                                    "naverId": "Number",
+                                    "facebookId": "Number",
+                                    "googleId": "Number",
+                                    "gold": {
+                                        "type": "Number",
+                                        "default": 0
+                                    },
+                                    "permission": {
+                                        "type": "String",
+                                        "default": "public"
+                                    },
+                                    "bankAccountNumbers": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "BankAccountNumber",
+                                            "default": []
+                                        }
+                                    ],
+                                    "resetPasswordToken": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "watchedBattles": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Battle",
+                                            "default": []
+                                        }
+                                    ],
+                                    "likeBattles": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Battle",
+                                            "default": []
+                                        }
+                                    ],
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "follows": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User",
+                                            "default": []
+                                        }
+                                    ],
+                                    "followers": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User",
+                                            "default": []
+                                        }
+                                    ],
+                                    "deleteFlag": {
+                                        "type": "Number",
+                                        "default": 0
+                                    },
+                                    "deletedAt": "Date",
+                                    "secessionReason": {
+                                        "type": "String",
+                                        "default": ""
+                                    }
+                                },
+                                "followUser": {
+                                    "name": "String",
+                                    "email": "String",
+                                    "channelName": {
+                                        "type": "String",
+                                        "default": "채널명 없음"
+                                    },
+                                    "avatarUrl": {
+                                        "type": "String",
+                                        "default": "https://fireworks-triple-star.s3.ap-northeast-2.amazonaws.com/default-user-white.png"
+                                    },
+                                    "updatedDateOfChannelName": "Date",
+                                    "phone": "String",
+                                    "sex": "String",
+                                    "kakaoId": "Number",
+                                    "naverId": "Number",
+                                    "facebookId": "Number",
+                                    "googleId": "Number",
+                                    "gold": {
+                                        "type": "Number",
+                                        "default": 0
+                                    },
+                                    "permission": {
+                                        "type": "String",
+                                        "default": "public"
+                                    },
+                                    "bankAccountNumbers": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "BankAccountNumber",
+                                            "default": []
+                                        }
+                                    ],
+                                    "resetPasswordToken": {
+                                        "type": "String",
+                                        "default": ""
+                                    },
+                                    "watchedBattles": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Battle",
+                                            "default": []
+                                        }
+                                    ],
+                                    "likeBattles": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "Battle",
+                                            "default": []
+                                        }
+                                    ],
+                                    "createdAt": {
+                                        "type": "Date",
+                                        "default": "Date.now"
+                                    },
+                                    "follows": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User",
+                                            "default": []
+                                        }
+                                    ],
+                                    "followers": [
+                                        {
+                                            "type": "mongoose.Schema.Types.ObjectId",
+                                            "ref": "User",
+                                            "default": []
+                                        }
+                                    ],
+                                    "deleteFlag": {
+                                        "type": "Number",
+                                        "default": 0
+                                    },
+                                    "deletedAt": "Date",
+                                    "secessionReason": {
+                                        "type": "String",
+                                        "default": ""
+                                    }
+                                }
+                            }
                         }
                     },
                     "default": {

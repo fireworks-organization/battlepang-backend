@@ -15,10 +15,9 @@ import {
 const checkJWTAuthenticate = passport.authenticate("jwt", { session: false });
 commentRouter.get("/", comments);
 commentRouter.post("/", checkJWTAuthenticate, addComment);
+commentRouter.put(routes.updateComment, updateComment);
 commentRouter.post(routes.reportComment, checkJWTAuthenticate, reportComment);
 commentRouter.post(routes.likeComment, checkJWTAuthenticate, likeComment);
-commentRouter.post(routes.unlikeComment, checkJWTAuthenticate, unlikeComment);
-commentRouter.put(routes.updateComment, updateComment);
-commentRouter.post(routes.deleteComment, checkJWTAuthenticate, deleteComment);
+commentRouter.delete(routes.deleteComment, deleteComment);
 
 export default commentRouter;

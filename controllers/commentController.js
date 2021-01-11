@@ -210,11 +210,11 @@ export const updateComment = async (req, res) => {
 };
 export const deleteComment = async (req, res) => {
   const {
-    body: { data: { comment } }
+    body: { data: { comment } },
+    params: { commentId }
   } = req;
   try {
     console.log(comment)
-    const commentId = comment._id;
     const findBattle = await Battle.findOne({
       _id: comment.battleId
     });

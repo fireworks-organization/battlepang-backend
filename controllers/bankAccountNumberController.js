@@ -54,7 +54,7 @@ export const deleteBankAccountNumber = async (req, res) => {
     await BankAccountNumber.deleteOne({
       _id: bankAccountNumberId
     });
-    res.status(200).send();
+    res.status(200).json({ result: "환전계좌 삭제 성공" });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error });
