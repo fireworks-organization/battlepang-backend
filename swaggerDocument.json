@@ -3427,7 +3427,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "fanclub to be returned",
+                        "description": "팬클럽가입을 누른 유저 / 팬클럽에 가입된 유저 반환",
                         "schema": {
                             "example": {
                                 "currentUser": {
@@ -3591,10 +3591,14 @@
                             }
                         }
                     },
-                    "default": {
-                        "description": "400 error",
+                    "400": {
+                        "description": "각 에러 발생시",
                         "schema": {
-                            "$ref": "#/definitions/ErrorModel"
+                            "example": [
+                                {
+                                    "error": "발생한 에러 메세지 그대로 반환"
+                                }
+                            ]
                         }
                     }
                 }
