@@ -148,7 +148,7 @@ export const addBattle = async (req, res) => {
     req.files.filter(item => item.fieldname == "videoFile")[0] : null;
   const thumbnailFile = req.files ?
     req.files.filter(item => item.fieldname == "thumbnail")[0] : null;
-  console.log(thumbnailFile)
+  console.log(videoFile)
   let battleObjJSON = JSON.parse(battleObj);
 
   let videoFileName = "./public/videoFiles/";
@@ -168,29 +168,29 @@ export const addBattle = async (req, res) => {
     newVideoFileName = newVideoFileName + battleObjJSON.videoFileName;
   }
   try {
-    if (battleObjJSON.videoFileName) {
+    // if (battleObjJSON.videoFileName) {
       vimeoUploadAndWatchingToTrancoded(videoFileName, battleObjJSON);
-    } else {
-      ffmpeg.setFfmpegPath(ffmpegPath);
-      // console.log(battleObjJSON)
-      // console.log(videoFileName)
-      // console.log(newVideoFileName)
-      ffmpeg(videoFileName)
-        .setStartTime(videoCutToStartTime)
-        .setDuration('30')
-        .output(newVideoFileName)
-        .on('end', function (err) {
-          if (!err) {
-            if (!battleObjJSON.videoFileName) {
-              fs.unlinkSync(videoFileName);
-            }
-            vimeoUploadAndWatchingToTrancoded(newVideoFileName, battleObjJSON);
-          }
-        })
-        .on('error', function (err) {
-          console.log('error: ', err)
-        }).run()
-    }
+    // } else {
+    //   ffmpeg.setFfmpegPath(ffmpegPath);
+    //   // console.log(battleObjJSON)
+    //   // console.log(videoFileName)
+    //   // console.log(newVideoFileName)
+    //   ffmpeg(videoFileName)
+    //     .setStartTime(videoCutToStartTime)
+    //     .setDuration('30')
+    //     .output(newVideoFileName)
+    //     .on('end', function (err) {
+    //       if (!err) {
+    //         if (!battleObjJSON.videoFileName) {
+    //           fs.unlinkSync(videoFileName);
+    //         }
+    //         vimeoUploadAndWatchingToTrancoded(newVideoFileName, battleObjJSON);
+    //       }
+    //     })
+    //     .on('error', function (err) {
+    //       console.log('error: ', err)
+    //     }).run()
+    // }
 
     function vimeoUploadAndWatchingToTrancoded(uploadFileName, battleObjJSON) {
       // console.log(uploadFileName)

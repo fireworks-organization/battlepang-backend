@@ -132,27 +132,27 @@ export const addSubBattle = async (req, res) => {
         console.log("신청인원이 모두 찼습니다.")
         res.status(400).json({ error: "신청인원이 모두 찼습니다." });
       } else {
-        if (subBattleObjJSON.videoFileName) {
+        // if (subBattleObjJSON.videoFileName) {
           vimeoUploadAndWatchingToTrancoded(videoFileName, subBattleObjJSON);
-        } else {
-          ffmpeg.setFfmpegPath(ffmpegPath);
-          ffmpeg(videoFileName)
-            .setStartTime(videoCutToStartTime)
-            .setDuration('30')
-            .output(newVideoFileName)
-            .on('end', function (err) {
-              console.log(err)
-              if (!err) {
-                if (!subBattleObjJSON.videoFileName) {
-                  fs.unlinkSync(videoFileName);
-                }
-                vimeoUploadAndWatchingToTrancoded(newVideoFileName, subBattleObjJSON)
-              }
-            })
-            .on('error', function (err) {
-              console.log('error: ', err)
-            }).run()
-        }
+        // } else {
+        //   ffmpeg.setFfmpegPath(ffmpegPath);
+        //   ffmpeg(videoFileName)
+        //     .setStartTime(videoCutToStartTime)
+        //     .setDuration('30')
+        //     .output(newVideoFileName)
+        //     .on('end', function (err) {
+        //       console.log(err)
+        //       if (!err) {
+        //         if (!subBattleObjJSON.videoFileName) {
+        //           fs.unlinkSync(videoFileName);
+        //         }
+        //         vimeoUploadAndWatchingToTrancoded(newVideoFileName, subBattleObjJSON)
+        //       }
+        //     })
+        //     .on('error', function (err) {
+        //       console.log('error: ', err)
+        //     }).run()
+        // }
       }
     } else {
       console.log("배틀을 찾을 수 없습니다.")
