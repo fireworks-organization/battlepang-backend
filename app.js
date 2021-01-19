@@ -69,7 +69,7 @@ app.get('/api-docs', swaggerUi.setup(swaggerDocument, swaggerUiOpts));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-app.use(cors());
+app.use(cors({origin: true}));
 app.use(helmet());
 app.use(logger("dev"));
 app.use(bodyParser.json());
