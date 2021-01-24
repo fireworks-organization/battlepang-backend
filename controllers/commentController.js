@@ -210,7 +210,7 @@ export const updateComment = async (req, res) => {
 };
 export const deleteComment = async (req, res) => {
   const {
-    body: { data: { comment } },
+    body: { comment },
     params: { commentId }
   } = req;
   try {

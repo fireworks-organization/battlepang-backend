@@ -169,7 +169,7 @@ npm install --save multer
 npm install --save vimeo
 ```
 
-### ffmpegPath ffmpeg 
+### ffmpegPath ffmpeg
 
 ```
 npm install --save @ffmpeg-installer/ffmpeg
@@ -180,34 +180,39 @@ sudo chmod -R 777 .
 로 npm설치폴더의 권한을 풀어준다
 ```
 
-
 ### mongo
+
 ```
    $or: [{ _id: id }, { title: { $nin: "" } }],
 ```
 
 ### Amazon software development kit
+
 ```
    npm i aws-sdk --save
 ```
 
 ### multer-s3
+
 ```
    npm i multer-s3 --save
 ```
 
 ### pm2 실행
+
 ```
-pm2 start pm2.json
+pm2 start ecosystem.config.js
 ```
 
-### swagger 
+### swagger
+
 ```
 npm install --save swagger-jsdoc
 npm install --save swagger-ui-express
 ```
 
 ### swagger{
+
      "paths": {
         "/users/": {
             "get": {
@@ -253,4 +258,5 @@ npm install --save swagger-ui-express
                 "responses": {}
             }
         },
+
 }
