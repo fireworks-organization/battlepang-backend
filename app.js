@@ -26,6 +26,16 @@ import swaggerUi from 'swagger-ui-express';
 import routes from "./routes";
 
 var app = express();
+let isAppGoingToBeClosed = false // SIGINT 시그널을 받았는지 여부. 앱이 곧 종료될 것임을 의미한다.
+
+app.use(function(req, res, next) {
+  // 프로세스 종료 예정이라면 리퀘스트를 처리하지 않는다
+  if (isAppGoingToBeClosed) {
+    res.set('Connection', 'close')
+  }
+
+  next()
+})
 const swaggerDocument = require("./swaggerDocument.json");
 
 app.use((req, res, next) => {

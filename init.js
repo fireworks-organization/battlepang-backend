@@ -6,8 +6,6 @@ import "./models/User";
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, handleListening);
-
 const listeningServer = app.listen(PORT, err => {
   if (err) throw err
   console.log(`Listening on : http://localhost:${PORT}`);
