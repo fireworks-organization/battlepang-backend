@@ -38,15 +38,8 @@ const addOperate = (operate, key, value) => {
 export const battles = async (req, res) => {
 
   const {
-    query: { id, creator, subBattleId, state, count, userId, sortBy }
+    query: { id, creator, reviewCriteria, subBattleId, state, count, userId, sortBy }
   } = req;
-  console.log("id", id);
-  console.log("creator", creator);
-  console.log("subBattleId", subBattleId);
-  console.log("state", state);
-  console.log("count", count);
-  console.log("userId", userId);
-
   const populateList = ["creator", "votes", {
     path: "subBattles",
     populate: ["creator", "votes"]
@@ -64,6 +57,9 @@ export const battles = async (req, res) => {
   }
   if (creator) {
     findOperate = addOperate(findOperate, "creator", creator);
+  }
+  if (reviewCriteria) {
+    findOperate = addOperate(findOperate, "reviewCriteria", {$regex:reviewCriteria});
   }
   if (subBattleId) {
     findOperate = addOperate(findOperate, "subBattleId", subBattleId);
@@ -83,7 +79,7 @@ export const battles = async (req, res) => {
     sort[str[0]] = str[1] === 'desc' ? -1 : 1;
     console.log(sort)
   }
-
+  console.log('sss',findOperate);
   try {
     let findBattles = [];
     let findSubBattles = [];
