@@ -307,4 +307,21 @@ export const joinSubBattle = async (req, res) => {
     res.status(400).json({ error });
   }
 };
+export const deleteSubBattle = async (req, res) => {
+  const {
+    params: { _id,battleId }
+  } = req;
+  try {
+    const findBattle = await await Battle.findOne({_id: battleId});
+    findBattle.subBattles = findBattle.subBattles.filter(el=>{
+      return el._id !== _id
+    })
+    await findBattle.save();
+    const battle = await SubBattle.findOneAndRemove({ _id: _id });
+    res.status(200).send({ battle });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};
 
