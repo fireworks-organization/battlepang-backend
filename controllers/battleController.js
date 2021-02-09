@@ -5,6 +5,7 @@ const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path
 const ffmpeg = require('fluent-ffmpeg')
 
 import Battle from "../models/Battle";
+import Comment from "../models/Comment";
 import SubBattle from "../models/SubBattle";
 import Vote from "../models/Vote";
 import Report from "../models/Report";
@@ -79,7 +80,6 @@ export const battles = async (req, res) => {
     sort[str[0]] = str[1] === 'desc' ? -1 : 1;
     console.log(sort)
   }
-  console.log('sss',findOperate);
   try {
     let findBattles = [];
     let findSubBattles = [];
@@ -489,6 +489,7 @@ export const deleteBattle = async (req, res) => {
     params: { battleId }
   } = req;
   try {
+    const re = await Comment.find({ battleId: battleId }).remove();
     const battle = await Battle.findOneAndRemove({ _id: battleId });
     res.status(200).send({ battle });
   } catch (error) {
