@@ -309,9 +309,8 @@ export const joinSubBattle = async (req, res) => {
 };
 export const updateSubBattle = async (req, res) => {
   const {
-    body: { battleId, title, description, state },
+    body: { battleId, title, description },
   } = req;
-  console.log(state)
   try {
     const findBattle = await SubBattle.findOne({
       _id: battleId
@@ -319,10 +318,6 @@ export const updateSubBattle = async (req, res) => {
     if (!findBattle) {
       res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
       return false;
-    }
-
-    if (state !== undefined) {
-      findBattle.state = state;
     }
     if (title !== undefined) {
       findBattle.title = title;
