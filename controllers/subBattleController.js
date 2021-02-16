@@ -342,9 +342,8 @@ export const deleteSubBattle = async (req, res) => {
   } = req;
   try {
     const findBattle = await Battle.findOne({_id: battleId});
-    findBattle.subBattles = findBattle.subBattles.filter(el=>{
-      return el._id !== _id
-    })
+    findBattle.joinCount = findBattle.joinCount - 1;
+    findBattle.subBattles = findBattle.subBattles.filter(el=>el != _id);
     await findBattle.save();
     const battle = await SubBattle.findOneAndRemove({ _id: _id });
     res.status(200).send({ battle });
