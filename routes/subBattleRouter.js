@@ -9,6 +9,9 @@ const checkJWTAuthenticate = passport.authenticate("jwt", { session: false });
 import {
   subBattles,
   addSubBattle,
+  updateSubBattle,
+  deleteSubBattle
+
 } from "../controllers/subBattleController";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -24,5 +27,7 @@ const uploader = multer({ storage: storage });
 
 subBattleRouter.get("/", subBattles);
 subBattleRouter.post(routes.addSubBattle, uploader.any(), addSubBattle);
+subBattleRouter.post(routes.updateSubBattle, updateSubBattle);
+subBattleRouter.post(routes.deleteSubBattle, deleteSubBattle);
 
 export default subBattleRouter;

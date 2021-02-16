@@ -307,4 +307,50 @@ export const joinSubBattle = async (req, res) => {
     res.status(400).json({ error });
   }
 };
+export const updateSubBattle = async (req, res) => {
+  const {
+    body: { battleId, title, description },
+  } = req;
+  try {
+    const findBattle = await SubBattle.findOne({
+      _id: battleId
+    });
+    if (!findBattle) {
+      res.status(400).json({ error: "배틀을 찾을 수 없습니다." });
+      return false;
+    }
+    if (title !== undefined) {
+      findBattle.title = title;
+    }
+    if (description !== undefined) {
+      findBattle.description = description;
+    }
+    await findBattle.save(function (error, battle) {
+      if (error) return res.status(400).json({ error });
+      console.log(battle)
+      res.status(200).json({ battle: { ...battle } });
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+
+};
+export const deleteSubBattle = async (req, res) => {
+  const {
+    body: { _id, battleId }
+  } = req;
+  try {
+    const findBattle = await Battle.findOne({_id: battleId});
+    findBattle.subBattles = findBattle.subBattles.filter(el=>{
+      return el._id !== _id
+    })
+    await findBattle.save();
+    const battle = await SubBattle.findOneAndRemove({ _id: _id });
+    res.status(200).send({ battle });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};
 
