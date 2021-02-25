@@ -7,11 +7,10 @@ const m_connect = () => {
         process.env.MONGO_PROD_URL,
         {
             autoIndex: false,
-            reconnectTries: Number.MAX_VALUE,
-            reconnectInterval: 500,
-            poolSize: 5,
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useFindAndModify: false,
             bufferMaxEntries: 0,
-            useNewUrlParser: true
         }
     );
 }
