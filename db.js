@@ -11,6 +11,8 @@ const m_connect = () => {
             useUnifiedTopology: true,
             useFindAndModify: false,
             bufferMaxEntries: 0,
+            poolSize : 5,
+            socketTimeoutMS : 3000,
         }
     );
 }
