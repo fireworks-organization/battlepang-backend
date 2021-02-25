@@ -28,3 +28,8 @@ process.on('SIGINT', function() {
     process.exit(err ? 1 : 0)
   })
 })
+
+process.on('uncaughtException', function (err) {
+  console.log('Caught exception: ' + err);
+  // restart or safe shutdown 등의 처리
+});
