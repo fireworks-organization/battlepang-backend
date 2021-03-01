@@ -106,3 +106,10 @@ dist
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+# Elastic Beanstalk Files
+.elasticbeanstalk
+.ebextensions
+
+# docker-compose 몽고 데이터
+mongoData
+

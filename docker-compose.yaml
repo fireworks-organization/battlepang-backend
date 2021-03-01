@@ -1,0 +1,17 @@
+# $ mkdir mongoData # 볼륨
+# $ docker-compose up
+version: "3.8"      # version 정보를 작성합니다.
+services:           # service 목록을 정의합니다.
+  mongo:          # service의 이름입니다.
+    image: mongo    # 해당 service에서 사용할 image입니다.
+    restart: always # container를 실행할 때 항상 이미 수행중이라면 재시작을 수행합니다.
+    environment:    # 환경변수를 정의합니다.
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123123
+    volumes:        # container -> local로 mount할 수 있습니다.
+      - type: bind
+        source: "./mongoData" # local 경로
+        target: /data/db  # container 내부에서의 경로
+    container_name: "mongo" # container의 name을 정의합니다.
+    ports:                # service port를 정의합니다.
+      - "27017:27017"     # local:container

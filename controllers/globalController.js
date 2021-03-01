@@ -8,7 +8,7 @@ const calculateOrderAmount = items => {
     // people from directly manipulating the amount on the client
     return 1400;
 };
-export const home = (req, res) => res.send("REST API를 위한 서버입니다.");
+export const home = (req, res) => res.send(`<h1>Battlepang의 REST API를 위한 서버입니다.</h1><p>jenkins build number: ${process.env.JENKINS_BUILD_NUMBER || -1}`);
 
 export const stripePayment = async (req, res) => {
     const { items } = req.body;
