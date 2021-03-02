@@ -14,6 +14,7 @@ const s3 = new aws.S3({
   secretAccessKey: process.env.S3_PRIVATE_KEY,
   region: "ap-northeast-1"
 });
+
 function makeid(length) {
   var result = "";
   var characters =
@@ -130,11 +131,13 @@ export const register = async (req, res, next) => {
   const {
     body: { data }
   } = req;
-  console.log(data);
+  console.log("로그인 요청 body: " + data)
   const { email, name, phone, password, password2 } = data;
+  if (password === undefined){
+    return res.status(400).json({ error: "패스워드를 입력해주세요." });
+  }
   if (password !== password2) {
-    res.status(400).json({ error: "패스워드가 다릅니다." });
-    next();
+    return res.status(400).json({ error: "패스워드가 다릅니다." });
   } else {
     try {
       const findUser = await User.findOne({
@@ -143,7 +146,6 @@ export const register = async (req, res, next) => {
       if (findUser) {
         res.status(400).json({ error: "이미 가입된 이메일 or 핸드폰번호 입니다." });
       } else {
-
         const resetPasswordToken = makeid(12)
         const user = await User({
           email,
@@ -152,12 +154,11 @@ export const register = async (req, res, next) => {
           resetPasswordToken
         });
         await User.register(user, password);
-        res.status(200).send(user);
+        return res.status(200).send(user);
       }
     } catch (error) {
       console.log(error);
-      res.status(400).json({ error });
-      next();
+      return res.status(503).json({ error });
     }
   }
 };
@@ -166,6 +167,11 @@ export const login = async (req, res, next) => {
   const {
     body: { phone }
   } = req;
+  if (phone === undefined) {
+    return res.status(400).json({
+      error: "핸드폰 번호를 입력해주세요."
+    })
+  }
   const findUser = await User.findOne({ phone });
   if (!findUser) {
     console.log("존재하지 않는 아이디입니다")
@@ -175,6 +181,8 @@ export const login = async (req, res, next) => {
     console.log("탈퇴한 유저입니다.")
     return res.status(400).json({ error: "탈퇴한 유저입니다." }); // 임의 에러 처리
   }
+  // passport에게 req, res를 통째로 전달.
+  // password가 정의되어있어야한다.
   passport.authenticate("local", { session: false }, function (err, user, info) {
     if (err) {
       console.log("에러발생:" + err)

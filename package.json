@@ -39,7 +39,8 @@
     ]
   },
   "scripts": {
-    "start": "nodemon --exec babel-node init.js --delay 2"
+    "start": "babel-node init.js --delay 2",
+    "dev": "nodemon --exec babel-node init.js --delay 2"
   },
   "devDependencies": {
     "@babel/cli": "7.8.4",
