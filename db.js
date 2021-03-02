@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
-
+console.log("Connecting to database " + process.env.MONGO_PROD_URL)
 const m_connect = () => {
     mongoose.connect(
         process.env.MONGO_PROD_URL,

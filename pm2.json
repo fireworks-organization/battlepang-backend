@@ -1,9 +1,0 @@
-{
-    "apps": [
-        {
-            "name": "battlepang-backend",
-            "script": "npm",
-            "args": "start"
-        }
-    ]
-}

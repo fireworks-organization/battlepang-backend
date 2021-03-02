@@ -71,6 +71,7 @@ web_modules/
 
 # dotenv environment variables file
 .env
+.env.dev
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -110,6 +111,8 @@ dist
 .elasticbeanstalk
 .ebextensions
 
+# injelliJ
+.idea
+
 # docker-compose 몽고 데이터
 mongoData
-
